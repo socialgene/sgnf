@@ -1,8 +1,8 @@
 //
-// This file holds several functions specific to the workflow/socialgene.nf in the nf-core/socialgene pipeline
+// This file holds several functions specific to the workflow/builder.nf in the nf-core/builder pipeline
 //
 
-class WorkflowSocialgene {
+class WorkflowBuilder {
 
     //
     // Check and validate parameters

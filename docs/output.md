@@ -1,4 +1,4 @@
-# nf-core/socialgene: Output
+# nf-core/builder: Output
 
 ## Introduction
 

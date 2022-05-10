@@ -1,11 +1,11 @@
 #!/usr/bin/env nextflow
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    nf-core/socialgene
+    nf-core/builder
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Github : https://github.com/nf-core/socialgene
-    Website: https://nf-co.re/socialgene
-    Slack  : https://nfcore.slack.com/channels/socialgene
+    Github : https://github.com/nf-core/builder
+    Website: https://nf-co.re/builder
+    Slack  : https://nfcore.slack.com/channels/builder
 ----------------------------------------------------------------------------------------
 */
 
@@ -33,13 +33,13 @@ WorkflowMain.initialise(workflow, params, log)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { SOCIALGENE } from './workflows/socialgene'
+include { BUILDER } from './workflows/builder'
 
 //
-// WORKFLOW: Run main nf-core/socialgene analysis pipeline
+// WORKFLOW: Run main nf-core/builder analysis pipeline
 //
-workflow NFCORE_SOCIALGENE {
-    SOCIALGENE ()
+workflow NFCORE_BUILDER {
+    BUILDER ()
 }
 
 /*
@@ -53,7 +53,7 @@ workflow NFCORE_SOCIALGENE {
 // See: https://github.com/nf-core/rnaseq/issues/619
 //
 workflow {
-    NFCORE_SOCIALGENE ()
+    NFCORE_BUILDER ()
 }
 
 /*

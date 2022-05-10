@@ -1,1 +1,15 @@
-repository_type: pipeline
+lint:
+  files_exist:
+    - .github/workflows/branch.yml
+    - .github/workflows/awstest.yml
+    - .github/workflows/awsfulltest.yml
+    - .github/workflows/linting.yml
+    - .github/workflows/linting_comment.yml
+    - .travis.yml
+    - docs/usage.md
+    - docs/output.md
+    - docs/README.md
+    - docs/images/nf-core-socialgene_logo_light.png
+    - docs/images/nf-core-socialgene_logo_dark.png
+    - docs/images/nf-core-autometa_logo.png
+  readme: false

@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema",
-    "$id": "https://raw.githubusercontent.com/nf-core/builder/master/assets/schema_input.json",
-    "title": "nf-core/builder pipeline - params.input schema",
+    "$id": "https://raw.githubusercontent.com/nf-core/socialgene/master/assets/schema_input.json",
+    "title": "nf-core/socialgene pipeline - params.input schema",
     "description": "Schema for the file provided with params.input",
     "type": "array",
     "items": {
@@ -31,6 +31,9 @@
                 ]
             }
         },
-        "required": ["sample", "fastq_1"]
+        "required": [
+            "sample",
+            "fastq_1"
+        ]
     }
 }

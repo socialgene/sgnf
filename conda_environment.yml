@@ -1,0 +1,29 @@
+name: socialgene
+
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+
+dependencies:
+  - bioconda::coreutils
+  - conda-forge::sed=4.7
+  - bioconda::hmmer=3.3.2
+  - conda-forge::zstd
+  - conda-forge::python==3.9
+  - bioconda::nf-core>=2.1
+  - bioconda::nextflow>=21.10.6
+  - bioconda::blast=2.12.0
+  - bioconda::mmseqs2=13.45111
+  - bioconda::ncbi-genome-download
+  - conda-forge::sqlite=3.36.0
+  - conda-forge::pigz=2.6
+  - bioconda::seqkit=0.16.1
+  - conda-forge::ncbi-datasets-cli= 12.32.0
+  - bioconda::diamond=2.0.9
+  - pip
+  - rsync # needed for nextflow
+  - numpy # can't install numpy with just pip if using python 3.9
+  - wget
+  - pip:
+      - -e /home/chase/Documents/socialgene/socialgene # TODO: update when python package is on pypy

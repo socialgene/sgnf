@@ -39,7 +39,7 @@ workflow HMM_MODELS {
         if (hmm_internal_list == null) {
             // Check that either hmm_internal_list or params.custom_hmm_file was specified
             if (params.custom_hmm_file == null) {
-                throw new Exception('Must specify a "custom_hmm_file" or "hmmlist" must be "all" or a subset of\n["antismash","amrfinder","bigslice","classiphage","pfam","prism","resfams","tigrfam","virus_orthologous_groups"]')
+                throw new Exception('Must specify a "custom_hmm_file" or the "hmmlist" parameter must be "all" or a subset of\n["antismash","amrfinder","bigslice","classiphage","pfam","prism","resfams","tigrfam","virus_orthologous_groups"]')
             } //TODO: raise error if hmm_internal_list is null
         }
 

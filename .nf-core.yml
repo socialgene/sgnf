@@ -12,4 +12,7 @@ lint:
     - docs/images/nf-core-socialgene_logo_light.png
     - docs/images/nf-core-socialgene_logo_dark.png
     - docs/images/nf-core-autometa_logo.png
+    - conf/test.config
+    - conf/test_full.config
   readme: false
+repository_type: pipeline

@@ -26,4 +26,4 @@ dependencies:
   - numpy # can't install numpy with just pip if using python 3.9
   - wget
   - pip:
-      - -e /home/chase/Documents/socialgene/socialgene # TODO: update when python package is on pypy
+      - /home/chase/Documents/github/kwan_lab/socialgene/sgpy

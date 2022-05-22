@@ -1,11 +1,11 @@
 
 process HMM_HASH {
-    tag("numfiles: ${number_hmm_files}")
+    tag("numfiles: ${hmm_splits}")
     label 'process_medium'
 
     input:
     path antismash_dir
-    val number_hmm_files
+    val hmm_splits
 
     output:
     path 'all_hmms.tsv', emit: all_hmms_tsv
@@ -16,7 +16,7 @@ process HMM_HASH {
     socialgene_clean_hmm \
         --input_dir . \
         --outdir . \
-        --numoutfiles ${number_hmm_files}
+        --numoutfiles ${hmm_splits}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

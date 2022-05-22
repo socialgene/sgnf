@@ -17,15 +17,17 @@
                     "description": "Run 'dev' for fast (Not yet implemented)",
                     "hidden": true
                 },
-                "number_hmm_files": {
-                    "type": "integer",
-                    "default": 1,
-                    "description": "How many hmm files should be created to run in parallel (for large data, start by increasing fasta_splits instead)"
-                },
                 "fasta_splits": {
                     "type": "integer",
                     "default": 1,
-                    "description": "How many FASTA files should be the created non-redundant protein data be split into and then  run in parallel"
+                    "description": "Split non-redundant protein sequences into x-FASTA files",
+                    "help_text": "Use this to run HMMER in parallel/make things faster. Determines how many FASTA files should be the created from all non-redundant protein sequences"
+                },
+                "hmm_splits": {
+                    "type": "integer",
+                    "default": 1,
+                    "description": "For most use cases keep this at 1 and increase fasta_splits instead",
+                    "help_text": "Determines how many hmm files should be created to run in parallel. This is mainly for making smaller files for massively parallel distribution on CHTC"
                 }
             }
         },
@@ -43,6 +45,11 @@
                 "hmms": {
                     "type": "boolean",
                     "description": "Annotate proteins with HMMer?"
+                },
+                "hmmlist": {
+                    "type": "string",
+                    "default": "None",
+                    "description": "\"all\" or some combination of [\"antismash\",\"amrfinder\",\"bigslice\",\"classiphage\",\"pfam\",\"prism\",\"resfams\",\"tigrfam\",\"virus_orthologous_groups\"]"
                 },
                 "blastp": {
                     "type": "boolean",
@@ -62,89 +69,6 @@
                     "description": "Run paired omics pipeline?"
                 }
             }
-        },
-        "input_data_options": {
-            "title": "Input data options",
-            "type": "object",
-            "description": "",
-            "default": "",
-            "properties": {
-                "ncbi_genome_download_command": {
-                    "type": "string",
-                    "default": "--genera \\'Micromonospora sp. B006\\' bacteria",
-                    "description": "Arguments to pass to ncbi_genome_download_command",
-                    "help_text": "See the following link for more info about commands you can use:\nhttps://github.com/kblin/ncbi-genome-download"
-                },
-                "ncbi_datasets_taxon": {
-                    "type": "string",
-                    "default": "None",
-                    "description": "Taxonomic name  (maybe NCBI taxonomy id as well?) see extended help before using",
-                    "help_text": "Note/Warning: \nSpecifying a taxon directly has the potential to download a large number of genomes that you may not be prepared to handle.\nI highly recommend searching here (https://www.ncbi.nlm.nih.gov/genome/browse#!/prokaryotes/) first to get an idea of how many input genomes you can expect.\n\n\nThe input argument you provide will replace the `$args` in the command below:\n\n` datasets download genome taxon \"$args\" --include-gbff --exclude-genomic-cds --exclude-protein --exclude-rna --exclude-seq`\n\nInfo on use of NCBI datasets can be found here: https://www.ncbi.nlm.nih.gov/datasets/docs/v1/reference-docs/command-line/datasets/"
-                },
-                "gbk_input": {
-                    "type": "string",
-                    "default": "None",
-                    "description": "Path to local GenBank file(s), can be a glob",
-                    "help_text": "Accepted files:\ngbff, gbk\ngzipped/TAR versions of those\n"
-                },
-                "paired_omics_json_path": {
-                    "type": "string",
-                    "default": "None",
-                    "description": "Paired omics json file, downloaded from: https://pairedomicsdata.bioinformatics.nl/projects"
-                },
-                "sequence_files_glob": {
-                    "type": "string",
-                    "default": "None",
-                    "description": "Must be set when using `gbk_input`",
-                    "help_text": "This is required to prevent the command from getting super long when processing lots of files. \nIt is required if the `gbk_input` parameter is set.\n\nIt's passed on to Python's glob so any valid Python-glob should work- https://docs.python.org/3/library/glob.html\nIt should match whatever files are specified by the `gbk_input` parameter \ne.g.\n```\ngbk_input                           = '/home/chase/Downloads/some_folder/*.gbff.gz'\nsequence_files_glob         = '*.gbff.gz'\n```\n\n```\ngbk_input                           = '/home/chase/Downloads/my_single_file.gbff.gz'\nsequence_files_glob         = 'my_single_file.gbff.gz'\n```"
-                }
-            }
-        },
-        "input_output_options": {
-            "title": "Input/output options",
-            "type": "object",
-            "fa_icon": "fas fa-terminal",
-            "description": "Define where the pipeline should find input data and save output data.",
-            "properties": {
-                "single_outdir": {
-                    "type": "string",
-                    "description": "If set, and others not, all other outdirs within this directory"
-                },
-                "outdir_per_run": {
-                    "type": "string",
-                    "description": "Directory that holds data generated each run"
-                },
-                "outdir_long_cache": {
-                    "type": "string",
-                    "format": "file-path",
-                    "mimetype": "text/csv",
-                    "schema": "assets/schema_input.json",
-                    "description": "Path to directory where long-term cache data is stored",
-                    "help_text": "You will need to create a design file with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row. See [usage docs](https://nf-co.re/socialgene/usage#samplesheet-input).",
-                    "fa_icon": "fas fa-file-csv"
-                },
-                "outdir_neo4j": {
-                    "type": "string",
-                    "description": "Path to the output directory where the results will be saved.",
-                    "default": "./results",
-                    "fa_icon": "fas fa-folder-open"
-                },
-                "genome_downloads": {
-                    "type": "string",
-                    "default": "socialgene_results/genome_downloads",
-                    "description": "Storage directory for downloaded genomes"
-                },
-                "email": {
-                    "type": "string",
-                    "description": "Email address for completion summary.",
-                    "fa_icon": "fas fa-envelope",
-                    "help_text": "Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the command line for every run.",
-                    "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$"
-                }
-            },
-            "required": [
-                "single_outdir"
-            ]
         },
         "reference_genome_options": {
             "title": "Reference genome options",
@@ -313,11 +237,193 @@
                     "description": "do not use",
                     "hidden": true
                 },
+                "email": {
+                    "type": "string",
+                    "description": "Email address for completion summary.",
+                    "fa_icon": "fas fa-envelope",
+                    "help_text": "Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the command line for every run.",
+                    "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$"
+                },
                 "input": {
                     "type": "string",
                     "default": "not-used-but-needed-by-code",
                     "description": "do not use",
                     "hidden": true
+                }
+            }
+        },
+        "hmmer_options": {
+            "title": "HMMER Options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "HMMSEARCH_Z": {
+                    "type": "integer",
+                    "default": 100000000,
+                    "hidden": true
+                },
+                "HMMSEARCH_IEVALUE": {
+                    "type": "number",
+                    "default": 0.1,
+                    "hidden": true
+                },
+                "HMMSEARCH_E": {
+                    "type": "number",
+                    "default": 10.0,
+                    "hidden": true
+                },
+                "HMMSEARCH_DOME": {
+                    "type": "number",
+                    "default": 10.0,
+                    "hidden": true
+                },
+                "HMMSEARCH_INCE": {
+                    "type": "number",
+                    "default": 0.1,
+                    "hidden": true
+                },
+                "HMMSEARCH_INCDOME": {
+                    "type": "number",
+                    "default": 0.01,
+                    "hidden": true
+                },
+                "HMMSEARCH_SEED": {
+                    "type": "integer",
+                    "default": 42,
+                    "hidden": true
+                },
+                "HMMSEARCH_F1": {
+                    "type": "number",
+                    "default": 0.02,
+                    "hidden": true
+                },
+                "HMMSEARCH_F2": {
+                    "type": "number",
+                    "default": 0.001,
+                    "hidden": true
+                },
+                "HMMSEARCH_F3": {
+                    "type": "number",
+                    "default": 1e-05,
+                    "hidden": true
+                }
+            }
+        },
+        "output_directories": {
+            "title": "Output Directories",
+            "type": "object",
+            "fa_icon": "fas fa-terminal",
+            "description": "Define where the pipeline should find input data and save output data.",
+            "properties": {
+                "single_outdir": {
+                    "type": "string",
+                    "description": "If set, and others not, all other outdirs within this directory",
+                    "fa_icon": "fas fa-folder-open"
+                },
+                "outdir_per_run": {
+                    "type": "string",
+                    "description": "Directory that holds data generated each run",
+                    "fa_icon": "fas fa-folder-open"
+                },
+                "outdir_neo4j": {
+                    "type": "string",
+                    "description": "Path to the output directory where the results will be saved.",
+                    "default": "./results",
+                    "fa_icon": "fas fa-folder-open"
+                },
+                "genome_downloads": {
+                    "type": "string",
+                    "default": "socialgene_results/genome_downloads",
+                    "description": "Storage directory for downloaded genomes",
+                    "fa_icon": "fas fa-folder-open"
+                },
+                "outdir_blast_cache": {
+                    "type": "string",
+                    "default": "socialgene_results/socialgene_per_run/blastp_cache",
+                    "fa_icon": "fas fa-folder-open"
+                },
+                "outdir_download_cache": {
+                    "type": "string",
+                    "default": "/home/chase/Documents/socialgene_data/download_cache"
+                }
+            },
+            "required": [
+                "single_outdir"
+            ]
+        },
+        "big_data_mode": {
+            "title": "BIG data mode",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "refseq_nr_protein_fasta_dir": {
+                    "type": "string",
+                    "default": "None",
+                    "fa_icon": "fas fa-folder-open"
+                },
+                "refseq_nr_protein_fasta_glob": {
+                    "type": "string",
+                    "default": "**/complete.nonredundant_protein*.protein.faa.gz"
+                },
+                "feature_table_dir": {
+                    "type": "string",
+                    "default": "None",
+                    "fa_icon": "fas fa-folder-open"
+                },
+                "feature_table_glob": {
+                    "type": "string",
+                    "default": "**/*_feature_table.txt.gz"
+                },
+                "crabhash_path": {
+                    "type": "string",
+                    "default": "None"
+                },
+                "outdir_refseq_cache": {
+                    "type": "string",
+                    "default": "/home/chase/Documents/socialgene_data/refseq_cache"
+                }
+            }
+        },
+        "input_data_options": {
+            "title": "Input data options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "ncbi_genome_download_command": {
+                    "type": "string",
+                    "default": "--genera \\'Micromonospora sp. B006\\' bacteria",
+                    "description": "Arguments to pass to ncbi_genome_download_command",
+                    "help_text": "See the following link for more info about commands you can use:\nhttps://github.com/kblin/ncbi-genome-download"
+                },
+                "ncbi_datasets_taxon": {
+                    "type": "string",
+                    "default": "None",
+                    "description": "Taxonomic name  (maybe NCBI taxonomy id as well?) see extended help before using",
+                    "help_text": "Note/Warning: \nSpecifying a taxon directly has the potential to download a large number of genomes that you may not be prepared to handle.\nI highly recommend searching here (https://www.ncbi.nlm.nih.gov/genome/browse#!/prokaryotes/) first to get an idea of how many input genomes you can expect.\n\n\nThe input argument you provide will replace the `$args` in the command below:\n\n` datasets download genome taxon \"$args\" --include-gbff --exclude-genomic-cds --exclude-protein --exclude-rna --exclude-seq`\n\nInfo on use of NCBI datasets can be found here: https://www.ncbi.nlm.nih.gov/datasets/docs/v1/reference-docs/command-line/datasets/"
+                },
+                "gbk_input": {
+                    "type": "string",
+                    "default": "None",
+                    "description": "Path to local GenBank file(s), can be a glob",
+                    "help_text": "Accepted files:\ngbff, gbk\ngzipped/TAR versions of those\n"
+                },
+                "paired_omics_json_path": {
+                    "type": "string",
+                    "default": "None",
+                    "description": "Paired omics json file, downloaded from: https://pairedomicsdata.bioinformatics.nl/projects"
+                },
+                "sequence_files_glob": {
+                    "type": "string",
+                    "default": "None",
+                    "description": "Must be set when using `gbk_input`",
+                    "help_text": "This is required to prevent the command from getting super long when processing lots of files. \nIt is required if the `gbk_input` parameter is set.\n\nIt's passed on to Python's glob so any valid Python-glob should work- https://docs.python.org/3/library/glob.html\nIt should match whatever files are specified by the `gbk_input` parameter \ne.g.\n```\ngbk_input                           = '/home/chase/Downloads/some_folder/*.gbff.gz'\nsequence_files_glob         = '*.gbff.gz'\n```\n\n```\ngbk_input                           = '/home/chase/Downloads/my_single_file.gbff.gz'\nsequence_files_glob         = 'my_single_file.gbff.gz'\n```"
+                },
+                "custom_hmm_file": {
+                    "type": "string",
+                    "default": "None"
                 }
             }
         }
@@ -330,12 +436,6 @@
             "$ref": "#/definitions/socialgene_modules"
         },
         {
-            "$ref": "#/definitions/input_data_options"
-        },
-        {
-            "$ref": "#/definitions/input_output_options"
-        },
-        {
             "$ref": "#/definitions/reference_genome_options"
         },
         {
@@ -346,6 +446,19 @@
         },
         {
             "$ref": "#/definitions/generic_options"
+        },
+        {
+            "$ref": "#/definitions/hmmer_options"
+        },
+        {
+            "$ref": "#/definitions/output_directories"
+        },
+        {
+            "$ref": "#/definitions/big_data_mode"
+        },
+        {
+            "$ref": "#/definitions/input_data_options"
         }
-    ]
+    ],
+    "properties": {}
 }

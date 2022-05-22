@@ -2,10 +2,6 @@
 process ASSEMBLY_ACCESSION {
     label 'process_low'
 
-//     publishDir "${params.neo4j_top_dir}/import/protein_info/locus_to_protein", mode: 'move', overwrite: true
-
-
-
     output:
     path "*.assemblies", emit: assemblies
 

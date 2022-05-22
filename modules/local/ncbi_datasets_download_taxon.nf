@@ -3,6 +3,11 @@ process NCBI_DATASETS_DOWNLOAD_TAXON {
     // https://www.ncbi.nlm.nih.gov/datasets/docs/v1/
     label 'process_low'
 
+    conda (params.enable_conda ? "bioconda::ncbi-datasets-cli=12.20.1" : null)
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/ncbi-datasets-cli:12.20.1' :
+        'quay.io/biocontainers/ncbi-datasets-cli:12.20.1' }"
+
     output:
     path "ncbi_dataset/data/assembly_data_report.jsonl" , emit: assembly_data_report
     path "ncbi_dataset/data/dataset_catalog.json"       , emit: dataset_catalog

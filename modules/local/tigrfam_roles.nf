@@ -2,9 +2,6 @@
 process TIGRFAM_ROLES {
     label 'process_low'
 
-
-
-
     output:
     path "*.tigrfamrole_to_mainrole", emit: tigrfamrole_to_mainrole
     path "*.tigrfamrole_to_subrole", emit: tigrfamrole_to_subrole
@@ -12,11 +9,8 @@ process TIGRFAM_ROLES {
     path "*.tigrfam_subrole", emit: tigrfam_subrole
     path "*.tigrfam_role", emit: tigrfam_role
 
-
     script:
     """
-
-
     wget "https://ftp.ncbi.nlm.nih.gov/hmm/TIGRFAMs/release_15.0/TIGR_ROLE_NAMES"
 
     awk -F"\t" 'BEGIN{OFS="\t";} \$3 == "mainrole:" {print \$2,\$4}' TIGR_ROLE_NAMES > tigrfamrole_to_mainrole.tsv
@@ -30,7 +24,5 @@ process TIGRFAM_ROLES {
     md5_as_filename.sh "mainrole.tsv" "tigrfam_mainrole"
     md5_as_filename.sh "subrole.tsv" "tigrfam_subrole"
     md5_as_filename.sh "role.tsv" "tigrfam_role"
-
-
     """
 }

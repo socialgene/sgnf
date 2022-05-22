@@ -1,7 +1,7 @@
 process DIAMOND_BLASTP {
     label 'process_high'
 
-    conda (params.enable_conda ? "bioconda::diamond==2.0.14--hdcc8f71_0" : null)
+    conda (params.enable_conda ? "bioconda::diamond==2.0.14" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/diamond:2.0.14--hdcc8f71_0' :
         'quay.io/biocontainers/diamond:2.0.14--hdcc8f71_0' }"

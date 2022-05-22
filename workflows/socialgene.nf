@@ -48,7 +48,7 @@ include { PROTEIN_HASH                      } from '../modules/local/protein_has
 include { PROTEIN_FASTA_DOWNLOAD            } from '../modules/local/protein_fasta_download.nf'
 include { PYHMMER                           } from '../modules/local/pyhmmer.nf'
 include { REFSEQ_ASSEMBLY_TO_TAXID          } from '../modules/local/refseq_assembly_to_taxid.nf'
-include { SEQKIT_SPLIT                      } from '../modules/local/seqkit_split.nf'
+include { SEQKIT_SPLIT                      } from '../modules/local/seqkit/split/main.nf'
 
 include { NCBI_DATASETS_DOWNLOAD_TAXON      } from "../modules/local/ncbi_datasets_download_taxon.nf"
 

@@ -43,7 +43,7 @@ include { PROTEIN_FASTA_DOWNLOAD            } from '../modules/local/protein_fas
 include { PROTHASH_SQLITE                   } from '../modules/local/prothash_sqlite.nf'
 include { PYHMMER                           } from '../modules/local/pyhmmer.nf'
 include { REFSEQ_ASSEMBLY_TO_TAXID          } from '../modules/local/refseq_assembly_to_taxid.nf'
-include { SEQKIT_SPLIT                      } from '../modules/local/seqkit_split.nf'
+include { SEQKIT_SPLIT                      } from '../modules/local/seqkit/split/main.nf'
 
 /*
 ========================================================================================

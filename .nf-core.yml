@@ -18,5 +18,6 @@ lint:
     - docs/images/nf-core-autometa_logo.png
     - conf/test.config
     - conf/test_full.config
+    - assets/multiqc_config.yml
   readme: false
 repository_type: pipeline

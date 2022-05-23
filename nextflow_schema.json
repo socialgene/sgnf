@@ -261,52 +261,62 @@
                 "HMMSEARCH_Z": {
                     "type": "integer",
                     "default": 100000000,
-                    "hidden": true
+                    "hidden": true,
+                    "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf"
                 },
                 "HMMSEARCH_IEVALUE": {
                     "type": "number",
                     "default": 0.1,
-                    "hidden": true
+                    "hidden": true,
+                    "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf"
                 },
                 "HMMSEARCH_E": {
                     "type": "number",
                     "default": 10.0,
-                    "hidden": true
+                    "hidden": true,
+                    "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf"
                 },
                 "HMMSEARCH_DOME": {
                     "type": "number",
                     "default": 10.0,
-                    "hidden": true
+                    "hidden": true,
+                    "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf"
                 },
                 "HMMSEARCH_INCE": {
                     "type": "number",
                     "default": 0.1,
-                    "hidden": true
+                    "hidden": true,
+                    "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf"
                 },
                 "HMMSEARCH_INCDOME": {
                     "type": "number",
                     "default": 0.01,
-                    "hidden": true
+                    "hidden": true,
+                    "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf"
                 },
                 "HMMSEARCH_SEED": {
                     "type": "integer",
                     "default": 42,
-                    "hidden": true
+                    "hidden": true,
+                    "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf"
                 },
                 "HMMSEARCH_F1": {
                     "type": "number",
                     "default": 0.02,
-                    "hidden": true
+                    "hidden": true,
+                    "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf"
                 },
                 "HMMSEARCH_F2": {
                     "type": "number",
                     "default": 0.001,
-                    "hidden": true
+                    "hidden": true,
+                    "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf"
                 },
                 "HMMSEARCH_F3": {
                     "type": "number",
                     "default": 1e-05,
-                    "hidden": true
+                    "hidden": true,
+                    "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf"
                 }
             }
         },
@@ -341,11 +351,13 @@
                 "outdir_blast_cache": {
                     "type": "string",
                     "default": "socialgene_results/socialgene_per_run/blastp_cache",
-                    "fa_icon": "fas fa-folder-open"
+                    "fa_icon": "fas fa-folder-open",
+                    "description": "Cache folder where blast results are written to. Important to delete if starting a new pipeline run with different input data but using same cache directory as a previous run."
                 },
                 "outdir_download_cache": {
                     "type": "string",
-                    "default": "/home/chase/Documents/socialgene_data/download_cache"
+                    "default": "/home/chase/Documents/socialgene_data/download_cache",
+                    "description": "Long term caching directory for downloaded items (e.g. HMM databases, NCBI taxonomy info, etc). For use between different pipeline runs, even with different input data."
                 }
             },
             "required": [
@@ -361,28 +373,34 @@
                 "refseq_nr_protein_fasta_dir": {
                     "type": "string",
                     "default": "None",
-                    "fa_icon": "fas fa-folder-open"
+                    "fa_icon": "fas fa-folder-open",
+                    "description": "Directory containing downloaded nr fasta files"
                 },
                 "refseq_nr_protein_fasta_glob": {
                     "type": "string",
-                    "default": "**/complete.nonredundant_protein*.protein.faa.gz"
+                    "default": "**/complete.nonredundant_protein*.protein.faa.gz",
+                    "description": "Glob specifying nr fasta files"
                 },
                 "feature_table_dir": {
                     "type": "string",
                     "default": "None",
-                    "fa_icon": "fas fa-folder-open"
+                    "fa_icon": "fas fa-folder-open",
+                    "description": "Directory containing downloaded genome feature tables"
                 },
                 "feature_table_glob": {
                     "type": "string",
-                    "default": "**/*_feature_table.txt.gz"
+                    "default": "**/*_feature_table.txt.gz",
+                    "description": "Glob specifying genome feature tables"
                 },
                 "crabhash_path": {
                     "type": "string",
-                    "default": "None"
+                    "default": "None",
+                    "description": "Path to crabhash executable"
                 },
                 "outdir_refseq_cache": {
                     "type": "string",
-                    "default": "/home/chase/Documents/socialgene_data/refseq_cache"
+                    "default": "/home/chase/Documents/socialgene_data/refseq_cache",
+                    "description": "crabhash ouptut (will be large for NCBI nr runs)"
                 }
             }
         },
@@ -423,7 +441,8 @@
                 },
                 "custom_hmm_file": {
                     "type": "string",
-                    "default": "None"
+                    "default": "None",
+                    "description": "File path of a custom HMMER hmm file"
                 }
             }
         }
@@ -459,6 +478,5 @@
         {
             "$ref": "#/definitions/input_data_options"
         }
-    ],
-    "properties": {}
+    ]
 }

@@ -36,7 +36,7 @@
     // update it to a higher version. Otherwise subsequent `manifest-pr` runs
     // will continue to use this version even though it was already set in the
     // last release.
-    "release-as": "0.0.0",
+    "release-as": "0.0.1",
     // BREAKING CHANGE only bumps semver minor if version < 1.0.0
     // absence defaults to false
     "bump-minor-pre-major": true,

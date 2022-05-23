@@ -111,7 +111,10 @@
     //                     Defaults to "https://github.com". E.g. for a commit of
     //                     "abc123", it's hyperlink in changelog is
     //                     https://github.com/<org>/<repo>/commit/abc123
-    "extra-files": "packages": {
+    "extra-files": [
+        "nextflow.config"
+    ],
+    "packages": {
         // `.` is a special case for handling to root of the repository
         ".": {
             // overrides release-type for node

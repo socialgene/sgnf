@@ -118,7 +118,7 @@
         // `.` is a special case for handling to root of the repository
         ".": {
             // overrides release-type for node
-            "release-type": "simple",
+            "release-type": "java",
         }
     }
 }

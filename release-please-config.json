@@ -29,7 +29,7 @@
     // optional top-level defaults that can be overridden per package:
     // set default package release-type to "python"
     // absence defaults to "node"
-    "release-type": "java",
+    "release-type": "simple",
     // manually set next version to be "1.2.3" ignoring conventional commits.
     // absence defaults to conventional commits derived next version.
     // Note: once the release PR is merged you should either remove this or
@@ -118,7 +118,7 @@
         // `.` is a special case for handling to root of the repository
         ".": {
             // overrides release-type for node
-            "release-type": "java",
+            "release-type": "simple",
         }
     }
 }

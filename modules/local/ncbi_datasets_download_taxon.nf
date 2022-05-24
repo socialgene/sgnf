@@ -3,7 +3,7 @@ process NCBI_DATASETS_DOWNLOAD_TAXON {
     // https://www.ncbi.nlm.nih.gov/datasets/docs/v1/
     label 'process_low'
 
-    conda (params.enable_conda ? "bioconda::ncbi-datasets-cli=13.21.0" : null)
+    conda (params.enable_conda ? "conda-forge::ncbi-datasets-cli=13.21.0 conda-forge::pigz==2.6" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/ncbi-datasets-cli:13.21.0' :
         'quay.io/biocontainers/ncbi-datasets-cli:13.21.0' }"
@@ -27,7 +27,7 @@ process NCBI_DATASETS_DOWNLOAD_TAXON {
     # remove unused files
     rm ncbi_dataset/data/*/sequence_report.jsonl
 
-    # compress genomes
+    # docker won't work unless create a mulled contianer
     pigz ncbi_dataset/data/*/*.gbff
 
     rename_ncbi_datasets_download_taxon.py

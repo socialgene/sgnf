@@ -37,7 +37,6 @@ include { FEATURE_TABLE_DOWNLOAD            } from '../modules/local/feature_tab
 include { HMMER_HMMSEARCH                   } from '../modules/local/hmmsearch.nf'
 include { HMM_HASH                          } from '../modules/local/hmm_hash.nf'
 include { HMM_TSV_PARSE                     } from '../modules/local/hmm_tsv_parse.nf'
-include { MAKE_BLAST_DB                     } from '../modules/local/make_blast_db.nf'
 include { MMSEQS2                           } from '../modules/local/mmseqs2.nf'
 include { NEO4J_ADMIN_IMPORT                } from '../modules/local/neo4j_admin_import.nf'
 include { NEO4J_HEADERS                     } from '../modules/local/neo4j_headers.nf'

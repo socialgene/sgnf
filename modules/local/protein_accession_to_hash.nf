@@ -4,13 +4,11 @@ process PROTEIN_ACCESSION_TO_HASH {
     label 'process_low'
 
 
+    conda (params.enable_conda ? "bioconda::sqlite==3" : null)
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/sqlite:3' :
+        'quay.io/biocontainers/sqlite:3' }"
 
-    conda (params.enable_conda ? "socialgene" : null)
-    if (workflow.containerEngine == 'singularity' && !params.singularity_pull_docker_container) {
-        container ""
-    } else {
-        container "socialgene"
-    }
 
     input:
     path protein_info_tsv

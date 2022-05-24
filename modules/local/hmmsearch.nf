@@ -1,6 +1,3 @@
-
-
-
 process HMMER_HMMSEARCH {
 
     input:

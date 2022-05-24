@@ -1,6 +1,11 @@
 process MMSEQS2 {
     label 'process_high'
 
+    conda (params.enable_conda ? "bioconda::mmseqs2" : null)
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/mmseqs2:13.45111--h95f258a_1' :
+        'quay.io/biocontainers/mmseqs2:13.45111--h95f258a_1' }"
+
     input:
     path(fasta)
 

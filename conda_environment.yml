@@ -17,7 +17,7 @@ dependencies:
   - conda-forge::sqlite=3.36.0
   - conda-forge::pigz=2.6
   - bioconda::seqkit=0.16.1
-  - conda-forge::ncbi-datasets-cli= 12.32.0
+  - conda-forge::ncbi-datasets-cli=13.21.0
   - bioconda::diamond=2.0.9
   - pip
   - rsync # needed for nextflow

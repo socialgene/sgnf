@@ -6,11 +6,6 @@ process HMMER_HMMSEARCH {
     input:
     tuple path(hmm), path(fasta)
 
-    conda (params.enable_conda ? "bioconda::hmmer=3.3.2" : null)
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/hmmer:3.3.2--h1b792b2_1' :
-        'quay.io/biocontainers/hmmer:3.3.2--h1b792b2_1' }"
-
 
     output:
     path "*.parseddomtblout", emit: parseddomtblout, optional:true //optional in case no domains found
@@ -23,7 +18,7 @@ process HMMER_HMMSEARCH {
     """
     hmmsearch \\
         --domtblout "${fasta}.domtblout" \\
-        -Z $ZVALUE \\
+        -Z 57096847 \\
         -E 100 \\
         --cpu $task.cpus \\
         --seed 42 \\

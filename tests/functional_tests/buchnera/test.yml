@@ -1,0 +1,2 @@
+- name: amrfinderplus run test_amrfinderplus_run
+  command: nextflow run . -profile buchnera,conda

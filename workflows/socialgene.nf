@@ -203,7 +203,7 @@ workflow DB_CREATOR {
         DOWNLOAD_AND_GATHER()
         HMM_HASH(
             DOWNLOAD_AND_GATHER.out.hmms,
-            1
+            params.hmm_splits
         )
 
         // make a channel that's the cartesian product of hmm model files and fasta files

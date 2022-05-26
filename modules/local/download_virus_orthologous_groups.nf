@@ -1,5 +1,5 @@
 
-process DOWNLOAD_VIRUS_OTHOLOGOUS_GROUPS {
+process DOWNLOAD_VIRUS_ORTHOLOGOUS_GROUPS {
     label 'process_low'
 
     output:

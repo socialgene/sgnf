@@ -4,7 +4,7 @@ process HMM_HASH {
     label 'process_medium'
 
     input:
-    path antismash_dir
+    path hmm_directory
     val hmm_splits
 
     output:

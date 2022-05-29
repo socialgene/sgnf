@@ -31,7 +31,7 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 ========================================================================================
 */
 
-
+include { ANTISMASH                         } from '../modules/local/antismash/main.nf'
 include { ASSEMBLY_FTP_URLS                 } from '../modules/local/assembly_ftp_urls.nf'
 include { FEATURE_TABLE_DOWNLOAD            } from '../modules/local/feature_table_download.nf'
 include { HMMER_HMMSEARCH                   } from '../modules/local/hmmsearch.nf'
@@ -232,7 +232,13 @@ workflow DB_CREATOR {
 
 
     if (params.builddb) {
-        NEO4J_ADMIN_IMPORT(NEO4J_HEADERS.out.headers, hmmer_result_ch, blast_ch, mmseqs2_ch, sg_modules)
+        NEO4J_ADMIN_IMPORT(
+        params.outdir_neo4j,
+        NEO4J_HEADERS.out.headers,
+        hmmer_result_ch,
+        blast_ch,
+        mmseqs2_ch,
+        sg_modules)
     }
 
 

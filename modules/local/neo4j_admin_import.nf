@@ -3,6 +3,7 @@ process NEO4J_ADMIN_IMPORT {
     label 'process_high'
 
     input:
+    path outdir_neo4j
     val w
     path "?"
     path blast
@@ -14,18 +15,18 @@ process NEO4J_ADMIN_IMPORT {
 
     script:
     """
-    touch "${params.outdir_neo4j}/import.report"
-    mkdir "${params.outdir_neo4j}/data"
-    mkdir "${params.outdir_neo4j}/plugins"
-    mkdir "${params.outdir_neo4j}/logs"
+    touch "${outdir_neo4j}/import.report"
+    mkdir "${outdir_neo4j}/data"
+    mkdir "${outdir_neo4j}/plugins"
+    mkdir "${outdir_neo4j}/logs"
     wget https://github.com/neo4j/graph-data-science/releases/download/2.0.3/neo4j-graph-data-science-2.0.3.zip
 
-    unzip neo4j-graph-data-science-2.0.3.zip -d "${params.outdir_neo4j}/plugins"
+    unzip neo4j-graph-data-science-2.0.3.zip -d "${outdir_neo4j}/plugins"
 
     rm -f neo4j-graph-data-science-2.0.3.zip
 
     socialgene_create_neo4j_db \\
-    --neo4j_top_dir "${params.outdir_neo4j}" \\
+    --neo4j_top_dir "${outdir_neo4j}" \\
     --cpus ${task.cpus} \\
     --additional_args "" \\
     --uid None \\

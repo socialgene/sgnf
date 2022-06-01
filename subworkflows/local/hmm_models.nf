@@ -16,7 +16,7 @@ include { DOWNLOAD_PFAM                    } from "./../../modules/local/downloa
 include { DOWNLOAD_PRISM                   } from "./../../modules/local/download_prism.nf"
 include { DOWNLOAD_RESFAMS                 } from "./../../modules/local/download_resfams.nf"
 include { DOWNLOAD_TIGRFAM                 } from "./../../modules/local/download_tigrfam.nf"
-include { DOWNLOAD_VIRUS_OTHOLOGOUS_GROUPS } from "./../../modules/local/download_virus_orthologous_groups.nf"
+include { DOWNLOAD_VIRUS_ORTHOLOGOUS_GROUPS } from "./../../modules/local/download_virus_orthologous_groups.nf"
 
 
 workflow HMM_MODELS {
@@ -86,8 +86,8 @@ workflow HMM_MODELS {
 
         }
         if (hmm_internal_list.contains("virus_orthologous_groups")) {
-            DOWNLOAD_VIRUS_OTHOLOGOUS_GROUPS()
-            DOWNLOAD_VIRUS_OTHOLOGOUS_GROUPS.out.set{virus_orthologous_groups_outchannel}
+            DOWNLOAD_VIRUS_ORTHOLOGOUS_GROUPS()
+            DOWNLOAD_VIRUS_ORTHOLOGOUS_GROUPS.out.set{virus_orthologous_groups_outchannel}
 
         }
         if (params.custom_hmm_file) {

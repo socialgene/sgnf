@@ -10,7 +10,7 @@ process PARAMETER_EXPORT_FOR_NEO4J {
     """
     socialgene_export_parameters \\
         --outpath "socialgene.parameters" \\
-        --genome_download_command "\${genome_download_command@Q}"
+        --genome_download_command 'TODO:\${genome_download_command@Q}'
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

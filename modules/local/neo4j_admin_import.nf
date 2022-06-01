@@ -2,6 +2,8 @@ process NEO4J_ADMIN_IMPORT {
     tag 'Building Neo4j database'
     label 'process_high'
 
+    stageInMode = 'rellink'
+
     input:
     path outdir_neo4j
     val w
@@ -26,7 +28,7 @@ process NEO4J_ADMIN_IMPORT {
     rm -f neo4j-graph-data-science-2.0.3.zip
 
     socialgene_create_neo4j_db \\
-    --neo4j_top_dir "${outdir_neo4j}" \\
+    --neo4j_top_dir \${PWD}/${outdir_neo4j} \\
     --cpus ${task.cpus} \\
     --additional_args "" \\
     --uid None \\

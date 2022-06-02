@@ -12,6 +12,7 @@ process HMMER_HMMSEARCH {
     task.ext.when == null || task.ext.when
 
     script:
+    def args = task.ext.args ?: ''
     """
     hmmsearch \\
         --domtblout "${fasta}.domtblout" \\
@@ -19,6 +20,7 @@ process HMMER_HMMSEARCH {
         -E 100 \\
         --cpu $task.cpus \\
         --seed 42 \\
+        $args \\
         "${hmm}" \\
         "${fasta}" > /dev/null 2>&1
 

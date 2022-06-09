@@ -129,7 +129,7 @@ workflow DB_CREATOR {
 
 
     // TODO: allow not having taxid
-    REFSEQ_ASSEMBLY_TO_TAXID()
+   // REFSEQ_ASSEMBLY_TO_TAXID()
 
     PROCESS_GENBANK_FILES(
         gb_files,

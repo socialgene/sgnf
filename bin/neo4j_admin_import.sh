@@ -49,7 +49,7 @@ docker run --interactive --rm \
                 --relationships=MAINROLE_ANN=import/neo4j_headers/tigrfamrole_to_mainrole.header,import/tigrfam_info/.*\.tigrfamrole_to_mainrole \
                 --relationships=SUBROLE_ANN=import/neo4j_headers/tigrfamrole_to_subrole.header,import/tigrfam_info/.*\.tigrfamrole_to_subrole \
                 --relationships=BELONGS_TO=import/neo4j_headers/taxid_to_taxid.header,import/taxdump_process/taxid_to_taxid.tsv \
-                --relationships=TAXONOMY=import/neo4j_headers/assembly_to_taxid.header,import/refseq_assembly_to_taxid/.*\.assembly_to_taxid \
+                --relationships=TAXONOMY=import/neo4j_headers/assembly_to_taxid.header,import/process_genbank/.*\.assembly_to_taxid \
 
                 ${EXTRA_ARGS} \
                 --delimiter="\t" \

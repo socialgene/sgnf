@@ -15,7 +15,7 @@ docker run --interactive --rm \
     --volume="${1}/plugins:/var/lib/neo4j/plugins" \
     --volume="${1}/import.report:/var/lib/neo4j/import.report" \
     --user=$(id -u):$(id -g) \
-        neo4j:4.3.7 \
+        neo4j:4.4.7 \
             neo4j-admin import \
             --nodes=assembly=import/neo4j_headers/assembly.header,import/process_genbank/.*\.assemblies \
                 --nodes=nucleotide=import/neo4j_headers/locus.header,import/process_genbank/.*\.loci \

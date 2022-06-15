@@ -16,7 +16,7 @@ process CRABHASH {
         "$args" \\
         '.' \\
         ${task.cpus}
-    # TODO: figure out how to get resut exe to work here in ?docker?
+    # TODO: figure out how to get result exe to work here in ?docker?
 
     mkdir hashid_accession_tsv
     mv *.tsv ./hashid_accession_tsv

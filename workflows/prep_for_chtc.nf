@@ -43,7 +43,6 @@ include { NEO4J_HEADERS                     } from '../modules/local/neo4j_heade
 include { PAIRED_OMICS                      } from '../modules/local/paired_omics.nf'
 include { PARAMETER_EXPORT_FOR_NEO4J        } from '../modules/local/parameter_export_for_neo4j.nf'
 include { PROCESS_GENBANK_FILES             } from '../modules/local/process_genbank_files.nf'
-include { PROTEIN_HASH                      } from '../modules/local/protein_hash.nf'
 include { PROTEIN_FASTA_DOWNLOAD            } from '../modules/local/protein_fasta_download.nf'
 include { PYHMMER                           } from '../modules/local/pyhmmer.nf'
 include { REFSEQ_ASSEMBLY_TO_TAXID          } from '../modules/local/refseq_assembly_to_taxid.nf'

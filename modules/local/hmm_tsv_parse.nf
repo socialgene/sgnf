@@ -6,8 +6,8 @@ process HMM_TSV_PARSE {
     path x
 
     output:
-    path "*.sg_hmm_nodes_out"  , emit: sg_hmm_nodes_out
-    path "*_hmms_out"         , emit: hmms_out
+    path "*.sg_hmm_nodes_out.gz"  , emit: sg_hmm_nodes_out
+    path "*_hmms_out.gz"          , emit: hmms_out
 
     script:
     """
@@ -15,10 +15,12 @@ process HMM_TSV_PARSE {
     socialgene_hmm_tsv_parser --all_hmms ${x}
 
     # Info about HMM nodes
-    md5_as_filename.sh "sg_hmm_nodes_out" "sg_hmm_nodes_out"
+    md5_as_filename_after_gzip.sh "sg_hmm_nodes_out" "sg_hmm_nodes_out.gz"
 
     # Info about hmm from source database(s)
-    ls | grep .hmms_out | while read -r line ; do md5_as_filename.sh "\$line" "\$line"; done
+    ls |\\
+        zgrep .hmms_out |\\
+        while read -r line ; do md5_as_filename_after_gzip.sh "\$line" "\$line".gz; done
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

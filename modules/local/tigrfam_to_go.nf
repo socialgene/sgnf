@@ -6,16 +6,18 @@ process TIGRFAM_TO_GO {
     path x
 
     output:
-    path "*.tigrfam_to_go", emit: tigrfam_to_go
-    path "*.goterm", emit: goterm
+    path "*.tigrfam_to_go.gz", emit: tigrfam_to_go
+    path "*.goterm.gz", emit: goterm
 
     script:
     """
-    cat $x | \\
+    zcat $x |\\
     awk -F"\t" 'BEGIN{OFS="\t";} {print \$1,\$2}' > tigrfam_to_go.tsv
-    awk -F"\t" 'BEGIN{OFS="\t";} {print \$2}' TIGRFAMS_GO_LINK | sort | uniq > go.tsv
 
-    md5_as_filename.sh "tigrfam_to_go.tsv" "tigrfam_to_go"
-    md5_as_filename.sh "go.tsv" "goterm"
+    zcat $x |\\
+    awk -F"\t" 'BEGIN{OFS="\t";} {print \$2}' | sort | uniq > go.tsv
+
+    md5_as_filename_after_gzip.sh "tigrfam_to_go.tsv" "tigrfam_to_go.gz"
+    md5_as_filename_after_gzip.sh "go.tsv" "goterm.gz"
     """
 }

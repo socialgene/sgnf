@@ -10,7 +10,7 @@ process LOCUS {
     path x
 
     output:
-    path "*.locus", emit: locus
+    path "*.locus.gz", emit: locus
 
 
     script:
@@ -21,6 +21,6 @@ process LOCUS {
     awk -F"\\t" 'BEGIN{OFS="\\t";} \$2 == "with_protein" {print \$7}' |\
     uniq > locus.tsv
 
-    md5_as_filename.sh "locus.tsv" "locus"
+    md5_as_filename_after_gzip.sh "locus.tsv" "locus"
     """
 }

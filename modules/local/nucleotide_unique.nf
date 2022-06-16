@@ -9,7 +9,7 @@ process NUCLEOTIDE_UNIQUE {
     path x
 
     output:
-    path "*.nucleotide_accessions", emit: nucleotide_accessions
+    path "*.nucleotide_accessions.gz", emit: nucleotide_accessions
 
 
     script:
@@ -18,7 +18,7 @@ process NUCLEOTIDE_UNIQUE {
 
     uniq $x | sort > nucleotide_accessions.tsv
 
-    md5_as_filename.sh \\
+    md5_as_filename_after_gzip.sh \\
         "nucleotide_accessions.tsv" \\
         "nucleotide_accessions"
     """

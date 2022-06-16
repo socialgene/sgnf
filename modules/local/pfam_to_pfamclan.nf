@@ -2,25 +2,20 @@
 process PFAM_TO_PFAMCLAN {
     label 'process_low'
 
-
-
-
     input:
     path x
 
     output:
-    path "*.pfam_to_pfamclan", emit: pfam_to_pfamclan
-
+    path "*.pfam_to_pfamclan.gz", emit: pfam_to_pfamclan
 
     script:
     """
-
 
     # get first, second column and remove rows without a clan
     zcat $x |\
         awk -F"\t" 'BEGIN{OFS="\t";} {print \$1,\$2}' |\
             awk -F"\t" 'BEGIN{OFS="\t";} \$2!=""' > pfam_to_pfamclan.tsv
-    md5_as_filename.sh "pfam_to_pfamclan.tsv" "pfam_to_pfamclan"
+    md5_as_filename_after_gzip.sh "pfam_to_pfamclan.tsv" "pfam_to_pfamclan"
 
     zcat $x |\
         awk -F"\t" 'BEGIN{OFS="\t";} {print \$2}' |\
@@ -28,6 +23,6 @@ process PFAM_TO_PFAMCLAN {
             sort |\
             uniq > pfamclan.tsv
 
-    md5_as_filename.sh "pfamclan.tsv" "pfamclan"
+    md5_as_filename_after_gzip.sh "pfamclan.tsv" "pfamclan"
     """
 }

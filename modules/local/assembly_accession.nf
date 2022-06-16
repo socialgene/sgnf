@@ -3,7 +3,7 @@ process ASSEMBLY_ACCESSION {
     label 'process_low'
 
     output:
-    path "*.assemblies", emit: assemblies
+    path "*.assemblies.gz", emit: assemblies
 
 
     script:
@@ -16,6 +16,6 @@ process ASSEMBLY_ACCESSION {
     cat assembly_summary_refseq.txt | \\
     awk '{FS="\\t"} !/^#/ {print \$1}' > assemblies.tsv
 
-    md5_as_filename.sh "assemblies.tsv" "assemblies"
+    md5_as_filename_after_gzip.sh "assemblies.tsv" "assemblies"
     """
 }

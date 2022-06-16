@@ -13,7 +13,7 @@ process NEO4J_ADMIN_IMPORT {
     val sg_modules
 
     output:
-    val 1, emit: placeholder
+    path "${outdir_neo4j}/import.report", emit: placeholder
 
     script:
     """

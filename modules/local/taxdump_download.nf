@@ -1,9 +1,6 @@
 process TAXDUMP_DOWNLOAD {
     label 'process_low'
 
-
-
-
     output:
     path 'taxdump.tar.gz'    , emit: taxdump
 

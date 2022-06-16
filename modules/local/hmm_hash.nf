@@ -18,6 +18,8 @@ process HMM_HASH {
         --outdir . \
         --numoutfiles ${hmm_splits}
 
+    pigz -3 --rsyncable socialgene_nr_hmms_file*
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         socialgene: \$(socialgene_version)

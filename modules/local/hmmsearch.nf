@@ -5,7 +5,7 @@ process HMMER_HMMSEARCH {
 
 
     output:
-    path "*.parseddomtblout", emit: parseddomtblout, optional:true //optional in case no domains found
+    path "*.parseddomtblout.gz", emit: parseddomtblout, optional:true //optional in case no domains found
     path "versions.yml" , emit: versions
 
     when:
@@ -14,6 +14,10 @@ process HMMER_HMMSEARCH {
     script:
     def args = task.ext.args ?: ''
     """
+    # hmmsearch can'ts use or pipe in gzipped fasta
+
+    zcat "${fasta}" > temp.fa
+
     hmmsearch \\
         --domtblout "${fasta}.domtblout" \\
         -Z 57096847 \\
@@ -22,14 +26,17 @@ process HMMER_HMMSEARCH {
         --seed 42 \\
         $args \\
         "${hmm}" \\
-        "${fasta}" > /dev/null 2>&1
+        temp.fa > /dev/null 2>&1
+
+    rm temp.fa
 
     socialgene_process_domtblout \\
         --domtblout_file "${fasta}.domtblout" \\
         --outpath "parseddomtblout"
 
     rm "${fasta}.domtblout"
-    md5_as_filename.sh "parseddomtblout" "parseddomtblout"
+
+    md5_as_filename_after_gzip.sh "parseddomtblout" "parseddomtblout.gz"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -8,7 +8,7 @@ process SPLIT_HMMS {
     tuple path(hmm), path(fasta)
 
     output:
-    path "*.domtblout", emit: hmmer_out
+    path "*.domtblout.gz", emit: hmmer_out
 
     script:
     """
@@ -21,7 +21,7 @@ process SPLIT_HMMS {
         --input_hmms ${hmm} \\
         --outpath "domtblout"
 
-    md5_as_filename.sh "domtblout" "domtblout"
+    md5_as_filename_after_gzip.sh "domtblout" "domtblout"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -48,8 +48,6 @@ include { PYHMMER                           } from '../modules/local/pyhmmer.nf'
 include { REFSEQ_ASSEMBLY_TO_TAXID          } from '../modules/local/refseq_assembly_to_taxid.nf'
 include { SEQKIT_SPLIT                      } from '../modules/local/seqkit/split/main.nf'
 
-include { NCBI_DATASETS_DOWNLOAD_TAXON      } from "../modules/local/ncbi_datasets_download_taxon.nf"
-
 /*
 ========================================================================================
     IMPORT LOCAL SUBWORKFLOWS
@@ -57,10 +55,10 @@ include { NCBI_DATASETS_DOWNLOAD_TAXON      } from "../modules/local/ncbi_datase
 */
 
 
-include { DOWNLOAD_AND_GATHER       } from "../subworkflows/local/download_and_gather.nf"
-//include { PARSE_FEATURE_TABLES      } from '../subworkflows/local/feature_table_parse.nf'
-include { LOCAL                      } from '../subworkflows/local/inputs.nf'
-include { NCBI                      } from '../subworkflows/local/inputs.nf'
+include { DOWNLOAD_AND_GATHER } from "../subworkflows/local/download_and_gather.nf"
+include { LOCAL               } from '../subworkflows/local/inputs.nf'
+include { NCBI                } from '../subworkflows/local/inputs.nf'
+include { HMM_MODELS          } from '../subworkflows/local/hmm_models.nf'
 
 
 
@@ -87,9 +85,8 @@ include { DIAMOND_MAKEDB      } from '../modules/local/diamond/makedb/main.nf'
 ========================================================================================
 */
 
-workflow DB_CREATOR {
+workflow CHTC_PREP {
 
-    sg_modules = "base"
     PARAMETER_EXPORT_FOR_NEO4J()
 
     if (params.ncbi_genome_download_command){
@@ -105,6 +102,7 @@ workflow DB_CREATOR {
     } else {
         sequence_files_glob = "*.gbff.gz"
     }
+
     PROCESS_GENBANK_FILES(
         gb_files,
         params.fasta_splits,
@@ -118,20 +116,18 @@ workflow DB_CREATOR {
     ch_fasta
         .set{single_ch_fasta}
 
-    if (params.hmms){
+    HMM_MODELS()
 
-        DOWNLOAD_AND_GATHER()
-        HMM_HASH(
-            DOWNLOAD_AND_GATHER.out.hmms,
-            params.hmm_splits
-        )
+    HMM_HASH(
+        HMM_MODELS.out.hmms,
+        params.hmm_splits
+    )
 
-        HMM_TSV_PARSE(
-            HMM_HASH.out.all_hmms_tsv
-        )
+    HMM_TSV_PARSE(
+        HMM_HASH.out.all_hmms_tsv
+    )
 
-        sg_modules = sg_modules + " hmms"
-    }
+
 
 
 }

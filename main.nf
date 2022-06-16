@@ -35,6 +35,7 @@ nextflow.enable.dsl = 2
 
 include { DB_CREATOR } from './workflows/socialgene'
 include { REFSEQ } from './workflows/socialgene_refseq'
+include { CHTC_PREP } from './workflows/chtc_prep'
 
 //
 // WORKFLOW: Run main nf-core/socialgene analysis pipeline
@@ -42,6 +43,8 @@ include { REFSEQ } from './workflows/socialgene_refseq'
 workflow SOCIALGENE {
     if (params.refseq_nr_protein_fasta_dir){
         REFSEQ()
+    } else if (params.chtc_prep_only) {
+        CHTC_PREP()
     } else {
         DB_CREATOR()
     }

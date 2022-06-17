@@ -1,29 +1,34 @@
 process CRABHASH {
     label 'process_high'
+    stageInMode 'copy'
 
     input:
     path x
     path crabhash_path
-
+    val glob
+    
     output:
-    path "hashid_fasta/*.fasta", emit: fasta
-    path "hashid_accession_tsv", emit: tsv
+    path "out/*.faa.gz"          , emit: fasta
+    path "out/*.protein_info.gz" , emit: tsv
 
     script:
     def args = task.ext.args ?: ''
     """
+    RUST_BACKTRACE=1
+    mkdir out
     ${crabhash_path}/crabhash \\
-        "$args" \\
-        '.' \\
+        \${PWD}/'${glob}' \\
+        'out' \\
         ${task.cpus}
-    # TODO: figure out how to get result exe to work here in ?docker?
 
-    mkdir hashid_accession_tsv
-    mv *.tsv ./hashid_accession_tsv
+    cd out
+    cat *.tsv | pigz -3 --rsyncable > all.protein_info.gz
+    md5_as_filename.sh 'all.protein_info.gz' 'protein_info.gz'
+    rm *.tsv
 
-    mkdir hashid_fasta
-    mv *.fasta ./hashid_fasta
-
+    cat *.fasta | pigz -3 --rsyncable > all.faa.gz
+    md5_as_filename.sh 'all.faa.gz' 'faa.gz'
+    rm *.fasta
     """
 
 

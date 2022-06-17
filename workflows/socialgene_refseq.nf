@@ -80,7 +80,6 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/
 
 
 include { CRABHASH            } from '../modules/local/crabhash.nf'
-include { CRABHASH_COPYFILES  } from '../modules/local/crabhash_copyfiles.nf'
 
 include { HMMER_HMMSEARCH     } from '../modules/local/hmmsearch.nf'
 

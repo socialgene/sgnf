@@ -1,6 +1,7 @@
 process CRABHASH {
     label 'process_high'
-    stageInMode 'copy'
+    label 'process_high_memory'
+
 
     input:
     path x
@@ -17,18 +18,19 @@ process CRABHASH {
     RUST_BACKTRACE=1
     mkdir out
     ${crabhash_path}/crabhash \\
-        \${PWD}/'${glob}' \\
+        '${glob}' \\
         'out' \\
         ${task.cpus}
 
     cd out
-    cat *.tsv | pigz -3 --rsyncable > all.protein_info.gz
+    pigz -3 --rsyncable *.tsv --stdout > all.protein_info.gz
     md5_as_filename.sh 'all.protein_info.gz' 'protein_info.gz'
     rm *.tsv
-
-    cat *.fasta | pigz -3 --rsyncable > all.faa.gz
+    
+    pigz -3 --rsyncable *.fasta --stdout > all.faa.gz
     md5_as_filename.sh 'all.faa.gz' 'faa.gz'
     rm *.fasta
+
     """
 
 

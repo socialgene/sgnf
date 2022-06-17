@@ -92,7 +92,7 @@ params {
     max_time                    = 6000.h
     hmmlist                     = 'all'
     gbk_input                   = '/home/chase/sg/chtc/fasta'
-    crabhash_glob               = '*.faa.gz'
+    crabhash_glob               = 'fasta/*.faa.gz'
     crabhash_path               = '/home/chase/sg/crabhash/target/release'
     chtc_prep_only              = true
     fasta_splits                = 1
@@ -100,16 +100,15 @@ params {
 }
 
 process {
-    withLabel:process_high {
-        cpus   = { check_max( 1    * task.attempt, 'cpus'    ) }
-        memory = { check_max( 10.GB * task.attempt, 'memory'  ) }
-        time   = { check_max( 600.h  * task.attempt, 'time'    ) }
+    
+    withName: 'CRABHASH' {
+            cpus = 80
     }
-    withName: NCBI_DATASETS_DOWNLOAD_TAXON {
+    withName: 'NCBI_DATASETS_DOWNLOAD_TAXON' {
             ext.args   = '--assembly-source genbank'
     }
     
-    withName: SEQKIT_RMDUP {
+    withName: 'SEQKIT_RMDUP' {
             publishDir = [
             path: { "${params.single_outdir}/fasta" },
             mode: 'move',

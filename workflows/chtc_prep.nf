@@ -33,6 +33,8 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 
 include { ANTISMASH                         } from '../modules/local/antismash/main.nf'
 include { ASSEMBLY_FTP_URLS                 } from '../modules/local/assembly_ftp_urls.nf'
+include { CRABHASH                          } from '../modules/local/crabhash.nf'
+include { CRABHASH_COPYFILES                } from '../modules/local/crabhash_copyfiles.nf'
 include { FEATURE_TABLE_DOWNLOAD            } from '../modules/local/feature_table_download.nf'
 include { HMMER_HMMSEARCH                   } from '../modules/local/hmmsearch.nf'
 include { HMM_HASH                          } from '../modules/local/hmm_hash.nf'
@@ -93,13 +95,14 @@ workflow CHTC_PREP {
     if (params.ncbi_genome_download_command){
         NCBI()
         NCBI.out.gb_files.set{gb_files}
-    } else if (params.gbk_input) {
-        LOCAL()
-        LOCAL.out.set{gb_files}
+    } 
+    if (params.gbk_input) {
+        gb_files = Channel.fromPath( params.gbk_input ).buffer( size: 600 )
+        //LOCAL.out.set{gb_files}
 
     }
     if (params.ncbi_datasets_taxon){
-        NCBI_DATASETS_DOWNLOAD_TAXON()
+        NCBI_DATASETS_DOWNLOAD_TAXON(params.ncbi_datasets_taxon)
         NCBI_DATASETS_DOWNLOAD_TAXON.out.gbff_files.set{gb_files}
         sequence_files_glob = "*.gbff.gz"
     }
@@ -111,7 +114,7 @@ workflow CHTC_PREP {
 
     PROCESS_GENBANK_FILES(
         gb_files,
-        params.fasta_splits,
+        1,
         sequence_files_glob
     )
 
@@ -119,8 +122,6 @@ workflow CHTC_PREP {
         .flatten()
         .set{ch_fasta}
 
-    ch_fasta
-        .set{single_ch_fasta}
 
     HMM_MODELS()
 
@@ -132,7 +133,6 @@ workflow CHTC_PREP {
     HMM_TSV_PARSE(
         HMM_HASH.out.all_hmms_tsv
     )
-
 
 
 

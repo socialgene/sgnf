@@ -14,14 +14,16 @@ process SEQKIT_RMDUP {
     path 'versions.yml' , emit: version
 
     script:
-    def software = getSoftwareName(task.process)
     """
+    touch nr.fa.gz
     zcat ${fasta} |\\
         seqkit \\
             rmdup \\
             --by-name \\
-            --dup-seqs-file \\
-            -o nr.fa.gz
+            --seq-type protein \\
+            --line-width 0 \\
+            --threads ${task.cpus} |\\
+                gzip > nr.fa.gz
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

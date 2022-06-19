@@ -10,9 +10,9 @@ process MMSEQS2 {
     path(fasta)
 
     output:
-    path('mmseqs2_results_all_seqs.fasta.gz')   , emit: clusterres_all_seqs
-    path('mmseqs2_results_cluster.tsv.gz')      , emit: clusterres_cluster
-    path('mmseqs2_results_rep_seq.fasta.gz')    , emit: clusterres_rep_seq
+    path('*.mmseqs2_results_all_seqs.fasta.gz')   , emit: clusterres_all_seqs
+    path('*.mmseqs2_results_cluster.tsv.gz')      , emit: clusterres_cluster
+    path('*.mmseqs2_results_rep_seq.fasta.gz')    , emit: clusterres_rep_seq
 
     """
     mmseqs \\

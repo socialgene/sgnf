@@ -156,7 +156,7 @@ workflow DB_CREATOR {
         if(params.blastp || params.mmseqs2) {
 
             ch_fasta
-            .collectFile(name:'concatenated.faa', newLine:true, sort:false)
+            .collectFile(name:'concatenated.faa.gz', newLine:false, sort:false)
             .set{single_ch_fasta}
 
         }

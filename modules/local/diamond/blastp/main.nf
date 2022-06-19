@@ -29,7 +29,7 @@ process DIAMOND_BLASTP {
         $args \\
         --out blastp_all_vs_all.blast6.txt.gz
 
-    md5_as_filename_after_gzip.sh "blastp_all_vs_all.blast6.txt.gz" "blast6.gz"
+    md5_as_filename.sh "blastp_all_vs_all.blast6.txt.gz" "blast6.gz"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -35,7 +35,7 @@ nextflow.enable.dsl = 2
 
 include { DB_CREATOR } from './workflows/socialgene'
 include { REFSEQ } from './workflows/socialgene_refseq'
-include { CHTC_PREP } from './workflows/chtc_prep_genbank'
+include { CHTC_PREP } from './workflows/chtc_prep'
 
 //
 // WORKFLOW: Run main nf-core/socialgene analysis pipeline

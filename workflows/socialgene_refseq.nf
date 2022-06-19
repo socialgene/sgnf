@@ -105,7 +105,6 @@ workflow REFSEQ {
         .set{ch_fasta}
 
     PROTHASH_SQLITE(CRABHASH.out.tsv)
-    CRABHASH_COPYFILES(CRABHASH.out.tsv)
 
     if (params.ncbi_taxonomy){
         sg_modules = sg_modules + " ncbi_taxonomy"

@@ -34,7 +34,6 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 include { ANTISMASH                         } from '../modules/local/antismash/main.nf'
 include { ASSEMBLY_FTP_URLS                 } from '../modules/local/assembly_ftp_urls.nf'
 include { CRABHASH                          } from '../modules/local/crabhash.nf'
-include { CRABHASH_COPYFILES                } from '../modules/local/crabhash_copyfiles.nf'
 include { FEATURE_TABLE_DOWNLOAD            } from '../modules/local/feature_table_download.nf'
 include { HMMER_HMMSEARCH                   } from '../modules/local/hmmsearch.nf'
 include { HMM_HASH                          } from '../modules/local/hmm_hash.nf'
@@ -95,7 +94,7 @@ workflow CHTC_PREP {
     if (params.ncbi_genome_download_command){
         NCBI()
         NCBI.out.gb_files.set{gb_files}
-    } 
+    }
     if (params.gbk_input) {
         gb_files = Channel.fromPath( params.gbk_input ).buffer( size: 600 )
         //LOCAL.out.set{gb_files}

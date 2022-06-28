@@ -58,9 +58,10 @@ include { NCBI_DATASETS_DOWNLOAD_TAXON      } from "../modules/local/ncbi_datase
 
 
 include { DOWNLOAD_AND_GATHER       } from "../subworkflows/local/download_and_gather.nf"
-//include { PARSE_FEATURE_TABLES      } from '../subworkflows/local/feature_table_parse.nf'
-include { LOCAL                      } from '../subworkflows/local/inputs.nf'
+//include { PARSE_FEATURE_TABLES    } from '../subworkflows/local/feature_table_parse.nf'
+include { LOCAL                     } from '../subworkflows/local/inputs.nf'
 include { NCBI                      } from '../subworkflows/local/inputs.nf'
+include { NCBI_TAXONOMY_INFO        } from '../subworkflows/local/ncbi_taxonomy_info.nf'
 
 
 
@@ -194,6 +195,8 @@ workflow DB_CREATOR {
     }
 
     if (params.ncbi_taxonomy){
+            NCBI_TAXONOMY_INFO()
+
         sg_modules = sg_modules + " ncbi_taxonomy"
     }
 

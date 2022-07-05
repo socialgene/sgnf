@@ -22,13 +22,13 @@ clean:
 
 
 
-	
+
 ## create_conda :	Create the socialgene conda enviornment
 create_conda:
 	conda env create --file conda_environment.yml
 
-## install_python :	Install the socialgene python package 
-install_python: 
+## install_python :	Install the socialgene python package
+install_python:
 	pip3 install -e ./socialgene
 
 ##
@@ -36,7 +36,7 @@ install_python:
 ##
 
 ## chai  : This is a specific Nextflow pipeline made to run on Chase's work computer
-chai: 
+chai:
 	nextflow run nextflow -profile chicago --builddb true --mode dev -resume --enable_conda true
 
 # sudo chown -R $(id -u):$(id -g) '/home/chase/Documents/socialgene_outdir/neo4j'
@@ -162,16 +162,16 @@ memrec:
 ## testnf: Run the test nextflow pipeline
 testnf:
 	nextflow run nextflow -profile test --outdir_per_run "/home/chase/temp/socialgene/outdir_per_run" --outdir_neo4j "/home/chase/temp/socialgene/outdir_neo4j" --outdir_long_cache "/home/chase/temp/socialgene/outdir_long_cache" -resume --fasta_splits 100
-	
+
 ## pytest	:	Run Python pacakge unit tests
-pytest: 
-	coverage run --omit="*/tests*" --source=./socialgene --module pytest ./socialgene/tests/python --cov=./socialgene/src/socialgene --failed-first  --cov-report=html 
+pytest:
+	coverage run --omit="*/tests*" --source=./socialgene --module pytest ./socialgene/tests/python --cov=./socialgene/src/socialgene --failed-first  --cov-report=html
 ## pytestnf :	Run Nextflow pytest tests (first runs clean, install python and  nextflow test run)
 pytestnf: clean install_python testnf
-	coverage run --source=./socialgene --module pytest ./socialgene/tests/nextflow --neo4j_outdir $(neo4j_outdir) 
+	coverage run --source=./socialgene --module pytest ./socialgene/tests/nextflow --neo4j_outdir $(neo4j_outdir)
 
 ## django_test :	Run pytest for the Django code
-django_test: 
+django_test:
 	CURRENT_UID=$(shell id -u):$(shell id -g) docker-compose -f $(COMPOSE_FILE) run --rm django pytest
 
 ## run_ci :	Run the Python continuous integration tests locally
@@ -182,19 +182,11 @@ run_ci: clean install_python pytest
 	black --check . --extend-exclude temp_scripts
 
 ## run_ci_full :	Run the Python and nf-core continuous integration tests locally
-run_ci_full: run_ci
-	nf-core -l lint_log.txt lint --dir ./nextflow 
+ci:
+	nf-core -l lint_log.txt lint --dir .
 	markdownlint ./docs ./nextflow --disable MD013 MD033 MD041
-	
-test_publish_socialgene: clean
-	python3 -m pip install --user --upgrade setuptools wheel twine
-	python3 -m build ./socialgene
-	python3 -m twine upload --repository testpypi ./socialgene/dist/*
 
-test_publish_socialgeneweb: clean
-	python3 -m pip install --user --upgrade setuptools wheel twine
-	python3 -m build ./django/socialgeneweb
-	python3 -m twine upload --repository testpypi ./django/socialgeneweb/dist/*
+
 
 
 

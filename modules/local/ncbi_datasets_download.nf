@@ -1,5 +1,5 @@
 
-process NCBI_DATASETS_DOWNLOAD_TAXON {
+process NCBI_DATASETS_DOWNLOAD {
     // https://www.ncbi.nlm.nih.gov/datasets/docs/v1/
     label 'process_low'
 
@@ -7,7 +7,7 @@ process NCBI_DATASETS_DOWNLOAD_TAXON {
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/ncbi-datasets-cli:13.24.3' :
         'quay.io/biocontainers/ncbi-datasets-cli:13.24.3' }"
-    
+
     input:
     val input_taxon
 
@@ -15,12 +15,15 @@ process NCBI_DATASETS_DOWNLOAD_TAXON {
     path "ncbi_dataset/data/assembly_data_report.jsonl" , emit: assembly_data_report
     path "ncbi_dataset/data/dataset_catalog.json"       , emit: dataset_catalog
     path "**/*.gbff.gz"                                 , emit: gbff_files
+    path "versions.yml"                                 , emit: versions
 
     script:
     def args = task.ext.args ?: ''
     """
     # download a taxon
-    datasets download genome taxon $input_taxon $args --include-gbff --exclude-genomic-cds --exclude-protein --exclude-rna --exclude-seq
+    datasets download \\
+        $input_taxon \\
+        $args
 
     # unzip files
     unzip ncbi_dataset.zip

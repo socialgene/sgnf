@@ -23,7 +23,7 @@ These determine the annotations and structure of the resulting database
 | `hmmlist` | "all" or some combination of ["antismash","amrfinder","bigslice","classiphage","pfam","prism","resfams","tigrfam","virus_orthologous_groups"] | `string` | None |  |  |
 | `blastp` | Should all vs all  BLASTp be run? DO NOT RUN ON LARGE DATA | `boolean` |  |  |  |
 | `ncbi_taxonomy` | Download and insert the NCBI taxonomy database? Requires input assemblies to have NCBI  Assembly accessions | `boolean` |  |  |  |
-| `builddb` | Should the Neo4j databse be created? | `boolean` | True |  |  |
+| `build_database` | Should the Neo4j databse be created? | `boolean` | True |  |  |
 | `paired_omics` | Run paired omics pipeline? | `boolean` |  |  |  |
 
 ## Reference genome options
@@ -140,24 +140,24 @@ The input argument you provide will replace the `$args` in the command below:
 ` datasets download genome taxon "$args" --include-gbff --exclude-genomic-cds --exclude-protein --exclude-rna --exclude-seq`
 
 Info on use of NCBI datasets can be found here: https://www.ncbi.nlm.nih.gov/datasets/docs/v1/reference-docs/command-line/datasets/</small></details>| `string` | None |  |  |
-| `gbk_input` | Path to local GenBank file(s), can be a glob <details><summary>Help</summary><small>Accepted files:
+| `local_genbank` | Path to local GenBank file(s), can be a glob <details><summary>Help</summary><small>Accepted files:
 gbff, gbk
 gzipped/TAR versions of those
 </small></details>| `string` | None |  |  |
 | `paired_omics_json_path` | Paired omics json file, downloaded from: https://pairedomicsdata.bioinformatics.nl/projects | `string` | None |  |  |
-| `sequence_files_glob` | Must be set when using `gbk_input` <details><summary>Help</summary><small>This is required to prevent the command from getting super long when processing lots of files.
-It is required if the `gbk_input` parameter is set.
+| `sequence_files_glob` | Must be set when using `local_genbank` <details><summary>Help</summary><small>This is required to prevent the command from getting super long when processing lots of files.
+It is required if the `local_genbank` parameter is set.
 
 It's passed on to Python's glob so any valid Python-glob should work- https://docs.python.org/3/library/glob.html
-It should match whatever files are specified by the `gbk_input` parameter
+It should match whatever files are specified by the `local_genbank` parameter
 e.g.
 ```
-gbk_input                           = '/home/chase/Downloads/some_folder/*.gbff.gz'
+local_genbank                           = '/home/chase/Downloads/some_folder/*.gbff.gz'
 sequence_files_glob         = '*.gbff.gz'
 ```
 
 ```
-gbk_input                           = '/home/chase/Downloads/my_single_file.gbff.gz'
+local_genbank                           = '/home/chase/Downloads/my_single_file.gbff.gz'
 sequence_files_glob         = 'my_single_file.gbff.gz'
 ```</small></details>| `string` | None |  |  |
 | `custom_hmm_file` | File path of a custom HMMER hmm file | `string` | None |  |  |

@@ -6,8 +6,8 @@
 
     Use as follows:
 
- conda install -c hcc aspera-cli 
- conda install -c bioconda entrez-direct 
+ conda install -c hcc aspera-cli
+ conda install -c bioconda entrez-direct
 
 /////////////////////// FOR GENBANK:
 esearch -db assembly -query 'txid201174[Organism]' \
@@ -78,7 +78,7 @@ ascp \
         nextflow run . \
             -profile chtc_prep,conda \
             --single_outdir $outdir \
-            -resume 
+            -resume
 ----------------------------------------------------------------------------------------
 */
 
@@ -91,7 +91,7 @@ params {
     max_memory                  = 800.GB
     max_time                    = 6000.h
     hmmlist                     = 'all'
-    gbk_input                   = '/home/chase/sg/chtc/fasta'
+    local_genbank                   = '/home/chase/sg/chtc/fasta'
     crabhash_glob               = 'fasta/*.faa.gz'
     crabhash_path               = '/home/chase/sg/crabhash/target/release'
     chtc_prep_only              = true
@@ -100,21 +100,21 @@ params {
 }
 
 process {
-    
+
     withName: 'CRABHASH' {
             cpus = 80
     }
-    withName: 'NCBI_DATASETS_DOWNLOAD_TAXON' {
+    withName: 'NCBI_DATASETS_DOWNLOAD' {
             ext.args   = '--assembly-source genbank'
     }
-    
+
     withName: 'SEQKIT_RMDUP' {
             publishDir = [
             path: { "${params.single_outdir}/fasta" },
             mode: 'move',
         ]
     }
-    
+
     withName: 'HMM_HASH' {
         publishDir = [
             // Save output files to a folder named after the Nextflow process

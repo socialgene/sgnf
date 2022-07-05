@@ -37,7 +37,7 @@ install_python:
 
 ## chai  : This is a specific Nextflow pipeline made to run on Chase's work computer
 chai:
-	nextflow run nextflow -profile chicago --builddb true --mode dev -resume --enable_conda true
+	nextflow run nextflow -profile chicago --build_database true --mode dev -resume --enable_conda true
 
 # sudo chown -R $(id -u):$(id -g) '/home/chase/Documents/socialgene_outdir/neo4j'
 

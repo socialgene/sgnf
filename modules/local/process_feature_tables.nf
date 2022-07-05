@@ -29,6 +29,7 @@ process PROCESS_FEATURE_TABLES {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
+        python: \$(python --version 2>&1 | tail -n 1 | sed 's/^Python //')
         socialgene: \$(socialgene_version)
     END_VERSIONS
     """

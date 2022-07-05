@@ -15,6 +15,7 @@ process PROCESS_GENBANK_FILES {
     path "*.faa.gz"                 , emit: fasta
     path "*.loci.gz"                , emit: loci
     path "*.assemblies.gz"          , emit: assembly
+    path "versions.yml"             , emit: versions
 
     script:
     """
@@ -34,6 +35,7 @@ process PROCESS_GENBANK_FILES {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
+        python: \$(python --version 2>&1 | tail -n 1 | sed 's/^Python //')
         socialgene: \$(socialgene_version)
     END_VERSIONS
     """

@@ -30,7 +30,7 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
     IMPORT LOCAL MODULES
 ========================================================================================
 */
-
+println "Project : $workflow.projectDir"
 include { ANTISMASH                         } from '../modules/local/antismash/main.nf'
 include { ASSEMBLY_FTP_URLS                 } from '../modules/local/assembly_ftp_urls.nf'
 include { FEATURE_TABLE_DOWNLOAD            } from '../modules/local/feature_table_download.nf'
@@ -48,7 +48,7 @@ include { PYHMMER                           } from '../modules/local/pyhmmer.nf'
 include { REFSEQ_ASSEMBLY_TO_TAXID          } from '../modules/local/refseq_assembly_to_taxid.nf'
 include { SEQKIT_SPLIT                      } from '../modules/local/seqkit/split/main.nf'
 
-include { NCBI_DATASETS_DOWNLOAD_TAXON      } from "../modules/local/ncbi_datasets_download_taxon.nf"
+include { NCBI_DATASETS_DOWNLOAD            } from "../modules/local/ncbi_datasets_download.nf"
 
 /*
 ========================================================================================
@@ -59,9 +59,8 @@ include { NCBI_DATASETS_DOWNLOAD_TAXON      } from "../modules/local/ncbi_datase
 
 include { DOWNLOAD_AND_GATHER       } from "../subworkflows/local/download_and_gather.nf"
 //include { PARSE_FEATURE_TABLES    } from '../subworkflows/local/feature_table_parse.nf'
-include { LOCAL                     } from '../subworkflows/local/inputs.nf'
-include { NCBI                      } from '../subworkflows/local/inputs.nf'
 include { NCBI_TAXONOMY_INFO        } from '../subworkflows/local/ncbi_taxonomy_info.nf'
+include { PROCESS_GENOMES           } from '../subworkflows/local/process_genomes.nf'
 
 
 
@@ -77,7 +76,7 @@ include { NCBI_TAXONOMY_INFO        } from '../subworkflows/local/ncbi_taxonomy_
 
 //
 // MODULE: Installed but modified from nf-core/modules
-//
+
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 include { DIAMOND_BLASTP      } from '../modules/local/diamond/blastp/main.nf'
 include { DIAMOND_MAKEDB      } from '../modules/local/diamond/makedb/main.nf'
@@ -91,31 +90,19 @@ include { DIAMOND_MAKEDB      } from '../modules/local/diamond/makedb/main.nf'
 workflow DB_CREATOR {
 
     sg_modules = "base"
-    //ch_versions = Channel.empty()
+    ch_versions = Channel.empty()
 
-//    ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
     PARAMETER_EXPORT_FOR_NEO4J()
 
+    PROCESS_GENOMES()
 
-    if (params.ncbi_genome_download_command){
-        NCBI()
-        NCBI.out.gb_files.set{gb_files}
-    } else if (params.gbk_input) {
-        LOCAL()
-        LOCAL.out.set{gb_files}
-
-    }
-    if (params.ncbi_datasets_taxon){
-        NCBI_DATASETS_DOWNLOAD_TAXON()
-        NCBI_DATASETS_DOWNLOAD_TAXON.out.gbff_files.set{gb_files}
-    }
+    //ch_versions = ch_versions.mix(PROCESS_GENOMES.out.versions)
 
     if (params.sequence_files_glob) {
         sequence_files_glob = params.sequence_files_glob
     } else {
         sequence_files_glob = "*.gbff.gz"
     }
-
 
 
     if (params.paired_omics_json_path) {
@@ -132,11 +119,11 @@ workflow DB_CREATOR {
    // REFSEQ_ASSEMBLY_TO_TAXID()
 
     PROCESS_GENBANK_FILES(
-        gb_files,
+        PROCESS_GENOMES.out.processed_genome_ch,
         params.fasta_splits,
         sequence_files_glob
     )
-
+ch_versions = ch_versions.mix(PROCESS_GENBANK_FILES.out.versions)
     PROCESS_GENBANK_FILES.out.fasta
         .flatten()
         .set{ch_fasta}
@@ -236,12 +223,13 @@ workflow DB_CREATOR {
 
     if (params.build_database) {
         NEO4J_ADMIN_IMPORT(
-        outdir_neo4j_ch,
-        NEO4J_HEADERS.out.headers,
-        hmmer_result_ch,
-        blast_ch,
-        mmseqs2_ch,
-        sg_modules)
+            outdir_neo4j_ch,
+            NEO4J_HEADERS.out.headers,
+            hmmer_result_ch,
+            blast_ch,
+            mmseqs2_ch,
+            sg_modules
+        )
     }
 
 
@@ -252,10 +240,13 @@ workflow DB_CREATOR {
     //     INPUT_CHECK.out.reads
     // )
     // ch_versions = ch_versions.mix(FASTQC.out.versions.first())
+bro=ch_versions.collectFile(name: 'collated_versions.yml')
 
-    // CUSTOM_DUMPSOFTWAREVERSIONS (
-    //     ch_versions.unique().collectFile(name: 'collated_versions.yml')
-    // )
+
+
+    CUSTOM_DUMPSOFTWAREVERSIONS (
+        ch_versions
+    )
 
 
 }

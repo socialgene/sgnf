@@ -50,7 +50,7 @@ include { PYHMMER                           } from '../modules/local/pyhmmer.nf'
 include { REFSEQ_ASSEMBLY_TO_TAXID          } from '../modules/local/refseq_assembly_to_taxid.nf'
 include { SEQKIT_SPLIT                      } from '../modules/local/seqkit/split/main.nf'
 include { SEQKIT_RMDUP                      } from '../modules/local/seqkit/rmdup/main.nf'
-include { NCBI_DATASETS_DOWNLOAD_TAXON      } from "../modules/local/ncbi_datasets_download_taxon.nf"
+include { NCBI_DATASETS_DOWNLOAD            } from "../modules/local/ncbi_datasets_download.nf"
 
 /*
 ========================================================================================
@@ -102,9 +102,9 @@ workflow CHTC_PREP {
     DOWNLOAD_NCBI('txid201174[Organism]')
 
     fasta_input = DOWNLOAD_NCBI.out.fasta.buffer( size: 1000 )
-    gb_files = Channel.fromPath( '/home/chase/sg/chtc/fasta')
+    processed_genome_ch = Channel.fromPath( '/home/chase/sg/chtc/fasta')
 
-    CRABHASH(gb_files, params.crabhash_path, params.crabhash_glob)
+    CRABHASH(processed_genome_ch, params.crabhash_path, params.crabhash_glob)
 
     SEQKIT_RMDUP(CRABHASH.out.fasta)
 

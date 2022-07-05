@@ -23,7 +23,7 @@
                     "description": "Taxonomic name  (maybe NCBI taxonomy id as well?) see extended help before using",
                     "help_text": "Note/Warning: \nSpecifying a taxon directly has the potential to download a large number of genomes that you may not be prepared to handle.\nI highly recommend searching here (https://www.ncbi.nlm.nih.gov/genome/browse#!/prokaryotes/) first to get an idea of how many input genomes you can expect.\n\n\nThe input argument you provide will replace the `$args` in the command below:\n\n` datasets download genome taxon \"$args\" --include-gbff --exclude-genomic-cds --exclude-protein --exclude-rna --exclude-seq`\n\nInfo on use of NCBI datasets can be found here: https://www.ncbi.nlm.nih.gov/datasets/docs/v1/reference-docs/command-line/datasets/"
                 },
-                "gbk_input": {
+                "local_genbank": {
                     "type": "string",
                     "default": "None",
                     "description": "Path to local GenBank file(s), can be a glob",
@@ -37,8 +37,8 @@
                 "sequence_files_glob": {
                     "type": "string",
                     "default": "None",
-                    "description": "Must be set when using `gbk_input`",
-                    "help_text": "This is required to prevent the command from getting super long when processing lots of files. \nIt is required if the `gbk_input` parameter is set.\n\nIt's passed on to Python's glob so any valid Python-glob should work- https://docs.python.org/3/library/glob.html\nIt should match whatever files are specified by the `gbk_input` parameter \ne.g.\n```\ngbk_input                           = '/home/chase/Downloads/some_folder/*.gbff.gz'\nsequence_files_glob         = '*.gbff.gz'\n```\n\n```\ngbk_input                           = '/home/chase/Downloads/my_single_file.gbff.gz'\nsequence_files_glob         = 'my_single_file.gbff.gz'\n```"
+                    "description": "Must be set when using `local_genbank`",
+                    "help_text": "This is required to prevent the command from getting super long when processing lots of files. \nIt is required if the `local_genbank` parameter is set.\n\nIt's passed on to Python's glob so any valid Python-glob should work- https://docs.python.org/3/library/glob.html\nIt should match whatever files are specified by the `local_genbank` parameter \ne.g.\n```\nlocal_genbank                           = '/home/chase/Downloads/some_folder/*.gbff.gz'\nsequence_files_glob         = '*.gbff.gz'\n```\n\n```\nlocal_genbank                           = '/home/chase/Downloads/my_single_file.gbff.gz'\nsequence_files_glob         = 'my_single_file.gbff.gz'\n```"
                 },
                 "custom_hmm_file": {
                     "type": "string",

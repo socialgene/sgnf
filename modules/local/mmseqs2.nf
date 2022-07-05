@@ -14,13 +14,16 @@ process MMSEQS2 {
     path('*.mmseqs2_results_cluster.tsv.gz')      , emit: clusterres_cluster
     path('*.mmseqs2_results_rep_seq.fasta.gz')    , emit: clusterres_rep_seq
 
+    script:
+    def args = task.ext.args ?: ''
     """
     mmseqs \\
         easy-cluster \\
         ${fasta} \\
         'mmseqs2_results' \\
         /tmp \\
-        --threads $task.cpus
+        --threads $task.cpus \\
+        $args
 
     rm -rf tmp
 

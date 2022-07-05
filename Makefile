@@ -141,12 +141,12 @@ django_logs:
 ## NEO4J SPECIFIC TASKS
 ##
 
-## memrec:    Get an estimate of the Neo4j memory settings your machine is capable of
+## memrec:	Get an estimate of the Neo4j memory settings your machine is capable of
 memrec:
 	docker run \
-	    --user="$(id -u)":"$(id -g)" \
-	    --env NEO4J_AUTH=neo4j/test \
-	    --interactive \
+		--user="$(id -u)":"$(id -g)" \
+		--env NEO4J_AUTH=neo4j/test \
+		--interactive \
 		--tty \
 		neo4j:4.3.7 \
 		neo4j-admin \
@@ -184,8 +184,12 @@ run_ci: clean install_python pytest
 ## run_ci_full :	Run the Python and nf-core continuous integration tests locally
 ci:
 	nf-core -l lint_log.txt lint --dir .
+	nf-core modules lint --all --local
+	nf-core schema lint .
 	markdownlint ./docs ./nextflow --disable MD013 MD033 MD041
 
+parameter_documentation:
+	nf-core schema docs > parameters.md
 
 
 

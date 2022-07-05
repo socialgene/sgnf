@@ -200,7 +200,7 @@ workflow DB_CREATOR {
         sg_modules = sg_modules + " ncbi_taxonomy"
     }
 
-    if (params.hmms){
+    if (params.hmmer){
 
         DOWNLOAD_AND_GATHER()
         HMM_HASH(
@@ -232,10 +232,11 @@ workflow DB_CREATOR {
 
     NEO4J_HEADERS(sg_modules)
 
+    outdir_neo4j_ch = Channel.fromPath( params.outdir_neo4j )
 
-    if (params.builddb) {
+    if (params.build_database) {
         NEO4J_ADMIN_IMPORT(
-        params.outdir_neo4j,
+        outdir_neo4j_ch,
         NEO4J_HEADERS.out.headers,
         hmmer_result_ch,
         blast_ch,

@@ -3,12 +3,6 @@
     "homePage": "https://github.com/nf-core/socialgene",
     "repos": {
         "nf-core/modules": {
-            "antismash/antismashlite": {
-                "git_sha": "85b3c2bcf28efef4de8ae8d5244cccafccd77548"
-            },
-            "antismash/antismashlitedownloaddatabases": {
-                "git_sha": "8db0b754c0422cb80d06f47986d660f8aaf02c89"
-            },
             "custom/dumpsoftwareversions": {
                 "git_sha": "e745e167c1020928ef20ea1397b6b4d230681b4d"
             }

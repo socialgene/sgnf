@@ -110,7 +110,7 @@ workflow REFSEQ {
         sg_modules = sg_modules + " ncbi_taxonomy"
     }
 
-    if (params.hmms){
+    if (params.hmmer){
 
         DOWNLOAD_AND_GATHER()
         HMM_HASH(
@@ -155,7 +155,7 @@ workflow REFSEQ {
         sg_modules = sg_modules + " ncbi_taxonomy"
     }
 
-    if (params.builddb) {
+    if (params.build_database) {
         NEO4J_ADMIN_IMPORT(NEO4J_HEADERS.out.headers, hmmer_result_ch, blast_ch, mmseqs2_ch, sg_modules)
     }
 

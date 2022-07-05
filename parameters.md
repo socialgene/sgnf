@@ -1,6 +1,6 @@
 # nf-core/socialgene pipeline parameters
 
-Download, Analyze, and Create a SocialGene Database
+Create a SocialGene Database
 
 ## SocialGene parameters
 
@@ -32,7 +32,7 @@ Reference genome related files and options required for the workflow.
 
 | Parameter | Description | Type | Default | Required | Hidden |
 |-----------|-----------|-----------|-----------|-----------|-----------|
-| `fasta` | Path to FASTA genome file. <details><summary>Help</summary><small>This parameter is *mandatory* if `--genome` is not specified. If you don't have a BWA index available this will be generated for you automatically. Combine with `--save_reference` to save BWA index for future runs.</small></details>| 
+| `fasta` | Path to FASTA genome file. <details><summary>Help</summary><small>This parameter is *mandatory* if `--genome` is not specified. If you don't have a BWA index available this will be generated for you automatically. Combine with `--save_reference` to save BWA index for future runs.</small></details>|
 `string` |  |  | True |
 
 ## Institutional config options
@@ -42,7 +42,7 @@ Parameters used to describe centralised config profiles. These should not be edi
 | Parameter | Description | Type | Default | Required | Hidden |
 |-----------|-----------|-----------|-----------|-----------|-----------|
 | `custom_config_version` | Git commit id for Institutional configs. | `string` | master |  | True |
-| `custom_config_base` | Base directory for Institutional configs. <details><summary>Help</summary><small>If you're running offline, Nextflow will not be able to fetch the institutional config files from the internet. If you don't need them, then this is not a problem. If you do need them, you should download the 
+| `custom_config_base` | Base directory for Institutional configs. <details><summary>Help</summary><small>If you're running offline, Nextflow will not be able to fetch the institutional config files from the internet. If you don't need them, then this is not a problem. If you do need them, you should download the
 files from the repo and tell Nextflow where to find them with this parameter.</small></details>| `string` | https://raw.githubusercontent.com/nf-core/configs/master |  | True |
 | `config_profile_name` | Institutional config name. | `string` |  |  | True |
 | `config_profile_description` | Institutional config description. | `string` |  |  | True |
@@ -71,11 +71,11 @@ Less common options for the pipeline, typically set in a config file.
 | `monochrome_logs` | Do not use coloured log outputs. | `boolean` |  |  | True |
 | `tracedir` | Directory to keep pipeline Nextflow logs and reports. | `string` | ${params.outdir}/pipeline_info |  | True |
 | `validate_params` | Boolean whether to validate parameters against the schema at runtime | `boolean` | True |  | True |
-| `show_hidden_params` | Show all params when using `--help` <details><summary>Help</summary><small>By default, parameters set as _hidden_ in the schema are not shown on the command line when a user runs with `--help`. Specifying this option will tell the pipeline to show all parameters.</small></details>| 
+| `show_hidden_params` | Show all params when using `--help` <details><summary>Help</summary><small>By default, parameters set as _hidden_ in the schema are not shown on the command line when a user runs with `--help`. Specifying this option will tell the pipeline to show all parameters.</small></details>|
 `boolean` |  |  | True |
 | `enable_conda` | Run this workflow with Conda. You can also use '-profile conda' instead of providing this parameter. | `boolean` |  |  | True |
 | `outdir` | do not use | `string` | not-used-but-needed-by-code |  | True |
-| `email` | Email address for completion summary. <details><summary>Help</summary><small>Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the 
+| `email` | Email address for completion summary. <details><summary>Help</summary><small>Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the
 command line for every run.</small></details>| `string` |  |  |  |
 | `input` | do not use | `string` | not-used-but-needed-by-code |  | True |
 
@@ -130,7 +130,7 @@ Define where the pipeline should find input data and save output data.
 |-----------|-----------|-----------|-----------|-----------|-----------|
 | `ncbi_genome_download_command` | Arguments to pass to ncbi_genome_download_command <details><summary>Help</summary><small>See the following link for more info about commands you can use:
 https://github.com/kblin/ncbi-genome-download</small></details>| `string` | --genera \'Micromonospora sp. B006\' bacteria |  |  |
-| `ncbi_datasets_taxon` | Taxonomic name  (maybe NCBI taxonomy id as well?) see extended help before using <details><summary>Help</summary><small>Note/Warning: 
+| `ncbi_datasets_taxon` | Taxonomic name  (maybe NCBI taxonomy id as well?) see extended help before using <details><summary>Help</summary><small>Note/Warning:
 Specifying a taxon directly has the potential to download a large number of genomes that you may not be prepared to handle.
 I highly recommend searching here (https://www.ncbi.nlm.nih.gov/genome/browse#!/prokaryotes/) first to get an idea of how many input genomes you can expect.
 
@@ -145,11 +145,11 @@ gbff, gbk
 gzipped/TAR versions of those
 </small></details>| `string` | None |  |  |
 | `paired_omics_json_path` | Paired omics json file, downloaded from: https://pairedomicsdata.bioinformatics.nl/projects | `string` | None |  |  |
-| `sequence_files_glob` | Must be set when using `gbk_input` <details><summary>Help</summary><small>This is required to prevent the command from getting super long when processing lots of files. 
+| `sequence_files_glob` | Must be set when using `gbk_input` <details><summary>Help</summary><small>This is required to prevent the command from getting super long when processing lots of files.
 It is required if the `gbk_input` parameter is set.
 
 It's passed on to Python's glob so any valid Python-glob should work- https://docs.python.org/3/library/glob.html
-It should match whatever files are specified by the `gbk_input` parameter 
+It should match whatever files are specified by the `gbk_input` parameter
 e.g.
 ```
 gbk_input                           = '/home/chase/Downloads/some_folder/*.gbff.gz'

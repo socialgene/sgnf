@@ -1,4 +1,4 @@
-#socialgene/sgnf: Contributing Guidelines
+# socialgene/sgnf: Contributing Guidelines
 
 Hi there!
 Many thanks for taking an interest in improvingsocialgene/sgnf.

@@ -22,8 +22,7 @@ include { DOWNLOAD_VIRUS_ORTHOLOGOUS_GROUPS } from "./../../modules/local/downlo
 workflow HMM_MODELS {
 
     main:
-
-        antismash_outchannel                = Channel.fromList()
+        hmm_outchannel                = Channel.fromList()
         amrfinder_outchannel                = Channel.fromList()
         bigslice_outchannel                 = Channel.fromList()
         classiphage_outchannel              = Channel.fromList()
@@ -58,45 +57,39 @@ workflow HMM_MODELS {
         if (hmm_internal_list.contains("bigslice")) {
             DOWNLOAD_BIGSLICE()
             DOWNLOAD_BIGSLICE.out.set{bigslice_outchannel}
-
         }
         if (hmm_internal_list.contains("classiphage")) {
             DOWNLOAD_CLASSIPHAGE()
             DOWNLOAD_CLASSIPHAGE.out.set{classiphage_outchannel}
-
         }
         if (hmm_internal_list.contains("pfam")) {
             DOWNLOAD_PFAM()
             DOWNLOAD_PFAM.out.set{pfam_outchannel}
-
         }
         if (hmm_internal_list.contains("prism")) {
             DOWNLOAD_PRISM()
             DOWNLOAD_PRISM.out.set{prism_outchannel}
-
         }
         if (hmm_internal_list.contains("resfams")) {
             DOWNLOAD_RESFAMS()
             DOWNLOAD_RESFAMS.out.set{resfams_outchannel}
-
         }
         if (hmm_internal_list.contains("tigrfam")) {
             DOWNLOAD_TIGRFAM()
             DOWNLOAD_TIGRFAM.out.set{tigrfam_outchannel}
-
         }
         if (hmm_internal_list.contains("virus_orthologous_groups")) {
             DOWNLOAD_VIRUS_ORTHOLOGOUS_GROUPS()
             DOWNLOAD_VIRUS_ORTHOLOGOUS_GROUPS.out.set{virus_orthologous_groups_outchannel}
-
         }
         if (params.custom_hmm_file) {
             DOWNLOAD_LOCAL_HMM(params.custom_hmm_file)
             DOWNLOAD_LOCAL_HMM.out.set{local_outchannel}
        }
 
-    antismash_outchannel
+    hmm_outchannel
         .concat (
+            antismash_outchannel,
             amrfinder_outchannel,
             bigslice_outchannel,
             classiphage_outchannel,

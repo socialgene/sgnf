@@ -10,6 +10,7 @@ process HMM_HASH {
     output:
     path 'all_hmms.tsv', emit: all_hmms_tsv
     path "socialgene_nr_hmms_file_*", emit: socialgene_hmms
+    path "versions.yml" , emit: versions
 
     script:
     """

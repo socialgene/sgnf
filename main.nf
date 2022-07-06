@@ -1,7 +1,7 @@
 #!/usr/bin/env nextflow
 /*
 ========================================================================================
-    nf-core/socialgene
+    socialgene
 ========================================================================================
     Github : https://github.com/socialgene
     Website: https://socialgene.github.io
@@ -38,7 +38,7 @@ include { DB_CREATOR } from './workflows/socialgene'
 //include { CHTC_PREP } from './workflows/chtc_prep'
 
 //
-// WORKFLOW: Run main nf-core/socialgene analysis pipeline
+// WORKFLOW: Run mainsocialgene/sgnf analysis pipeline
 //
 workflow SOCIALGENE {
 

@@ -14,6 +14,7 @@ process NEO4J_ADMIN_IMPORT {
 
     output:
     path "${outdir_neo4j}/import.report", emit: placeholder
+    path "versions.yml" , emit: versions
 
     script:
     """
@@ -35,5 +36,11 @@ process NEO4J_ADMIN_IMPORT {
     --gid None \\
     --sg_modules ${sg_modules}
 
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        python: \$(python --version 2>&1 | tail -n 1 | sed 's/^Python //')
+        socialgene: \$(socialgene_version)
+        neo4j-graph-data-science: '2.0.3'
+    END_VERSIONS
     """
 }

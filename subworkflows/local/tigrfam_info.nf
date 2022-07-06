@@ -12,11 +12,15 @@ include { TIGRFAM_TO_ROLE                   } from './../../modules/local/tigrfa
 
 workflow TIGRFAM_INFO {
 
-    TIGRFAM_INFO_DOWNLOAD()
-    TIGRFAM_TO_GO(
-        TIGRFAM_INFO_DOWNLOAD.out.tigerfam_to_go
-    )
-    TIGRFAM_ROLES()
-    TIGRFAM_TO_ROLE()
+    main:
+        ch_versions = Channel.empty()
+
+        TIGRFAM_INFO_DOWNLOAD()
+        TIGRFAM_TO_GO(
+            TIGRFAM_INFO_DOWNLOAD.out.tigerfam_to_go
+        )
+        TIGRFAM_ROLES()
+        TIGRFAM_TO_ROLE()
+
 
 }

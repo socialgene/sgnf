@@ -40,7 +40,8 @@ process NCBI_DATASETS_DOWNLOAD {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        python: \$(pigz --version | sed -E 's/pigz //g')
+        pigz: \$(pigz --version | sed -E 's/pigz //g')
+        datasets: \$(datasets version | sed 's/^ *//g')
     END_VERSIONS
     """
 }

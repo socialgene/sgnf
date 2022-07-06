@@ -30,7 +30,6 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
     IMPORT LOCAL MODULES
 ========================================================================================
 */
-println "Project : $workflow.projectDir"
 include { ANTISMASH                         } from '../modules/local/antismash/main.nf'
 include { ASSEMBLY_FTP_URLS                 } from '../modules/local/assembly_ftp_urls.nf'
 include { FEATURE_TABLE_DOWNLOAD            } from '../modules/local/feature_table_download.nf'
@@ -96,7 +95,7 @@ workflow DB_CREATOR {
 
     PROCESS_GENOMES()
 
-    //ch_versions = ch_versions.mix(PROCESS_GENOMES.out.versions)
+    ch_versions = ch_versions.mix(PROCESS_GENOMES.out.versions)
 
     if (params.sequence_files_glob) {
         sequence_files_glob = params.sequence_files_glob
@@ -104,14 +103,11 @@ workflow DB_CREATOR {
         sequence_files_glob = "*.gbff.gz"
     }
 
-
     if (params.paired_omics_json_path) {
-
         paired_omics_json_path = file(params.paired_omics_json_path)
-
         PAIRED_OMICS(paired_omics_json_path)
         sg_modules = sg_modules + " paired_omics"
-
+        ch_versions = ch_versions.mix(PAIRED_OMICS.out.versions)
     }
 
 
@@ -123,7 +119,8 @@ workflow DB_CREATOR {
         params.fasta_splits,
         sequence_files_glob
     )
-ch_versions = ch_versions.mix(PROCESS_GENBANK_FILES.out.versions)
+    ch_versions = ch_versions.mix(PROCESS_GENBANK_FILES.out.versions)
+
     PROCESS_GENBANK_FILES.out.fasta
         .flatten()
         .set{ch_fasta}
@@ -142,21 +139,14 @@ ch_versions = ch_versions.mix(PROCESS_GENBANK_FILES.out.versions)
 
     if (params.fasta_splits > 1) {
         if(params.blastp || params.mmseqs2) {
-
             ch_fasta
             .collectFile(name:'concatenated.faa.gz', newLine:false, sort:false)
             .set{single_ch_fasta}
-
         }
     } else {
         ch_fasta
         .set{single_ch_fasta}
     }
-
-
-    // WRITE ALL HEADERS FOR NEO4J
-
-
 
     if (params.blastp){
        sg_modules = sg_modules + " blastp"
@@ -164,6 +154,8 @@ ch_versions = ch_versions.mix(PROCESS_GENBANK_FILES.out.versions)
         DIAMOND_BLASTP(single_ch_fasta, DIAMOND_MAKEDB.out.db)
         DIAMOND_BLASTP.out.blastout.collect()
             .set{blast_ch}
+        ch_versions = ch_versions.mix(DIAMOND_MAKEDB.out.versions)
+        ch_versions = ch_versions.mix(DIAMOND_BLASTP.out.versions)
     } else {
         blast_ch = file( "dummy_file1.txt", checkIfExists: false )
     }
@@ -173,6 +165,7 @@ ch_versions = ch_versions.mix(PROCESS_GENBANK_FILES.out.versions)
         MMSEQS2.out.clusterres_cluster
             .set{mmseqs2_ch}
         sg_modules = sg_modules + " mmseqs2"
+        ch_versions = ch_versions.mix(MMSEQS2.out.versions)
     } else {
         mmseqs2_ch = file( "dummy_file2.txt", checkIfExists: false )
     }
@@ -182,18 +175,20 @@ ch_versions = ch_versions.mix(PROCESS_GENBANK_FILES.out.versions)
     }
 
     if (params.ncbi_taxonomy){
-            NCBI_TAXONOMY_INFO()
-
+        NCBI_TAXONOMY_INFO(ch_versions)
         sg_modules = sg_modules + " ncbi_taxonomy"
+        ch_versions = ch_versions.mix(NCBI_TAXONOMY_INFO.out.versions)
     }
 
     if (params.hmmer){
-
+        // TODO: move to subworkflow
         DOWNLOAD_AND_GATHER()
         HMM_HASH(
             DOWNLOAD_AND_GATHER.out.hmms,
             params.hmm_splits
         )
+       ch_versions = ch_versions.mix(HMM_HASH.out.versions)
+
 
         // make a channel that's the cartesian product of hmm model files and fasta files
         HMM_HASH.out.socialgene_hmms
@@ -206,18 +201,21 @@ ch_versions = ch_versions.mix(PROCESS_GENBANK_FILES.out.versions)
         //PYHMMER(hmm_ch)
         //hmmer_result_ch = PYHMMER.out.collect()
         HMMER_HMMSEARCH(hmm_ch)
+       ch_versions = ch_versions.mix(HMMER_HMMSEARCH.out.versions)
+
         hmmer_result_ch = HMMER_HMMSEARCH.out.versions.collect()
 
         HMM_TSV_PARSE(
             HMM_HASH.out.all_hmms_tsv
         )
-
         sg_modules = sg_modules + " hmms"
+        ch_versions = ch_versions.mix(HMM_TSV_PARSE.out.versions)
     } else {
         hmmer_result_ch = file( "dummy_file3.txt", checkIfExists: false )
     }
 
     NEO4J_HEADERS(sg_modules)
+    ch_versions = ch_versions.mix(NEO4J_HEADERS.out.versions)
 
     outdir_neo4j_ch = Channel.fromPath( params.outdir_neo4j )
 
@@ -230,22 +228,12 @@ ch_versions = ch_versions.mix(PROCESS_GENBANK_FILES.out.versions)
             mmseqs2_ch,
             sg_modules
         )
+        ch_versions = ch_versions.mix(NEO4J_ADMIN_IMPORT.out.versions)
     }
 
-
-    //
-    // MODULE: Run FastQC
-    //
-    // FASTQC (
-    //     INPUT_CHECK.out.reads
-    // )
-    // ch_versions = ch_versions.mix(FASTQC.out.versions.first())
-bro=ch_versions.collectFile(name: 'collated_versions.yml')
-
-
-
+    temp = ch_versions.collectFile(name: 'temp.yml', newLine: true)
     CUSTOM_DUMPSOFTWAREVERSIONS (
-        ch_versions
+        temp
     )
 
 

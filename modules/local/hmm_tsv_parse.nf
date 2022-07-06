@@ -8,6 +8,7 @@ process HMM_TSV_PARSE {
     output:
     path "*.sg_hmm_nodes_out.gz"  , emit: sg_hmm_nodes_out
     path "*_hmms_out.gz"          , emit: hmms_out
+    path "versions.yml" , emit: versions
 
     script:
     """

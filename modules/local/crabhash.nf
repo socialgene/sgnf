@@ -7,7 +7,7 @@ process CRABHASH {
     path x
     path crabhash_path
     val glob
-    
+
     output:
     path "out/*.faa.gz"          , emit: fasta
     path "out/*.protein_info.gz" , emit: tsv
@@ -26,11 +26,16 @@ process CRABHASH {
     pigz -3 --rsyncable *.tsv --stdout > all.protein_info.gz
     md5_as_filename.sh 'all.protein_info.gz' 'protein_info.gz'
     rm *.tsv
-    
+
     pigz -3 --rsyncable *.fasta --stdout > all.faa.gz
     md5_as_filename.sh 'all.faa.gz' 'faa.gz'
     rm *.fasta
 
+# TODO:  crabhash version
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        pigz: \$(pigz --version | sed -E 's/pigz //g')
+    END_VERSIONS
     """
 
 

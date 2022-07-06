@@ -3,31 +3,28 @@ process PROTEIN_FASTA_DOWNLOAD {
     errorStrategy 'retry'
     maxRetries 2
 
-    input:
-    path x
 
     output:
     path "*_protein.faa.gz", emit: fasta
+    path "versions.yml" , emit: versions
 
-    script:
-    if( params.mode == 'dev' )
-    """
-    download_sample_proteins.sh "${x}"
-
-    """
-    else // get all RefSeq protein FASTA files
-    """
+    shell:
+    '''
     rsync -am \
     --include="taxdump.tar.gz" \
     --include='*/' \
     --exclude='*' \
     rsync://ftp.ncbi.nlm.nih.gov/refseq/release/${params.refseq_partition} \
     my_dir/
-    """
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        rsync: \$(rsync --version | head -n1 | sed 's/^rsync  version //' | sed 's/\s.*//')
+    END_VERSIONS
+    '''
 
 
 }
-
 
 // ascp \
 // -i ~/miniconda3/envs/socialgene/etc/asperaweb_id_dsa.openssh \

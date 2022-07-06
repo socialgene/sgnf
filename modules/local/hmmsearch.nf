@@ -42,7 +42,6 @@ process HMMER_HMMSEARCH {
     "${task.process}":
         hmmer: \$(hmmsearch -h | grep -o '^# HMMER [0-9.]*' | sed 's/^# HMMER *//')
         socialgene: \$(socialgene_version)
-
     END_VERSIONS
     """
 }

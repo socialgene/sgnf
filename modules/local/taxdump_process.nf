@@ -1,15 +1,13 @@
 process TAXDUMP_PROCESS {
     label 'process_low'
 
-
-
-
     input:
     path taxdump
 
     output:
     path '*.nodes_taxid.gz'      , emit: nodes_taxid
     path '*.taxid_to_taxid.gz'   , emit: taxid_to_taxid
+    path "versions.yml" , emit: versions
 
     script:
     """

@@ -12,10 +12,11 @@ include { TIGRFAM_INFO       } from './tigrfam_info.nf'
 workflow DOWNLOAD_AND_GATHER {
 
     main:
+    ch_versions = Channel.empty()
+
     HMM_MODELS()
     TIGRFAM_INFO()
 
     emit:
         hmms = HMM_MODELS.out.hmms
-
 }

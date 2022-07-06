@@ -1,5 +1,5 @@
 //
-// This file holds several functions specific to the main.nf workflow in the nf-core/socialgene pipeline
+// This file holds several functions specific to the main.nf workflow in thesocialgene/sgnf pipeline
 //
 
 class WorkflowMain {

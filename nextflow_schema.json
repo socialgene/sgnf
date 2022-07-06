@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema",
-    "$id": "https://raw.githubusercontent.com/nf-core/socialgene/master/nextflow_schema.json",
-    "title": "nf-core/socialgene pipeline parameters",
+    "$id": "https://raw.githubusercontent.com/socialgene/sgnf/master/nextflow_schema.json",
+    "title": "socialgene/sgnf pipeline parameters",
     "description": "Create a SocialGene Database",
     "type": "object",
     "definitions": {

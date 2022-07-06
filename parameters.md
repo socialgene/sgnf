@@ -1,4 +1,4 @@
-# nf-core/socialgene pipeline parameters
+#socialgene/sgnf pipeline parameters
 
 Create a SocialGene Database
 

@@ -4,6 +4,7 @@ process DOWNLOAD_CLASSIPHAGE {
 
     output:
     path "classiphage", emit: classiphage
+    path "versions.yml" , emit: versions
 
     script:
     """
@@ -16,6 +17,12 @@ process DOWNLOAD_CLASSIPHAGE {
     wget http://appmibio.uni-goettingen.de/software/ClassiPhage/Podo_refined_HMMs.zip
     wget http://appmibio.uni-goettingen.de/software/ClassiPhage/Sipho_refined_HMMs.zip
 
+    # file integerity check
+    echo 'MD5 (Ino_refined_HMMs.zip) = 6d75fb4a2adcbb5faeff493e2f63b3ea' >> md5
+    echo 'MD5 (Myo_refined_HMMs.zip) = 48eb2f48766359042527287ab5bbf00f' >> md5
+    echo 'MD5 (Podo_refined_HMMs.zip) = ca29bbada3622c0365dcd4cf402a0552' >> md5
+    echo 'MD5 (Sipho_refined_HMMs.zip) = 01ccddc76fb21f2061a039ab0b588a2a' >> md5
+    md5sum -c md5
 
     unzip -oq Ino_refined_HMMs.zip
     unzip -oq Myo_refined_HMMs.zip
@@ -36,6 +43,14 @@ process DOWNLOAD_CLASSIPHAGE {
 
     # remove any non-hmm files
     bash local_rsync_only_hmm.sh "classiphage"
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        url1: 'http://appmibio.uni-goettingen.de/software/ClassiPhage/Ino_refined_HMMs.zip'
+        url2: 'http://appmibio.uni-goettingen.de/software/ClassiPhage/Myo_refined_HMMs.zip'
+        url3: 'http://appmibio.uni-goettingen.de/software/ClassiPhage/Podo_refined_HMMs.zip'
+        url4: 'http://appmibio.uni-goettingen.de/software/ClassiPhage/Sipho_refined_HMMs.zip'
+    END_VERSIONS
     """
 }
 

@@ -56,7 +56,7 @@ include { NCBI_DATASETS_DOWNLOAD            } from "../modules/local/ncbi_datase
 */
 
 
-include { DOWNLOAD_AND_GATHER       } from "../subworkflows/local/download_and_gather.nf"
+include { GATHER_HMMS               } from "../subworkflows/local/gather_hmms.nf"
 //include { PARSE_FEATURE_TABLES    } from '../subworkflows/local/feature_table_parse.nf'
 include { NCBI_TAXONOMY_INFO        } from '../subworkflows/local/ncbi_taxonomy_info.nf'
 include { PROCESS_GENOMES           } from '../subworkflows/local/process_genomes.nf'
@@ -175,19 +175,28 @@ workflow DB_CREATOR {
     }
 
     if (params.ncbi_taxonomy){
-        NCBI_TAXONOMY_INFO(ch_versions)
+        NCBI_TAXONOMY_INFO()
         sg_modules = sg_modules + " ncbi_taxonomy"
         ch_versions = ch_versions.mix(NCBI_TAXONOMY_INFO.out.versions)
     }
 
+
     if (params.hmmer){
-        // TODO: move to subworkflow
-        DOWNLOAD_AND_GATHER()
+
+        GATHER_HMMS()
+        ch_versions = ch_versions.mix(GATHER_HMMS.out.versions)
+
+        if (params.hmmlist.contains("tigrfam")){
+            // download additional tigrfam info
+            TIGRFAM_INFO()
+            ch_versions = ch_versions.mix(TIGRFAM_INFO.out.versions)
+        }
+
         HMM_HASH(
-            DOWNLOAD_AND_GATHER.out.hmms,
+            GATHER_HMMS.out.hmms,
             params.hmm_splits
         )
-       ch_versions = ch_versions.mix(HMM_HASH.out.versions)
+       ch_versions = ch_versions.mix(HMM_HASH.out.versions.first())
 
 
         // make a channel that's the cartesian product of hmm model files and fasta files
@@ -201,9 +210,9 @@ workflow DB_CREATOR {
         //PYHMMER(hmm_ch)
         //hmmer_result_ch = PYHMMER.out.collect()
         HMMER_HMMSEARCH(hmm_ch)
-       ch_versions = ch_versions.mix(HMMER_HMMSEARCH.out.versions)
+        ch_versions = ch_versions.mix(HMMER_HMMSEARCH.out.versions.first())
 
-        hmmer_result_ch = HMMER_HMMSEARCH.out.versions.collect()
+        hmmer_result_ch = HMMER_HMMSEARCH.out.parseddomtblout.collect()
 
         HMM_TSV_PARSE(
             HMM_HASH.out.all_hmms_tsv

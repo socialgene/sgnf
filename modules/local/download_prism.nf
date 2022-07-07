@@ -2,16 +2,12 @@
 process DOWNLOAD_PRISM {
     label 'process_low'
 
-
-
-
     output:
     path "prism", emit: prism
+    path "versions.yml" , emit: versions
 
     script:
     """
-
-
     mkdir prism
     cd prism
     wget -r -np -nH --no-check-certificate --cut-dirs=3 -R index.html https://magarveylab.ca/Skinnider_etal/models/hmm/
@@ -24,6 +20,11 @@ process DOWNLOAD_PRISM {
     # remove any non-socialgene files
     bash local_rsync_only_hmm.sh "prism"
 
-
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        version: '2017-03-21'
+        notice: 'Cannot be redistributed'
+        url: 'https://magarveylab.ca/Skinnider_etal/models/hmm/'
+    END_VERSIONS
     """
 }

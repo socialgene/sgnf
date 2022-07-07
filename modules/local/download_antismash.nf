@@ -2,11 +2,12 @@
 process DOWNLOAD_ANTISMASH {
     label 'process_low'
 
-
-
+    input:
+    val git_sha
 
     output:
     path "antismash", emit: antismash
+    path "antismash_version.yml" , emit: versions
 
     script:
     """
@@ -15,7 +16,7 @@ process DOWNLOAD_ANTISMASH {
     # wget handles the redirect
     git clone https://github.com/antismash/antismash.git
     cd antismash
-    git reset --hard e2d777c6cd035e6bf20f7eec924a350b00b84c7b
+    git reset --hard ${git_sha}
     cd ..
 
     # convert hmm models to version 3
@@ -24,6 +25,10 @@ process DOWNLOAD_ANTISMASH {
     # remove any non-socialgene files
     bash local_rsync_only_hmm.sh "antismash"
 
-
+    cat <<-END_VERSIONS > antismash_version.yml
+    "${task.process}":
+        commit_sha: \${git_sha}
+        url: "https://github.com/antismash/antismash/commit/\${latestTag}"
+    END_VERSIONS
     """
 }

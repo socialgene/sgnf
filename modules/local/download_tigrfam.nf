@@ -10,8 +10,6 @@ process DOWNLOAD_TIGRFAM {
 
     script:
     """
-
-
     # was getting gzip errors when using curl and zcat
     mkdir tigrfam
     wget ftp://ftp.ncbi.nlm.nih.gov/hmm/TIGRFAMs/release_15.0/TIGRFAMs_15.0_HMM.LIB.gz -O TIGRFAMs_15.0_HMM.hmm.gz

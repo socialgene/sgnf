@@ -19,5 +19,11 @@ process TIGRFAM_TO_GO {
 
     md5_as_filename_after_gzip.sh "tigrfam_to_go.tsv" "tigrfam_to_go.gz"
     md5_as_filename_after_gzip.sh "go.tsv" "goterm.gz"
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        version: '15.0'
+        url: 'https://ftp.ncbi.nlm.nih.gov/hmm/TIGRFAMs/release_15.0/TIGRFAMS_GO_LINK'
+    END_VERSIONS
     """
 }

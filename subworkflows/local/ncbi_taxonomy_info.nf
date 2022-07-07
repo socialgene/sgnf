@@ -8,10 +8,9 @@ include { TAXDUMP_DOWNLOAD } from './../../modules/local/taxdump_download.nf'
 include { TAXDUMP_PROCESS  } from './../../modules/local/taxdump_process.nf'
 
 workflow NCBI_TAXONOMY_INFO {
-    take:
-        ch_versions
 
     main:
+        ch_versions = Channel.empty()
         TAXDUMP_DOWNLOAD()
 
         TAXDUMP_PROCESS(

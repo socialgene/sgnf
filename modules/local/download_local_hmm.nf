@@ -4,6 +4,7 @@ process DOWNLOAD_LOCAL_HMM {
 
     input:
     path x
+    path "versions.yml" , emit: versions
 
     output:
     path "local", emit: local
@@ -15,5 +16,9 @@ process DOWNLOAD_LOCAL_HMM {
     mkdir local
     mv "${x}_socialgene" ./local/"${x}_socialgene"
 
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        hmmer: \$(hmmsearch -h | grep -o '^# HMMER [0-9.]*' | sed 's/^# HMMER *//')
+    END_VERSIONS
     """
 }

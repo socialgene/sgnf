@@ -62,7 +62,7 @@ include { NCBI_DATASETS_DOWNLOAD            } from "../modules/local/ncbi_datase
 include { DOWNLOAD_AND_GATHER } from "../subworkflows/local/download_and_gather.nf"
 include { LOCAL               } from '../subworkflows/local/inputs.nf'
 include { NCBI                } from '../subworkflows/local/inputs.nf'
-include { HMM_MODELS          } from '../subworkflows/local/hmm_models.nf'
+include { GATHER_HMMS          } from '../subworkflows/local/hmm_models.nf'
 
 
 
@@ -108,10 +108,10 @@ workflow CHTC_PREP {
 
     SEQKIT_RMDUP(CRABHASH.out.fasta)
 
-    HMM_MODELS()
+    GATHER_HMMS()
 
     HMM_HASH(
-        HMM_MODELS.out.hmms,
+        GATHER_HMMS.out.hmms,
         params.hmm_splits
     )
 

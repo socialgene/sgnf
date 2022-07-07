@@ -20,11 +20,11 @@ process DOWNLOAD_PFAM {
     curl -s ftp.ebi.ac.uk/pub/databases/Pfam/releases${version}/md5_checksums | grep "Pfam-A.hmm.gz" | md5sum -c -
     gunzip Pfam-A.hmm.gz
 
-    # convert hmm models to version 3
+    # convert hmm models to HMMER version 3
     bash hmmconvert_loop.sh
 
     # remove any non-socialgene files
-    bash local_rsync_only_hmm.sh "pfam"
+    bash remove_files_keep_directory_structure.sh "pfam"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

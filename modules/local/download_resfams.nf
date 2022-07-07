@@ -21,11 +21,11 @@ process DOWNLOAD_RESFAMS {
     gunzip resfams.hmm.gz
     mv resfams.hmm resfams
 
-    # convert hmm models to version 3
+    # convert hmm models to HMMER version 3
     bash hmmconvert_loop.sh
 
     # remove any non-socialgene files
-    bash local_rsync_only_hmm.sh "resfams"
+    bash remove_files_keep_directory_structure.sh "resfams"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

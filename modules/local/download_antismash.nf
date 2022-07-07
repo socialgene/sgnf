@@ -19,11 +19,11 @@ process DOWNLOAD_ANTISMASH {
     git reset --hard ${git_sha}
     cd ..
 
-    # convert hmm models to version 3
+    # convert hmm models to HMMER version 3
     bash hmmconvert_loop.sh
 
     # remove any non-socialgene files
-    bash local_rsync_only_hmm.sh "antismash"
+    bash remove_files_keep_directory_structure.sh "antismash"
 
     cat <<-END_VERSIONS > antismash_version.yml
     "${task.process}":

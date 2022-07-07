@@ -5,5 +5,5 @@ do
     basename="${i##*/}"
     filepath="$(dirname $i)"
     hmmconvert ${i} > "${i}_socialgene"
-    gzip "${i}_socialgene"
+    gzip -3 --rsyncable "${i}_socialgene"
 done

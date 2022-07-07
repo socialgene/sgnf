@@ -1,9 +1,12 @@
 
 process DOWNLOAD_AMRFINDER {
     label 'process_low'
+    errorStrategy 'retry'
+    maxErrors 2
 
     output:
     path "amrfinder", emit: amrfinder
+    path "versions.yml" , emit: versions
 
     script:
     """
@@ -20,5 +23,10 @@ process DOWNLOAD_AMRFINDER {
     # remove any non-socialgene files
     bash local_rsync_only_hmm.sh "amrfinder"
 
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        version: '2021-03-01.1'
+        url: 'https://ftp.ncbi.nlm.nih.gov/hmm/NCBIfam-AMRFinder/2021-03-01.1/NCBIfam-AMRFinder.HMM.tar.gz'
+    END_VERSIONS
     """
 }

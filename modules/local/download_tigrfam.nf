@@ -4,11 +4,9 @@ process DOWNLOAD_TIGRFAM {
     errorStrategy 'retry'
     maxErrors 3
 
-
-
-
     output:
     path "tigrfam", emit: prism
+    path "versions.yml" , emit: versions
 
     script:
     """
@@ -25,5 +23,11 @@ process DOWNLOAD_TIGRFAM {
 
     # remove any non-socialgene files
     bash local_rsync_only_hmm.sh "tigrfam"
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        version: '15.0'
+        url: 'ftp://ftp.ncbi.nlm.nih.gov/hmm/TIGRFAMs/release_15.0/TIGRFAMs_15.0_HMM.LIB.gz -O TIGRFAMs_15.0_HMM.hmm.gz'
+    END_VERSIONS
     """
 }

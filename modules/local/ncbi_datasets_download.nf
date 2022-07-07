@@ -3,10 +3,10 @@ process NCBI_DATASETS_DOWNLOAD {
     // https://www.ncbi.nlm.nih.gov/datasets/docs/v1/
     label 'process_low'
 
-    conda (params.enable_conda ? "conda-forge::ncbi-datasets-cli=13.24.3 conda-forge::pigz==2.6" : null)
+    conda (params.enable_conda ? "conda-forge::ncbi-datasets-cli=13.28 conda-forge::pigz==2.6" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/ncbi-datasets-cli:13.24.3' :
-        'quay.io/biocontainers/ncbi-datasets-cli:13.24.3' }"
+        'quay.io/biocontainers/ncbi-datasets-cli:13.28' }"
 
     input:
     val input_taxon
@@ -23,10 +23,12 @@ process NCBI_DATASETS_DOWNLOAD {
     # download a taxon
     datasets download \\
         $input_taxon \\
+        --dehydrated \\
         $args
 
     # unzip files
     unzip ncbi_dataset.zip
+    datasets rehydrate --directory .
     rm ncbi_dataset.zip
     rm README.md
 

@@ -22,16 +22,17 @@ include { DOWNLOAD_VIRUS_ORTHOLOGOUS_GROUPS } from "./../../modules/local/downlo
 workflow HMM_MODELS {
 
     main:
-        hmm_outchannel                = Channel.fromList()
-        amrfinder_outchannel                = Channel.fromList()
-        bigslice_outchannel                 = Channel.fromList()
-        classiphage_outchannel              = Channel.fromList()
-        pfam_outchannel                     = Channel.fromList()
-        prism_outchannel                    = Channel.fromList()
-        resfams_outchannel                  = Channel.fromList()
-        tigrfam_outchannel                  = Channel.fromList()
-        virus_orthologous_groups_outchannel = Channel.fromList()
-        local_outchannel                    = Channel.fromList()
+        antismash_outchannel                = Channel.empty()
+        amrfinder_outchannel                = Channel.empty()
+        bigslice_outchannel                 = Channel.empty()
+        classiphage_outchannel              = Channel.empty()
+        pfam_outchannel                     = Channel.empty()
+        prism_outchannel                    = Channel.empty()
+        resfams_outchannel                  = Channel.empty()
+        tigrfam_outchannel                  = Channel.empty()
+        virus_orthologous_groups_outchannel = Channel.empty()
+        local_outchannel                    = Channel.empty()
+        hmm_outchannel                    = Channel.empty()
 
         hmm_internal_list = params.hmmlist
 

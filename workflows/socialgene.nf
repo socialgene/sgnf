@@ -60,6 +60,7 @@ include { GATHER_HMMS               } from "../subworkflows/local/gather_hmms.nf
 //include { PARSE_FEATURE_TABLES    } from '../subworkflows/local/feature_table_parse.nf'
 include { NCBI_TAXONOMY_INFO        } from '../subworkflows/local/ncbi_taxonomy_info.nf'
 include { PROCESS_GENOMES           } from '../subworkflows/local/process_genomes.nf'
+include { TIGRFAM_INFO              } from '../subworkflows/local/tigrfam_info.nf'
 
 
 
@@ -191,7 +192,8 @@ workflow DB_CREATOR {
             TIGRFAM_INFO()
             ch_versions = ch_versions.mix(TIGRFAM_INFO.out.versions)
         }
-
+TIGRFAM_INFO()
+            ch_versions = ch_versions.mix(TIGRFAM_INFO.out.versions)
         HMM_HASH(
             GATHER_HMMS.out.hmms,
             params.hmm_splits
@@ -235,7 +237,8 @@ workflow DB_CREATOR {
             hmmer_result_ch,
             blast_ch,
             mmseqs2_ch,
-            sg_modules
+            sg_modules,
+            params.hmmlist
         )
         ch_versions = ch_versions.mix(NEO4J_ADMIN_IMPORT.out.versions)
     }

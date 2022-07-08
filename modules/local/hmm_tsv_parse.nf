@@ -15,6 +15,9 @@ process HMM_TSV_PARSE {
 
     socialgene_hmm_tsv_parser --all_hmms ${x}
 
+    # python script currently makes a file of each hmm source possible, just delete the empty ones for now:
+    find . -type f -name '*hmms_out' -empty -print
+
     # Info about HMM nodes
     md5_as_filename_after_gzip.sh "sg_hmm_nodes_out" "sg_hmm_nodes_out.gz"
 

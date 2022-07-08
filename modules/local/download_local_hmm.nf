@@ -11,7 +11,7 @@ process DOWNLOAD_LOCAL_HMM {
 
     script:
     """
-    # currently hmmconvert_loop.sh requires the file to end with '.hmm'
+    # hmmconvert_loop.sh requires the file to end with '.hmm'
     hmmconvert ${x} > "${x}_socialgene"
     mkdir local
     mv "${x}_socialgene" ./local/"${x}_socialgene"

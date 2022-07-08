@@ -27,8 +27,8 @@ process DOWNLOAD_ANTISMASH {
 
     cat <<-END_VERSIONS > antismash_version.yml
     "${task.process}":
-        commit_sha: \${git_sha}
-        url: "https://github.com/antismash/antismash/commit/\${latestTag}"
+        commit_sha: ${git_sha}
+        url: "https://github.com/antismash/antismash/commit/${git_sha}"
     END_VERSIONS
     """
 }

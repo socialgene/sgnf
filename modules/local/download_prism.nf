@@ -4,7 +4,7 @@ process DOWNLOAD_PRISM {
 
     output:
     path "prism", emit: prism
-    path "versions.yml" , emit: versions
+    path "prism_versions.yml" , emit: versions
 
     script:
     """
@@ -20,7 +20,7 @@ process DOWNLOAD_PRISM {
     # remove any non-socialgene files
     bash remove_files_keep_directory_structure.sh "prism"
 
-    cat <<-END_VERSIONS > versions.yml
+    cat <<-END_VERSIONS > prism_versions.yml
     "${task.process}":
         version: '2017-03-21'
         notice: 'Cannot be redistributed'

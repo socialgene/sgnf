@@ -4,7 +4,7 @@ process DOWNLOAD_BIGSLICE {
 
     output:
     path "bigslice", emit: prism
-    path "versions.yml" , emit: versions
+    path "bigslice_versions.yml" , emit: versions
 
     script:
     """
@@ -23,7 +23,7 @@ process DOWNLOAD_BIGSLICE {
     # remove any non-hmm files
     bash remove_files_keep_directory_structure.sh "bigslice"
 
-    cat <<-END_VERSIONS > versions.yml
+    cat <<-END_VERSIONS > bigslice_versions.yml
     "${task.process}":
         version: 'v1.0.0/bigslice-models.2020-04-27'
         url: 'https://github.com/medema-group/bigslice/releases/download/v1.0.0/bigslice-models.2020-04-27.tar.gz'

@@ -37,6 +37,7 @@ include { HMMER_HMMSEARCH                   } from '../modules/local/hmmsearch.n
 include { HMM_HASH                          } from '../modules/local/hmm_hash.nf'
 include { HMM_TSV_PARSE                     } from '../modules/local/hmm_tsv_parse.nf'
 include { MMSEQS2                           } from '../modules/local/mmseqs2.nf'
+include { NCBI_DATASETS_DOWNLOAD            } from "../modules/local/ncbi_datasets_download.nf"
 include { NEO4J_ADMIN_IMPORT                } from '../modules/local/neo4j_admin_import.nf'
 include { NEO4J_HEADERS                     } from '../modules/local/neo4j_headers.nf'
 include { PAIRED_OMICS                      } from '../modules/local/paired_omics.nf'
@@ -47,35 +48,22 @@ include { PYHMMER                           } from '../modules/local/pyhmmer.nf'
 include { REFSEQ_ASSEMBLY_TO_TAXID          } from '../modules/local/refseq_assembly_to_taxid.nf'
 include { SEQKIT_SPLIT                      } from '../modules/local/seqkit/split/main.nf'
 
-include { NCBI_DATASETS_DOWNLOAD            } from "../modules/local/ncbi_datasets_download.nf"
-
 /*
 ========================================================================================
     IMPORT LOCAL SUBWORKFLOWS
 ========================================================================================
 */
 
-
 include { GATHER_HMMS               } from "../subworkflows/local/gather_hmms.nf"
-//include { PARSE_FEATURE_TABLES    } from '../subworkflows/local/feature_table_parse.nf'
 include { NCBI_TAXONOMY_INFO        } from '../subworkflows/local/ncbi_taxonomy_info.nf'
 include { PROCESS_GENOMES           } from '../subworkflows/local/process_genomes.nf'
 include { TIGRFAM_INFO              } from '../subworkflows/local/tigrfam_info.nf'
-
-
-
-//
-// SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
-//
 
 /*
 ========================================================================================
     IMPORT NF-CORE MODULES/SUBWORKFLOWS
 ========================================================================================
 */
-
-//
-// MODULE: Installed but modified from nf-core/modules
 
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 include { DIAMOND_BLASTP      } from '../modules/local/diamond/blastp/main.nf'
@@ -187,18 +175,19 @@ workflow DB_CREATOR {
         GATHER_HMMS()
         ch_versions = ch_versions.mix(GATHER_HMMS.out.versions)
 
-        if (params.hmmlist.contains("tigrfam")){
-            // download additional tigrfam info
-            TIGRFAM_INFO()
-            ch_versions = ch_versions.mix(TIGRFAM_INFO.out.versions)
-        }
-TIGRFAM_INFO()
-            ch_versions = ch_versions.mix(TIGRFAM_INFO.out.versions)
+        // if (params.hmmlist.contains("tigrfam")){
+        //     // download additional tigrfam info
+        //     TIGRFAM_INFO()
+        //     ch_versions = ch_versions.mix(TIGRFAM_INFO.out.versions)
+        // }
+        TIGRFAM_INFO()
+        ch_versions = ch_versions.mix(TIGRFAM_INFO.out.versions)
+
         HMM_HASH(
             GATHER_HMMS.out.hmms,
             params.hmm_splits
         )
-       ch_versions = ch_versions.mix(HMM_HASH.out.versions.first())
+       ch_versions = ch_versions.mix(HMM_HASH.out.versions)
 
 
         // make a channel that's the cartesian product of hmm model files and fasta files
@@ -237,8 +226,7 @@ TIGRFAM_INFO()
             hmmer_result_ch,
             blast_ch,
             mmseqs2_ch,
-            sg_modules,
-            params.hmmlist
+            sg_modules
         )
         ch_versions = ch_versions.mix(NEO4J_ADMIN_IMPORT.out.versions)
     }

@@ -6,13 +6,12 @@ process DOWNLOAD_NCBI {
 
     input:
     val input_taxon
-    path "versions.yml" , emit: versions
 
     output:
     // The directories are emitted because nf will crash with lots and lots of input files
     path "fasta"        , emit: fasta
     path "features"     , emit: feature_table
-    path "versions.yml" , emit: versions
+    path "ncbi_versions.yml" , emit: versions
 
     shell:
     """
@@ -23,7 +22,7 @@ process DOWNLOAD_NCBI {
         $input_taxon
 
     # TODO: how to get esearch version
-    cat <<-END_VERSIONS > versions.yml
+    cat <<-END_VERSIONS > ncbi_versions.yml
     "${task.process}":
         python: \$(ascp --version | head -n1 | sed -E 's/IBM Aspera CLI version //g')
     END_VERSIONS

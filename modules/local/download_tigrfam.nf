@@ -6,7 +6,7 @@ process DOWNLOAD_TIGRFAM {
 
     output:
     path "tigrfam", emit: prism
-    path "versions.yml" , emit: versions
+    path "tigrfam_versions.yml" , emit: versions
 
     script:
     """
@@ -22,7 +22,7 @@ process DOWNLOAD_TIGRFAM {
     # remove any non-socialgene files
     bash remove_files_keep_directory_structure.sh "tigrfam"
 
-    cat <<-END_VERSIONS > versions.yml
+    cat <<-END_VERSIONS > tigrfam_versions.yml
     "${task.process}":
         version: '15.0'
         url: 'ftp://ftp.ncbi.nlm.nih.gov/hmm/TIGRFAMs/release_15.0/TIGRFAMs_15.0_HMM.LIB.gz -O TIGRFAMs_15.0_HMM.hmm.gz'

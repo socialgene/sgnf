@@ -6,7 +6,7 @@ process DOWNLOAD_AMRFINDER {
 
     output:
     path "amrfinder", emit: hmms
-    path "versions.yml" , emit: versions
+    path "amrfinder_versions.yml" , emit: versions
 
     script:
     """
@@ -32,7 +32,7 @@ process DOWNLOAD_AMRFINDER {
 
     bash remove_files_keep_directory_structure.sh "amrfinder"
 
-    cat <<-END_VERSIONS > versions.yml
+    cat <<-END_VERSIONS > amrfinder_versions.yml
     "${task.process}":
         version: '2021-03-01.1'
         url: 'https://ftp.ncbi.nlm.nih.gov/hmm/NCBIfam-AMRFinder/2021-03-01.1/NCBIfam-AMRFinder.HMM.tar.gz'

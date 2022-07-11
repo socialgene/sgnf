@@ -4,7 +4,7 @@ process DOWNLOAD_CLASSIPHAGE {
 
     output:
     path "classiphage", emit: classiphage
-    path "versions.yml" , emit: versions
+    path "classiphage_versions.yml" , emit: versions
 
     script:
     """
@@ -44,7 +44,7 @@ process DOWNLOAD_CLASSIPHAGE {
     # remove any non-hmm files
     bash remove_files_keep_directory_structure.sh "classiphage"
 
-    cat <<-END_VERSIONS > versions.yml
+    cat <<-END_VERSIONS > classiphage_versions.yml
     "${task.process}":
         url1: 'http://appmibio.uni-goettingen.de/software/ClassiPhage/Ino_refined_HMMs.zip'
         url2: 'http://appmibio.uni-goettingen.de/software/ClassiPhage/Myo_refined_HMMs.zip'

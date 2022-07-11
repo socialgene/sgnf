@@ -11,7 +11,7 @@ process NEO4J_HEADERS {
 
     script:
     """
-    socialgene_export_neo4j_headers --outdir . --sg_modules base $sg_modules
+    socialgene_export_neo4j_headers --outdir . --sg_modules $sg_modules --hmmlist ${params.hmmlist.join(' ')}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

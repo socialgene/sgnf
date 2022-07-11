@@ -11,7 +11,6 @@ process NEO4J_ADMIN_IMPORT {
     path blast
     path mmseqs2
     val sg_modules
-    val hmmlist
 
     output:
     path "${outdir_neo4j}/import.report", emit: placeholder
@@ -37,7 +36,7 @@ process NEO4J_ADMIN_IMPORT {
     --uid None \\
     --gid None \\
     --sg_modules ${sg_modules} \\
-    --hmmlist ${hmmlist}
+    --hmmlist ${params.hmmlist.join(' ')}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

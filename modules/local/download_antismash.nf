@@ -7,7 +7,7 @@ process DOWNLOAD_ANTISMASH {
 
     output:
     path "antismash", emit: antismash
-    path "antismash_version.yml" , emit: versions
+    path "antismash_versions.yml" , emit: versions
 
     script:
     """
@@ -25,7 +25,7 @@ process DOWNLOAD_ANTISMASH {
     # remove any non-socialgene files
     bash remove_files_keep_directory_structure.sh "antismash"
 
-    cat <<-END_VERSIONS > antismash_version.yml
+    cat <<-END_VERSIONS > antismash_versions.yml
     "${task.process}":
         commit_sha: ${git_sha}
         url: "https://github.com/antismash/antismash/commit/${git_sha}"

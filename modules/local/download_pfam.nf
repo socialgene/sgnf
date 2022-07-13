@@ -29,7 +29,7 @@ process DOWNLOAD_PFAM {
 
     cat <<-END_VERSIONS > pfam_versions.yml
     "${task.process}":
-        version: "${version}""
+        version: "${version}"
         url: "ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam${version}/Pfam-A.hmm.gz"
     END_VERSIONS
 

@@ -10,7 +10,7 @@ workflow PROCESS_GENOMES {
             NCBI_GENOME_DOWNLOAD(params.ncbi_genome_download_command)
             NCBI_GENOME_DOWNLOAD
                 .out
-                .processed_genome_ch
+                .gbff_files
                 .set{genome_file_ch}
             ch_versions_out = ch_versions.mix(NCBI_GENOME_DOWNLOAD.out.versions)
 

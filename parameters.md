@@ -130,7 +130,7 @@ Define where the pipeline should find input data and save output data.
 |-----------|-----------|-----------|-----------|-----------|-----------|
 | `ncbi_genome_download_command` | Arguments to pass to ncbi_genome_download_command <details><summary>Help</summary><small>See the following link for more info about commands you can use:
 https://github.com/kblin/ncbi-genome-download</small></details>| `string` | --genera \'Micromonospora sp. B006\' bacteria |  |  |
-| `ncbi_datasets_taxon` | Taxonomic name  (maybe NCBI taxonomy id as well?) see extended help before using <details><summary>Help</summary><small>Note/Warning:
+| `ncbi_datasets_command` | Taxonomic name  (maybe NCBI taxonomy id as well?) see extended help before using <details><summary>Help</summary><small>Note/Warning:
 Specifying a taxon directly has the potential to download a large number of genomes that you may not be prepared to handle.
 I highly recommend searching here (https://www.ncbi.nlm.nih.gov/genome/browse#!/prokaryotes/) first to get an idea of how many input genomes you can expect.
 

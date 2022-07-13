@@ -24,7 +24,7 @@ process DOWNLOAD_NCBI {
     # TODO: how to get esearch version
     cat <<-END_VERSIONS > ncbi_versions.yml
     "${task.process}":
-        python: \$(ascp --version | head -n1 | sed -E 's/IBM Aspera CLI version //g')
+        aspera: \$(ascp --version | head -n1 | sed -E 's/IBM Aspera CLI version //g')
     END_VERSIONS
     """
 }

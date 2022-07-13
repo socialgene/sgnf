@@ -11,7 +11,7 @@ process NCBI_GENOME_DOWNLOAD {
 
     output:
     path "**/*.gbff.gz",    emit: gbff_files
-    path 'versions.yml',   emit: version
+    path 'versions.yml',   emit: versions
 
     script:
     """

@@ -17,7 +17,7 @@
                     "help_text": "See the following link for more info about commands you can use:\nhttps://github.com/kblin/ncbi-genome-download",
                     "default": "None"
                 },
-                "ncbi_datasets_taxon": {
+                "ncbi_datasets_command": {
                     "type": "string",
                     "default": "None",
                     "description": "Taxonomic name  (maybe NCBI taxonomy id as well?) see extended help before using",
@@ -66,10 +66,7 @@
                     "default": "socialgene_downloads"
                 }
             },
-            "required": [
-                "single_outdir",
-                "outdir_download_cache"
-            ]
+            "required": ["single_outdir", "outdir_download_cache"]
         },
         "new_group_1": {
             "title": "New Group 1",
@@ -403,7 +400,7 @@
                 },
                 "HMMSEARCH_F3": {
                     "type": "number",
-                    "default": 1e-05,
+                    "default": 1e-5,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 },

@@ -31,24 +31,18 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 ========================================================================================
 */
 
-include { ANTISMASH                         } from '../modules/local/antismash/main.nf'
-include { ASSEMBLY_FTP_URLS                 } from '../modules/local/assembly_ftp_urls.nf'
-include { CRABHASH                          } from '../modules/local/crabhash.nf'
-include { FEATURE_TABLE_DOWNLOAD            } from '../modules/local/feature_table_download.nf'
-include { HMMER_HMMSEARCH                   } from '../modules/local/hmmsearch.nf'
-include { HMM_HASH                          } from '../modules/local/hmm_hash.nf'
-include { HMM_TSV_PARSE                     } from '../modules/local/hmm_tsv_parse.nf'
-include { MMSEQS2                           } from '../modules/local/mmseqs2.nf'
-include { NEO4J_ADMIN_IMPORT                } from '../modules/local/neo4j_admin_import.nf'
-include { NEO4J_HEADERS                     } from '../modules/local/neo4j_headers.nf'
-include { PAIRED_OMICS                      } from '../modules/local/paired_omics.nf'
-include { PARAMETER_EXPORT_FOR_NEO4J        } from '../modules/local/parameter_export_for_neo4j.nf'
-include { PROCESS_GENBANK_FILES             } from '../modules/local/process_genbank_files.nf'
-include { PROTEIN_FASTA_DOWNLOAD            } from '../modules/local/protein_fasta_download.nf'
-include { PYHMMER                           } from '../modules/local/pyhmmer.nf'
-include { REFSEQ_ASSEMBLY_TO_TAXID          } from '../modules/local/refseq_assembly_to_taxid.nf'
-include { SEQKIT_SPLIT                      } from '../modules/local/seqkit/split/main.nf'
-include { NCBI_DATASETS_DOWNLOAD            } from "../modules/local/ncbi_datasets_download.nf"
+include { CRABHASH                              } from '../modules/local/crabhash.nf'
+include { FEATURE_TABLE_DOWNLOAD                } from '../modules/local/feature_table_download.nf'
+include { HMM_HASH                              } from '../modules/local/hmm_hash.nf'
+include { HMM_TSV_PARSE                         } from '../modules/local/hmm_tsv_parse.nf'
+include { PARAMETER_EXPORT_FOR_NEO4J            } from '../modules/local/parameter_export_for_neo4j.nf'
+include { SEQKIT_SPLIT                          } from '../modules/local/seqkit/split/main.nf'
+include { NCBI_DATASETS_DOWNLOAD                } from "../modules/local/ncbi_datasets_download.nf"
+
+include { DOWNLOAD_REFSEQ_NONREDUNDANT_COMPLETE } from "../modules/local/download_refseq_nonredundant_complete.nf"
+
+
+
 
 /*
 ========================================================================================
@@ -57,10 +51,8 @@ include { NCBI_DATASETS_DOWNLOAD            } from "../modules/local/ncbi_datase
 */
 
 
-include { DOWNLOAD_AND_GATHER } from "../subworkflows/local/download_and_gather.nf"
-include { LOCAL               } from '../subworkflows/local/inputs.nf'
-include { NCBI                } from '../subworkflows/local/inputs.nf'
-include { GATHER_HMMS          } from '../subworkflows/local/hmm_models.nf'
+
+include { GATHER_HMMS               } from "../subworkflows/local/gather_hmms.nf"
 
 
 
@@ -88,51 +80,25 @@ include { DIAMOND_MAKEDB      } from '../modules/local/diamond/makedb/main.nf'
 */
 
 workflow CHTC_PREP {
-
+    ch_versions = Channel.empty()
     PARAMETER_EXPORT_FOR_NEO4J()
 
-    if (params.ncbi_genome_download_command){
-        NCBI()
-        NCBI.out.processed_genome_ch.set{processed_genome_ch}
-    }
-    if (params.local_genbank) {
-        processed_genome_ch = Channel.fromPath( params.local_genbank ).buffer( size: 600 )
-        //LOCAL.out.set{processed_genome_ch}
-
-    }
-    if (params.ncbi_datasets_command){
-        NCBI_DATASETS_DOWNLOAD(params.ncbi_datasets_command)
-        NCBI_DATASETS_DOWNLOAD.out.gbff_files.set{processed_genome_ch}
-        sequence_files_glob = "*.gbff.gz"
-    }
-
-    if (params.sequence_files_glob) {
-        sequence_files_glob = params.sequence_files_glob
-    }
-
-
-    PROCESS_GENBANK_FILES(
-        processed_genome_ch,
-        1,
-        sequence_files_glob
-    )
-
-    PROCESS_GENBANK_FILES.out.fasta
-        .flatten()
-        .set{ch_fasta}
-
+    DOWNLOAD_REFSEQ_NONREDUNDANT_COMPLETE()
+    CRABHASH(DOWNLOAD_REFSEQ_NONREDUNDANT_COMPLETE.out.fasta, params.crabhash_path, params.crabhash_glob)
 
     GATHER_HMMS()
+    ch_versions = ch_versions.mix(GATHER_HMMS.out.versions)
 
     HMM_HASH(
         GATHER_HMMS.out.hmms,
         params.hmm_splits
     )
+    ch_versions = ch_versions.mix(HMM_HASH.out.versions)
 
     HMM_TSV_PARSE(
         HMM_HASH.out.all_hmms_tsv
     )
-
+    ch_versions = ch_versions.mix(HMM_TSV_PARSE.out.versions)
 
 
 }

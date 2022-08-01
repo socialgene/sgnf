@@ -11,7 +11,7 @@ process CRABHASH {
 
     output:
     path "out/*.faa.gz"          , emit: fasta
-    path "out/*.protein_info.gz" , emit: tsv
+    path "**/*.protein_info.gz" , emit: tsv
 
     script:
     def args = task.ext.args ?: ''
@@ -24,7 +24,7 @@ process CRABHASH {
         ${task.cpus}
 
     cd out
-    pigz -p ${task.cpus} -6 --rsyncable *.tsv --stdout > all.protein_info.gz
+    sed 's/\$/\\t\\t/' *.tsv | gzip -6 --rsyncable > all.protein_info.gz
     rm *.tsv
     md5_as_filename.sh 'all.protein_info.gz' 'protein_info.gz'
 

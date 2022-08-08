@@ -34,6 +34,7 @@ include { ANTISMASH                         } from '../modules/local/antismash/m
 include { ASSEMBLY_FTP_URLS                 } from '../modules/local/assembly_ftp_urls.nf'
 include { FEATURE_TABLE_DOWNLOAD            } from '../modules/local/feature_table_download.nf'
 include { HMMER_HMMSEARCH                   } from '../modules/local/hmmsearch.nf'
+include { HMMSEARCH_PARSE                   } from '../modules/local/hmmsearch_parse.nf'
 include { HMM_HASH                          } from '../modules/local/hmm_hash.nf'
 include { HMM_TSV_PARSE                     } from '../modules/local/hmm_tsv_parse.nf'
 include { MMSEQS2                           } from '../modules/local/mmseqs2.nf'
@@ -204,7 +205,10 @@ workflow DB_CREATOR {
         HMMER_HMMSEARCH(hmm_ch)
         ch_versions = ch_versions.mix(HMMER_HMMSEARCH.out.versions.first())
 
-        hmmer_result_ch = HMMER_HMMSEARCH.out.parseddomtblout.collect()
+        HMMSEARCH_PARSE(HMMER_HMMSEARCH.out.domtblout)
+        ch_versions = ch_versions.mix(HMMSEARCH_PARSE.out.versions.first())
+
+        hmmer_result_ch = HMMSEARCH_PARSE.out.parseddomtblout.collect()
 
         HMM_TSV_PARSE(
             HMM_HASH.out.all_hmms_tsv

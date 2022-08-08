@@ -1,5 +1,5 @@
 process SEQKIT_SPLIT {
-    label 'process_medium'
+    label 'process_high'
 
     conda (params.enable_conda ? 'bioconda::seqkit=2.1.0' : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
@@ -14,13 +14,13 @@ process SEQKIT_SPLIT {
     path 'versions.yml'   , emit: version
 
     script:
-    def software = getSoftwareName(task.process)
+    def args = task.ext.args ?: ''
     """
     seqkit \\
         split \\
+        -j ${task.cpus} \\
         ${fasta} \\
-        ${options.args} \\
-        ${options.args2} \\
+        ${args} \\
         -O outfolder
 
     cat <<-END_VERSIONS > versions.yml

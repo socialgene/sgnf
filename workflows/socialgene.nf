@@ -182,6 +182,7 @@ workflow DB_CREATOR {
         // }
         TIGRFAM_INFO()
         ch_versions = ch_versions.mix(TIGRFAM_INFO.out.versions)
+        sg_modules = sg_modules + " tigrfam"
 
         HMM_HASH(
             GATHER_HMMS.out.hmms,

@@ -1,13 +1,13 @@
 
-process NCBI_DATASETS_DOWNLOAD_TAXON {
+process NCBI_DATASETS_DOWNLOAD {
     // https://www.ncbi.nlm.nih.gov/datasets/docs/v1/
     label 'process_low'
 
-    conda (params.enable_conda ? "conda-forge::ncbi-datasets-cli=13.24.3 conda-forge::pigz==2.6" : null)
+    conda (params.enable_conda ? "conda-forge::ncbi-datasets-cli=13.28 conda-forge::pigz==2.6" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/ncbi-datasets-cli:13.24.3' :
-        'quay.io/biocontainers/ncbi-datasets-cli:13.24.3' }"
-    
+        'quay.io/biocontainers/ncbi-datasets-cli:13.28' }"
+
     input:
     val input_taxon
 
@@ -15,15 +15,20 @@ process NCBI_DATASETS_DOWNLOAD_TAXON {
     path "ncbi_dataset/data/assembly_data_report.jsonl" , emit: assembly_data_report
     path "ncbi_dataset/data/dataset_catalog.json"       , emit: dataset_catalog
     path "**/*.gbff.gz"                                 , emit: gbff_files
+    path "versions.yml"                                 , emit: versions
 
     script:
     def args = task.ext.args ?: ''
     """
     # download a taxon
-    datasets download genome taxon $input_taxon $args --include-gbff --exclude-genomic-cds --exclude-protein --exclude-rna --exclude-seq
+    datasets download \\
+        $input_taxon \\
+        --dehydrated \\
+        $args
 
     # unzip files
     unzip ncbi_dataset.zip
+    datasets rehydrate --directory .
     rm ncbi_dataset.zip
     rm README.md
 
@@ -37,7 +42,8 @@ process NCBI_DATASETS_DOWNLOAD_TAXON {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        python: \$(pigz --version | sed -E 's/pigz //g')
+        pigz: \$(pigz --version | sed -E 's/pigz //g')
+        datasets: \$(datasets version | sed 's/^ *//g')
     END_VERSIONS
     """
 }

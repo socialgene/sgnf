@@ -20,4 +20,6 @@ lint:
     - conf/test_full.config
     - assets/multiqc_config.yml
   readme: false
+  actions_ci: false
+
 repository_type: pipeline

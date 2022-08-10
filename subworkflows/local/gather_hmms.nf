@@ -19,21 +19,21 @@ include { DOWNLOAD_TIGRFAM                 } from "./../../modules/local/downloa
 include { DOWNLOAD_VIRUS_ORTHOLOGOUS_GROUPS } from "./../../modules/local/download_virus_orthologous_groups.nf"
 
 
-workflow HMM_MODELS {
+workflow GATHER_HMMS {
 
     main:
-
-        antismash_outchannel                = Channel.fromList()
-        amrfinder_outchannel                = Channel.fromList()
-        bigslice_outchannel                 = Channel.fromList()
-        classiphage_outchannel              = Channel.fromList()
-        pfam_outchannel                     = Channel.fromList()
-        prism_outchannel                    = Channel.fromList()
-        resfams_outchannel                  = Channel.fromList()
-        tigrfam_outchannel                  = Channel.fromList()
-        virus_orthologous_groups_outchannel = Channel.fromList()
-        local_outchannel                    = Channel.fromList()
-
+        antismash_outchannel                = Channel.empty()
+        amrfinder_outchannel                = Channel.empty()
+        bigslice_outchannel                 = Channel.empty()
+        classiphage_outchannel              = Channel.empty()
+        pfam_outchannel                     = Channel.empty()
+        prism_outchannel                    = Channel.empty()
+        resfams_outchannel                  = Channel.empty()
+        tigrfam_outchannel                  = Channel.empty()
+        virus_orthologous_groups_outchannel = Channel.empty()
+        local_outchannel                    = Channel.empty()
+        hmm_outchannel                      = Channel.empty()
+        ch_versions                         = Channel.empty()
         hmm_internal_list = params.hmmlist
 
         if (hmm_internal_list == null) {
@@ -48,55 +48,59 @@ workflow HMM_MODELS {
         }
 
         if (hmm_internal_list.contains("antismash")) {
-            DOWNLOAD_ANTISMASH()
+            DOWNLOAD_ANTISMASH(params.antismash_hmms_git_sha)
             DOWNLOAD_ANTISMASH.out.set{antismash_outchannel}
+            ch_versions = ch_versions.mix(DOWNLOAD_ANTISMASH.out.versions)
         }
         if (hmm_internal_list.contains("amrfinder")) {
             DOWNLOAD_AMRFINDER()
             DOWNLOAD_AMRFINDER.out.set{amrfinder_outchannel}
+            ch_versions = ch_versions.mix(DOWNLOAD_AMRFINDER.out.versions)
         }
         if (hmm_internal_list.contains("bigslice")) {
             DOWNLOAD_BIGSLICE()
             DOWNLOAD_BIGSLICE.out.set{bigslice_outchannel}
-
+            ch_versions = ch_versions.mix(DOWNLOAD_BIGSLICE.out.versions)
         }
         if (hmm_internal_list.contains("classiphage")) {
             DOWNLOAD_CLASSIPHAGE()
             DOWNLOAD_CLASSIPHAGE.out.set{classiphage_outchannel}
-
+            ch_versions = ch_versions.mix(DOWNLOAD_CLASSIPHAGE.out.versions)
         }
         if (hmm_internal_list.contains("pfam")) {
-            DOWNLOAD_PFAM()
+            DOWNLOAD_PFAM(params.pfam_version)
             DOWNLOAD_PFAM.out.set{pfam_outchannel}
-
+            ch_versions = ch_versions.mix(DOWNLOAD_PFAM.out.versions)
         }
         if (hmm_internal_list.contains("prism")) {
             DOWNLOAD_PRISM()
             DOWNLOAD_PRISM.out.set{prism_outchannel}
-
+            ch_versions = ch_versions.mix(DOWNLOAD_PRISM.out.versions)
         }
         if (hmm_internal_list.contains("resfams")) {
             DOWNLOAD_RESFAMS()
             DOWNLOAD_RESFAMS.out.set{resfams_outchannel}
-
+            ch_versions = ch_versions.mix(DOWNLOAD_RESFAMS.out.versions)
         }
         if (hmm_internal_list.contains("tigrfam")) {
             DOWNLOAD_TIGRFAM()
             DOWNLOAD_TIGRFAM.out.set{tigrfam_outchannel}
-
+            ch_versions = ch_versions.mix(DOWNLOAD_TIGRFAM.out.versions)
         }
         if (hmm_internal_list.contains("virus_orthologous_groups")) {
             DOWNLOAD_VIRUS_ORTHOLOGOUS_GROUPS()
             DOWNLOAD_VIRUS_ORTHOLOGOUS_GROUPS.out.set{virus_orthologous_groups_outchannel}
-
+            ch_versions = ch_versions.mix(DOWNLOAD_VIRUS_ORTHOLOGOUS_GROUPS.out.versions)
         }
         if (params.custom_hmm_file) {
             DOWNLOAD_LOCAL_HMM(params.custom_hmm_file)
             DOWNLOAD_LOCAL_HMM.out.set{local_outchannel}
+            ch_versions = ch_versions.mix(DOWNLOAD_LOCAL_HMM.out.versions)
        }
 
-    antismash_outchannel
+    hmm_outchannel
         .concat (
+            antismash_outchannel,
             amrfinder_outchannel,
             bigslice_outchannel,
             classiphage_outchannel,
@@ -110,6 +114,8 @@ workflow HMM_MODELS {
         .toList()
         .set    { outchannel }
 
+
     emit:
         hmms = outchannel
+        versions = ch_versions
 }

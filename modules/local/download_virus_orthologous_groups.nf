@@ -4,6 +4,7 @@ process DOWNLOAD_VIRUS_ORTHOLOGOUS_GROUPS {
 
     output:
     path "virus_orthologous_groups", emit: virus_orthologous_groups
+    path "virus_orthologous_groups_versions.yml" , emit: versions
 
     script:
     """
@@ -11,11 +12,11 @@ process DOWNLOAD_VIRUS_ORTHOLOGOUS_GROUPS {
     mkdir virus_orthologous_groups
     cd virus_orthologous_groups
 
-    # wget http://fileshare.csb.univie.ac.at/vog/latest/vog.annotations.tsv.gz
-    # wget http://fileshare.csb.univie.ac.at/vog/latest/vog.annotations.tsv.gz.md5
+    # wget http://fileshare.csb.univie.ac.at/vog/vog211/vog.annotations.tsv.gz
+    # wget http://fileshare.csb.univie.ac.at/vog/vog211/vog.annotations.tsv.gz.md5
 
-    wget http://fileshare.csb.univie.ac.at/vog/latest/vog.hmm.tar.gz
-    wget http://fileshare.csb.univie.ac.at/vog/latest/vog.hmm.tar.gz.md5
+    wget http://fileshare.csb.univie.ac.at/vog/vog211/vog.hmm.tar.gz
+    wget http://fileshare.csb.univie.ac.at/vog/vog211/vog.hmm.tar.gz.md5
     md5sum -c vog.hmm.tar.gz.md5
 
     tar -xzvf vog.hmm.tar.gz
@@ -23,11 +24,17 @@ process DOWNLOAD_VIRUS_ORTHOLOGOUS_GROUPS {
     rm vog.hmm.tar.gz.md5
 
     cd ..
-    # convert hmm models to version 3
+    # convert hmm models to HMMER version 3
     bash hmmconvert_loop.sh
 
     # remove any non-hmm files
-    bash local_rsync_only_hmm.sh "virus_orthologous_groups"
+    bash remove_files_keep_directory_structure.sh "virus_orthologous_groups"
+
+    cat <<-END_VERSIONS > virus_orthologous_groups_versions.yml
+    "${task.process}":
+        version: 'vog211'
+        url: 'http://fileshare.csb.univie.ac.at/vog/vog211/vog.hmm.tar.gz'
+    END_VERSIONS
     """
 }
 

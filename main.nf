@@ -1,7 +1,7 @@
 #!/usr/bin/env nextflow
 /*
 ========================================================================================
-    nf-core/socialgene
+    socialgene
 ========================================================================================
     Github : https://github.com/socialgene
     Website: https://socialgene.github.io
@@ -34,20 +34,19 @@ nextflow.enable.dsl = 2
 */
 
 include { DB_CREATOR } from './workflows/socialgene'
-include { REFSEQ } from './workflows/socialgene_refseq'
+//include { REFSEQ } from './workflows/socialgene_refseq'
 include { CHTC_PREP } from './workflows/chtc_prep'
 
 //
-// WORKFLOW: Run main nf-core/socialgene analysis pipeline
+// WORKFLOW: Run mainsocialgene/sgnf analysis pipeline
 //
 workflow SOCIALGENE {
-    if (params.refseq_nr_protein_fasta_dir){
-        REFSEQ()
-    } else if (params.chtc_prep_only) {
+    if (params.refseq_complete_step_1){
         CHTC_PREP()
     } else {
         DB_CREATOR()
     }
+
 }
 
 /*

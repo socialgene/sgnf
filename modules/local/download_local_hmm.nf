@@ -7,13 +7,19 @@ process DOWNLOAD_LOCAL_HMM {
 
     output:
     path "local", emit: local
+    path "local_versions.yml" , emit: versions
+
 
     script:
     """
-    # currently hmmconvert_loop.sh requires the file to end with '.hmm'
+    # hmmconvert_loop.sh requires the file to end with '.hmm'
     hmmconvert ${x} > "${x}_socialgene"
     mkdir local
     mv "${x}_socialgene" ./local/"${x}_socialgene"
 
+    cat <<-END_VERSIONS > local_versions.yml
+    "${task.process}":
+        hmmer: \$(hmmsearch -h | grep -o '^# HMMER [0-9.]*' | sed 's/^# HMMER *//')
+    END_VERSIONS
     """
 }

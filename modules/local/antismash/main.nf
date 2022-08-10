@@ -54,7 +54,3 @@ process ANTISMASH {
     """
 }
 
-workflow {
-    a=file(params.a)
-    ANTISMASH(a)
-}

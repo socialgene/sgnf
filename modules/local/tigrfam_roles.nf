@@ -8,6 +8,7 @@ process TIGRFAM_ROLES {
     path "*.tigrfam_mainrole.gz", emit: tigrfam_mainrole
     path "*.tigrfam_subrole.gz", emit: tigrfam_subrole
     path "*.tigrfam_role.gz", emit: tigrfam_role
+    path "versions.yml" , emit: versions
 
     script:
     """
@@ -39,5 +40,10 @@ process TIGRFAM_ROLES {
         "role.tsv.gz" \\
         "tigrfam_role.gz"
 
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        version: '15.0'
+        url: 'https://ftp.ncbi.nlm.nih.gov/hmm/TIGRFAMs/release_15.0/TIGR_ROLE_NAMES'
+    END_VERSIONS
     """
 }

@@ -6,16 +6,16 @@ process NCBI_GENOME_DOWNLOAD {
         'https://depot.galaxyproject.org/singularity/ncbi-genome-download:0.3.1--pyh5e36f6f_0' :
         'quay.io/biocontainers/ncbi-genome-download:0.3.1--pyh5e36f6f_0' }"
 
+    input:
+    val input_args
+
     output:
     path "**/*.gbff.gz",    emit: gbff_files
-    path 'versions.yml',   emit: version
+    path 'versions.yml',   emit: versions
 
     script:
-    def args = task.ext.args ?: ''
-
     """
-    ncbi-genome-download \\
-        $args
+    ncbi-genome-download $input_args
 
 
     cat <<-END_VERSIONS > versions.yml

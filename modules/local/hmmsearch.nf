@@ -5,7 +5,7 @@ process HMMER_HMMSEARCH {
 
 
     output:
-    path "*.parseddomtblout.gz", emit: parseddomtblout, optional:true //optional in case no domains found
+    path "*.domtblout.gz", emit: domtblout, optional:true //optional in case no domains found
     path "versions.yml" , emit: versions
 
     when:
@@ -30,19 +30,11 @@ process HMMER_HMMSEARCH {
 
     rm temp.fa
 
-    socialgene_process_domtblout \\
-        --domtblout_file "${fasta}.domtblout" \\
-        --outpath "parseddomtblout"
-
-    rm "${fasta}.domtblout"
-
-    md5_as_filename_after_gzip.sh "parseddomtblout" "parseddomtblout.gz"
+    md5_as_filename_after_gzip.sh "${fasta}.domtblout" "domtblout.gz"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         hmmer: \$(hmmsearch -h | grep -o '^# HMMER [0-9.]*' | sed 's/^# HMMER *//')
-        socialgene: \$(socialgene_version)
-
     END_VERSIONS
     """
 }

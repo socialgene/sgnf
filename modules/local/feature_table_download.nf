@@ -7,6 +7,7 @@ process FEATURE_TABLE_DOWNLOAD {
 
     output:
     path "*.featuretable.gz", emit: featuretable
+    path "versions.yml" , emit: versions
 
     script:
     """
@@ -19,7 +20,7 @@ process FEATURE_TABLE_DOWNLOAD {
     md5_as_filename_after_gzip.sh "temp2" "featuretable"
 
     TODO: output list of genomes in the feature table, eg:
-    cat <<-END_VERSIONS > genomes.yml
+    cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         name_of_featuretable : \$(cat genome_url_per_line_file)
     END_VERSIONS

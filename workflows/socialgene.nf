@@ -30,14 +30,15 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
     IMPORT LOCAL MODULES
 ========================================================================================
 */
-
 include { ANTISMASH                         } from '../modules/local/antismash/main.nf'
 include { ASSEMBLY_FTP_URLS                 } from '../modules/local/assembly_ftp_urls.nf'
 include { FEATURE_TABLE_DOWNLOAD            } from '../modules/local/feature_table_download.nf'
 include { HMMER_HMMSEARCH                   } from '../modules/local/hmmsearch.nf'
+include { HMMSEARCH_PARSE                   } from '../modules/local/hmmsearch_parse.nf'
 include { HMM_HASH                          } from '../modules/local/hmm_hash.nf'
 include { HMM_TSV_PARSE                     } from '../modules/local/hmm_tsv_parse.nf'
 include { MMSEQS2                           } from '../modules/local/mmseqs2.nf'
+include { NCBI_DATASETS_DOWNLOAD            } from "../modules/local/ncbi_datasets_download.nf"
 include { NEO4J_ADMIN_IMPORT                } from '../modules/local/neo4j_admin_import.nf'
 include { NEO4J_HEADERS                     } from '../modules/local/neo4j_headers.nf'
 include { PAIRED_OMICS                      } from '../modules/local/paired_omics.nf'
@@ -48,26 +49,16 @@ include { PYHMMER                           } from '../modules/local/pyhmmer.nf'
 include { REFSEQ_ASSEMBLY_TO_TAXID          } from '../modules/local/refseq_assembly_to_taxid.nf'
 include { SEQKIT_SPLIT                      } from '../modules/local/seqkit/split/main.nf'
 
-include { NCBI_DATASETS_DOWNLOAD_TAXON      } from "../modules/local/ncbi_datasets_download_taxon.nf"
-
 /*
 ========================================================================================
     IMPORT LOCAL SUBWORKFLOWS
 ========================================================================================
 */
 
-
-include { DOWNLOAD_AND_GATHER       } from "../subworkflows/local/download_and_gather.nf"
-//include { PARSE_FEATURE_TABLES    } from '../subworkflows/local/feature_table_parse.nf'
-include { LOCAL                     } from '../subworkflows/local/inputs.nf'
-include { NCBI                      } from '../subworkflows/local/inputs.nf'
+include { GATHER_HMMS               } from "../subworkflows/local/gather_hmms.nf"
 include { NCBI_TAXONOMY_INFO        } from '../subworkflows/local/ncbi_taxonomy_info.nf'
-
-
-
-//
-// SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
-//
+include { PROCESS_GENOMES           } from '../subworkflows/local/process_genomes.nf'
+include { TIGRFAM_INFO              } from '../subworkflows/local/tigrfam_info.nf'
 
 /*
 ========================================================================================
@@ -75,9 +66,6 @@ include { NCBI_TAXONOMY_INFO        } from '../subworkflows/local/ncbi_taxonomy_
 ========================================================================================
 */
 
-//
-// MODULE: Installed but modified from nf-core/modules
-//
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 include { DIAMOND_BLASTP      } from '../modules/local/diamond/blastp/main.nf'
 include { DIAMOND_MAKEDB      } from '../modules/local/diamond/makedb/main.nf'
@@ -91,24 +79,13 @@ include { DIAMOND_MAKEDB      } from '../modules/local/diamond/makedb/main.nf'
 workflow DB_CREATOR {
 
     sg_modules = "base"
-    //ch_versions = Channel.empty()
+    ch_versions = Channel.empty()
 
-//    ch_versions = ch_versions.mix(INPUT_CHECK.out.versions)
     PARAMETER_EXPORT_FOR_NEO4J()
 
+    PROCESS_GENOMES()
 
-    if (params.ncbi_genome_download_command){
-        NCBI()
-        NCBI.out.gb_files.set{gb_files}
-    } else if (params.gbk_input) {
-        LOCAL()
-        LOCAL.out.set{gb_files}
-
-    }
-    if (params.ncbi_datasets_taxon){
-        NCBI_DATASETS_DOWNLOAD_TAXON()
-        NCBI_DATASETS_DOWNLOAD_TAXON.out.gbff_files.set{gb_files}
-    }
+    ch_versions = ch_versions.mix(PROCESS_GENOMES.out.versions)
 
     if (params.sequence_files_glob) {
         sequence_files_glob = params.sequence_files_glob
@@ -116,15 +93,11 @@ workflow DB_CREATOR {
         sequence_files_glob = "*.gbff.gz"
     }
 
-
-
     if (params.paired_omics_json_path) {
-
         paired_omics_json_path = file(params.paired_omics_json_path)
-
         PAIRED_OMICS(paired_omics_json_path)
         sg_modules = sg_modules + " paired_omics"
-
+        ch_versions = ch_versions.mix(PAIRED_OMICS.out.versions)
     }
 
 
@@ -132,10 +105,11 @@ workflow DB_CREATOR {
    // REFSEQ_ASSEMBLY_TO_TAXID()
 
     PROCESS_GENBANK_FILES(
-        gb_files,
+        PROCESS_GENOMES.out.processed_genome_ch,
         params.fasta_splits,
         sequence_files_glob
     )
+    ch_versions = ch_versions.mix(PROCESS_GENBANK_FILES.out.versions)
 
     PROCESS_GENBANK_FILES.out.fasta
         .flatten()
@@ -155,21 +129,14 @@ workflow DB_CREATOR {
 
     if (params.fasta_splits > 1) {
         if(params.blastp || params.mmseqs2) {
-
             ch_fasta
             .collectFile(name:'concatenated.faa.gz', newLine:false, sort:false)
             .set{single_ch_fasta}
-
         }
     } else {
         ch_fasta
         .set{single_ch_fasta}
     }
-
-
-    // WRITE ALL HEADERS FOR NEO4J
-
-
 
     if (params.blastp){
        sg_modules = sg_modules + " blastp"
@@ -177,6 +144,8 @@ workflow DB_CREATOR {
         DIAMOND_BLASTP(single_ch_fasta, DIAMOND_MAKEDB.out.db)
         DIAMOND_BLASTP.out.blastout.collect()
             .set{blast_ch}
+        ch_versions = ch_versions.mix(DIAMOND_MAKEDB.out.versions)
+        ch_versions = ch_versions.mix(DIAMOND_BLASTP.out.versions)
     } else {
         blast_ch = file( "dummy_file1.txt", checkIfExists: false )
     }
@@ -186,6 +155,7 @@ workflow DB_CREATOR {
         MMSEQS2.out.clusterres_cluster
             .set{mmseqs2_ch}
         sg_modules = sg_modules + " mmseqs2"
+        ch_versions = ch_versions.mix(MMSEQS2.out.versions)
     } else {
         mmseqs2_ch = file( "dummy_file2.txt", checkIfExists: false )
     }
@@ -195,18 +165,32 @@ workflow DB_CREATOR {
     }
 
     if (params.ncbi_taxonomy){
-            NCBI_TAXONOMY_INFO()
-
+        NCBI_TAXONOMY_INFO()
         sg_modules = sg_modules + " ncbi_taxonomy"
+        ch_versions = ch_versions.mix(NCBI_TAXONOMY_INFO.out.versions)
     }
 
-    if (params.hmms){
 
-        DOWNLOAD_AND_GATHER()
+    if (params.hmmer){
+
+        GATHER_HMMS()
+        ch_versions = ch_versions.mix(GATHER_HMMS.out.versions)
+
+        // if (params.hmmlist.contains("tigrfam")){
+        //     // download additional tigrfam info
+        //     TIGRFAM_INFO()
+        //     ch_versions = ch_versions.mix(TIGRFAM_INFO.out.versions)
+        // }
+        TIGRFAM_INFO()
+        ch_versions = ch_versions.mix(TIGRFAM_INFO.out.versions)
+        sg_modules = sg_modules + " tigrfam"
+
         HMM_HASH(
-            DOWNLOAD_AND_GATHER.out.hmms,
+            GATHER_HMMS.out.hmms,
             params.hmm_splits
         )
+       ch_versions = ch_versions.mix(HMM_HASH.out.versions)
+
 
         // make a channel that's the cartesian product of hmm model files and fasta files
         HMM_HASH.out.socialgene_hmms
@@ -219,42 +203,43 @@ workflow DB_CREATOR {
         //PYHMMER(hmm_ch)
         //hmmer_result_ch = PYHMMER.out.collect()
         HMMER_HMMSEARCH(hmm_ch)
-        hmmer_result_ch = HMMER_HMMSEARCH.out.versions.collect()
+        ch_versions = ch_versions.mix(HMMER_HMMSEARCH.out.versions.first())
+
+        HMMSEARCH_PARSE(HMMER_HMMSEARCH.out.domtblout)
+        ch_versions = ch_versions.mix(HMMSEARCH_PARSE.out.versions.first())
+
+        hmmer_result_ch = HMMSEARCH_PARSE.out.parseddomtblout.collect()
 
         HMM_TSV_PARSE(
             HMM_HASH.out.all_hmms_tsv
         )
-
         sg_modules = sg_modules + " hmms"
+        ch_versions = ch_versions.mix(HMM_TSV_PARSE.out.versions)
     } else {
         hmmer_result_ch = file( "dummy_file3.txt", checkIfExists: false )
     }
 
     NEO4J_HEADERS(sg_modules)
+    ch_versions = ch_versions.mix(NEO4J_HEADERS.out.versions)
 
+    outdir_neo4j_ch = Channel.fromPath( params.outdir_neo4j )
 
-    if (params.builddb) {
+    if (params.build_database) {
         NEO4J_ADMIN_IMPORT(
-        params.outdir_neo4j,
-        NEO4J_HEADERS.out.headers,
-        hmmer_result_ch,
-        blast_ch,
-        mmseqs2_ch,
-        sg_modules)
+            outdir_neo4j_ch,
+            NEO4J_HEADERS.out.headers,
+            hmmer_result_ch,
+            blast_ch,
+            mmseqs2_ch,
+            sg_modules
+        )
+        ch_versions = ch_versions.mix(NEO4J_ADMIN_IMPORT.out.versions)
     }
 
-
-    //
-    // MODULE: Run FastQC
-    //
-    // FASTQC (
-    //     INPUT_CHECK.out.reads
-    // )
-    // ch_versions = ch_versions.mix(FASTQC.out.versions.first())
-
-    // CUSTOM_DUMPSOFTWAREVERSIONS (
-    //     ch_versions.unique().collectFile(name: 'collated_versions.yml')
-    // )
+    temp = ch_versions.collectFile(name: 'temp.yml', newLine: true)
+    CUSTOM_DUMPSOFTWAREVERSIONS (
+        temp
+    )
 
 
 }

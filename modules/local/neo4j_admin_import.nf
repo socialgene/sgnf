@@ -11,6 +11,7 @@ process NEO4J_ADMIN_IMPORT {
     path blast
     path mmseqs2
     val sg_modules
+    val hmmlist
 
     output:
     path "${outdir_neo4j}/import.report", emit: placeholder

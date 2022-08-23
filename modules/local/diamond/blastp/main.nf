@@ -27,6 +27,7 @@ process DIAMOND_BLASTP {
         --query $fasta \\
         --outfmt 6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qcovhsp \\
         $args \\
+        --compress 1 \\
         --out blastp_all_vs_all.blast6.txt.gz
 
     md5_as_filename.sh "blastp_all_vs_all.blast6.txt.gz" "blast6.gz"

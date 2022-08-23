@@ -10,7 +10,7 @@ dependencies:
   - bioconda::hmmer==3.3.2
   - pip
   - rsync # needed for nextflow
-  - numpy # can't install numpy with just pip if using python 3.9
+  - numpy
   - wget
   - pip:
       - /home/chase/Documents/github/kwan_lab/socialgene/sgpy

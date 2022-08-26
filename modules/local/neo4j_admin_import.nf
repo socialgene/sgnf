@@ -11,6 +11,7 @@ process NEO4J_ADMIN_IMPORT {
     path blast
     path mmseqs2
     val sg_modules
+    val hmmlist
 
     output:
     path "${outdir_neo4j}/import.report", emit: placeholder
@@ -19,9 +20,9 @@ process NEO4J_ADMIN_IMPORT {
     script:
     """
     touch "${outdir_neo4j}/import.report"
-    mkdir "${outdir_neo4j}/data"
-    mkdir "${outdir_neo4j}/plugins"
-    mkdir "${outdir_neo4j}/logs"
+    mkdir -p "${outdir_neo4j}/data"
+    mkdir -p "${outdir_neo4j}/plugins"
+    mkdir -p "${outdir_neo4j}/logs"
 
     wget https://github.com/neo4j/graph-data-science/releases/download/2.0.3/neo4j-graph-data-science-2.0.3.zip
 
@@ -36,7 +37,7 @@ process NEO4J_ADMIN_IMPORT {
     --uid None \\
     --gid None \\
     --sg_modules ${sg_modules} \\
-    --hmmlist ${params.hmmlist.join(' ')}
+    --hmmlist ${hmmlist}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

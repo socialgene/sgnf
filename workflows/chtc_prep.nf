@@ -38,7 +38,7 @@ include { FEATURE_TABLE_DOWNLOAD                    } from '../modules/local/fea
 include { HMM_HASH                                  } from '../modules/local/hmm_hash.nf'
 include { HMM_TSV_PARSE                             } from '../modules/local/hmm_tsv_parse.nf'
 include { HMMSEARCH_PARSE                           } from '../modules/local/hmmsearch_parse.nf'
-include { MMSEQS2                                   } from '../modules/local/mmseqs2.nf'
+include { MMSEQS2_EASYCLUSTER                       } from '../modules/local/mmseqs2_easycluster.nf'
 include { NEO4J_ADMIN_IMPORT                        } from '../modules/local/neo4j_admin_import.nf'
 include { NEO4J_HEADERS                             } from '../modules/local/neo4j_headers.nf'
 include { PARAMETER_EXPORT_FOR_NEO4J                } from '../modules/local/parameter_export_for_neo4j.nf'
@@ -90,9 +90,9 @@ workflow CHTC_PREP {
     PARAMETER_EXPORT_FOR_NEO4J()
 
     DOWNLOAD_REFSEQ_NONREDUNDANT_COMPLETE()
-    
+
     CRABHASH(DOWNLOAD_REFSEQ_NONREDUNDANT_COMPLETE.out.fasta, params.crabhash_path, params.crabhash_glob)
-    
+
     FASTA_FILES_FOR_CHTC(CRABHASH.out.fasta)
 
     GATHER_HMMS()
@@ -114,13 +114,13 @@ workflow CHTC_PREP {
 
     PARSE_REFSEQ_ID_DESCRIPTIONS(DOWNLOAD_REFSEQ_NONREDUNDANT_COMPLETE.out.fasta)
 
-    MMSEQS2(CRABHASH.out.fasta)
+    MMSEQS2_EASYCLUSTER(CRABHASH.out.fasta)
     DIAMOND_MAKEDB(CRABHASH.out.fasta)
 
 
     if (params.chtc_results_dir) {
         chtc_domtblout_files_ch = Channel.fromPath( "${params.chtc_results_dir}/*.domtblout.gz" ).buffer(size: 50)
-        
+
         HMMSEARCH_PARSE(chtc_domtblout_files_ch)
         hmmer_result_ch = HMMSEARCH_PARSE.out.parseddomtblout.collect()
 
@@ -131,7 +131,7 @@ workflow CHTC_PREP {
         TIGRFAM_INFO()
 
         NEO4J_HEADERS(sg_modules)
-        MMSEQS2.out.clusterres_cluster
+        MMSEQS2_EASYCLUSTER.out.clusterres_cluster
             .set{mmseqs2_ch}
         blast_ch = file( "dummy_file1.txt", checkIfExists: false )
         NEO4J_ADMIN_IMPORT(

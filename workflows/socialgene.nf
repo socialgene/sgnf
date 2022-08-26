@@ -30,24 +30,24 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
     IMPORT LOCAL MODULES
 ========================================================================================
 */
-include { ANTISMASH                         } from '../modules/local/antismash/main.nf'
-include { ASSEMBLY_FTP_URLS                 } from '../modules/local/assembly_ftp_urls.nf'
-include { FEATURE_TABLE_DOWNLOAD            } from '../modules/local/feature_table_download.nf'
-include { HMMER_HMMSEARCH                   } from '../modules/local/hmmsearch.nf'
-include { HMMSEARCH_PARSE                   } from '../modules/local/hmmsearch_parse.nf'
-include { HMM_HASH                          } from '../modules/local/hmm_hash.nf'
-include { HMM_TSV_PARSE                     } from '../modules/local/hmm_tsv_parse.nf'
-include { MMSEQS2                           } from '../modules/local/mmseqs2.nf'
-include { NCBI_DATASETS_DOWNLOAD            } from "../modules/local/ncbi_datasets_download.nf"
-include { NEO4J_ADMIN_IMPORT                } from '../modules/local/neo4j_admin_import.nf'
-include { NEO4J_HEADERS                     } from '../modules/local/neo4j_headers.nf'
-include { PAIRED_OMICS                      } from '../modules/local/paired_omics.nf'
-include { PARAMETER_EXPORT_FOR_NEO4J        } from '../modules/local/parameter_export_for_neo4j.nf'
-include { PROCESS_GENBANK_FILES             } from '../modules/local/process_genbank_files.nf'
-include { PROTEIN_FASTA_DOWNLOAD            } from '../modules/local/protein_fasta_download.nf'
-include { PYHMMER                           } from '../modules/local/pyhmmer.nf'
-include { REFSEQ_ASSEMBLY_TO_TAXID          } from '../modules/local/refseq_assembly_to_taxid.nf'
-include { SEQKIT_SPLIT                      } from '../modules/local/seqkit/split/main.nf'
+include { ANTISMASH                         } from '../modules/local/antismash/main'
+include { ASSEMBLY_FTP_URLS                 } from '../modules/local/assembly_ftp_urls'
+include { FEATURE_TABLE_DOWNLOAD            } from '../modules/local/feature_table_download'
+include { HMMER_HMMSEARCH                   } from '../modules/local/hmmsearch'
+include { HMMSEARCH_PARSE                   } from '../modules/local/hmmsearch_parse'
+include { HMM_HASH                          } from '../modules/local/hmm_hash'
+include { HMM_TSV_PARSE                     } from '../modules/local/hmm_tsv_parse'
+include { MMSEQS2_EASYCLUSTER               } from '../modules/local/mmseqs2_easycluster'
+include { NCBI_DATASETS_DOWNLOAD            } from '../modules/local/ncbi_datasets_download'
+include { NEO4J_ADMIN_IMPORT                } from '../modules/local/neo4j_admin_import'
+include { NEO4J_HEADERS                     } from '../modules/local/neo4j_headers'
+include { PAIRED_OMICS                      } from '../modules/local/paired_omics'
+include { PARAMETER_EXPORT_FOR_NEO4J        } from '../modules/local/parameter_export_for_neo4j'
+include { PROCESS_GENBANK_FILES             } from '../modules/local/process_genbank_files'
+include { PROTEIN_FASTA_DOWNLOAD            } from '../modules/local/protein_fasta_download'
+include { PYHMMER                           } from '../modules/local/pyhmmer'
+include { REFSEQ_ASSEMBLY_TO_TAXID          } from '../modules/local/refseq_assembly_to_taxid'
+include { SEQKIT_SPLIT                      } from '../modules/local/seqkit/split/main'
 
 /*
 ========================================================================================
@@ -55,10 +55,10 @@ include { SEQKIT_SPLIT                      } from '../modules/local/seqkit/spli
 ========================================================================================
 */
 
-include { GATHER_HMMS               } from "../subworkflows/local/gather_hmms.nf"
-include { NCBI_TAXONOMY_INFO        } from '../subworkflows/local/ncbi_taxonomy_info.nf'
-include { PROCESS_GENOMES           } from '../subworkflows/local/process_genomes.nf'
-include { TIGRFAM_INFO              } from '../subworkflows/local/tigrfam_info.nf'
+include { GATHER_HMMS               } from '../subworkflows/local/gather_hmms'
+include { NCBI_TAXONOMY_INFO        } from '../subworkflows/local/ncbi_taxonomy_info'
+include { PROCESS_GENOMES           } from '../subworkflows/local/process_genomes'
+include { TIGRFAM_INFO              } from '../subworkflows/local/tigrfam_info'
 
 /*
 ========================================================================================
@@ -66,9 +66,9 @@ include { TIGRFAM_INFO              } from '../subworkflows/local/tigrfam_info.n
 ========================================================================================
 */
 
-include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
-include { DIAMOND_BLASTP      } from '../modules/local/diamond/blastp/main.nf'
-include { DIAMOND_MAKEDB      } from '../modules/local/diamond/makedb/main.nf'
+include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
+include { DIAMOND_BLASTP                } from '../modules/local/diamond/blastp/main'
+include { DIAMOND_MAKEDB                } from '../modules/local/diamond/makedb/main'
 
 /*
 ========================================================================================
@@ -80,6 +80,12 @@ workflow DB_CREATOR {
 
     sg_modules = "base"
     ch_versions = Channel.empty()
+
+    if( !(params.hmmlist instanceof String) ) {
+        hmmlist = [params.hmmlist]
+    }
+    hmmlist = params.hmmlist.join(' ')
+
 
     PARAMETER_EXPORT_FOR_NEO4J()
 
@@ -151,11 +157,11 @@ workflow DB_CREATOR {
     }
 
     if (params.mmseqs2){
-        MMSEQS2(single_ch_fasta)
-        MMSEQS2.out.clusterres_cluster
+        MMSEQS2_EASYCLUSTER(single_ch_fasta)
+        MMSEQS2_EASYCLUSTER.out.clusterres_cluster
             .set{mmseqs2_ch}
         sg_modules = sg_modules + " mmseqs2"
-        ch_versions = ch_versions.mix(MMSEQS2.out.versions)
+        ch_versions = ch_versions.mix(MMSEQS2_EASYCLUSTER.out.versions)
     } else {
         mmseqs2_ch = file( "dummy_file2.txt", checkIfExists: false )
     }
@@ -176,20 +182,19 @@ workflow DB_CREATOR {
         GATHER_HMMS()
         ch_versions = ch_versions.mix(GATHER_HMMS.out.versions)
 
-        // if (params.hmmlist.contains("tigrfam")){
-        //     // download additional tigrfam info
-        //     TIGRFAM_INFO()
-        //     ch_versions = ch_versions.mix(TIGRFAM_INFO.out.versions)
-        // }
-        TIGRFAM_INFO()
-        ch_versions = ch_versions.mix(TIGRFAM_INFO.out.versions)
-        sg_modules = sg_modules + " tigrfam"
+        if (params.hmmlist.contains("tigrfam")){
+            // download additional tigrfam info
+            TIGRFAM_INFO()
+            ch_versions = ch_versions.mix(TIGRFAM_INFO.out.versions)
+            ch_versions = ch_versions.mix(TIGRFAM_INFO.out.versions)
+            sg_modules = sg_modules + " tigrfam"
+        }
 
         HMM_HASH(
             GATHER_HMMS.out.hmms,
             params.hmm_splits
         )
-       ch_versions = ch_versions.mix(HMM_HASH.out.versions)
+        ch_versions = ch_versions.mix(HMM_HASH.out.versions)
 
 
         // make a channel that's the cartesian product of hmm model files and fasta files
@@ -215,8 +220,11 @@ workflow DB_CREATOR {
         )
         sg_modules = sg_modules + " hmms"
         ch_versions = ch_versions.mix(HMM_TSV_PARSE.out.versions)
+
     } else {
+
         hmmer_result_ch = file( "dummy_file3.txt", checkIfExists: false )
+
     }
 
     NEO4J_HEADERS(sg_modules)
@@ -231,7 +239,8 @@ workflow DB_CREATOR {
             hmmer_result_ch,
             blast_ch,
             mmseqs2_ch,
-            sg_modules
+            sg_modules,
+            hmmlist
         )
         ch_versions = ch_versions.mix(NEO4J_ADMIN_IMPORT.out.versions)
     }

@@ -35,7 +35,7 @@ include { ASSEMBLY_FTP_URLS                 } from '../modules/local/assembly_ft
 include { FEATURE_TABLE_DOWNLOAD            } from '../modules/local/feature_table_download.nf'
 include { HMM_HASH                          } from '../modules/local/hmm_hash.nf'
 include { HMM_TSV_PARSE                     } from '../modules/local/hmm_tsv_parse.nf'
-include { MMSEQS2                           } from '../modules/local/mmseqs2.nf'
+include { MMSEQS2_EASYCLUSTER               } from '../modules/local/mmseqs2_easycluster.nf'
 include { NEO4J_ADMIN_IMPORT                } from '../modules/local/neo4j_admin_import.nf'
 include { NEO4J_HEADERS                     } from '../modules/local/neo4j_headers.nf'
 include { PARAMETER_EXPORT_FOR_NEO4J        } from '../modules/local/parameter_export_for_neo4j.nf'
@@ -143,8 +143,8 @@ workflow REFSEQ {
     blast_ch = file( "dummy_file1.txt", checkIfExists: false )
 
     if (params.mmseqs2){
-        MMSEQS2(single_ch_fasta)
-        MMSEQS2.out.clusterres_cluster
+        MMSEQS2_EASYCLUSTER(single_ch_fasta)
+        MMSEQS2_EASYCLUSTER.out.clusterres_cluster
             .set{mmseqs2_ch}
         sg_modules = sg_modules + " mmseqs2"
     } else {

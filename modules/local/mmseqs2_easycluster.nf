@@ -1,4 +1,4 @@
-process MMSEQS2 {
+process MMSEQS2_EASYCLUSTER {
     label 'process_high'
 
     conda (params.enable_conda ? "bioconda::mmseqs2==13.45111" : null)

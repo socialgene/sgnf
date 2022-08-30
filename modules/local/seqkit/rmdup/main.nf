@@ -15,15 +15,15 @@ process SEQKIT_RMDUP {
 
     script:
     """
-    touch nr.fa.gz
-    zcat ${fasta} |\\
+
+    find  . -name '*.gz' -exec zcat {} + |\\
         seqkit \\
             rmdup \\
             --by-name \\
             --seq-type protein \\
             --line-width 0 \\
-            --threads ${task.cpus} |\\
-                gzip > nr.fa.gz
+            --threads ${task.cpus} \\
+            -o nr.fa.gz
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -15,7 +15,7 @@ workflow PROCESS_GENOMES {
             ch_versions_out = ch_versions.mix(NCBI_GENOME_DOWNLOAD.out.versions)
 
         } else if (params.local_genbank) {
-            genome_file_ch = Channel.fromPath( params.local_genbank ).collect()
+            genome_file_ch = Channel.fromPath( params.local_genbank )
             ch_versions_out = ch_versions
         } else if (params.ncbi_datasets_command){
             NCBI_DATASETS_DOWNLOAD(params.ncbi_datasets_command)

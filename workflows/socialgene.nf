@@ -48,7 +48,7 @@ include { PROTEIN_FASTA_DOWNLOAD            } from '../modules/local/protein_fas
 include { PYHMMER                           } from '../modules/local/pyhmmer'
 include { REFSEQ_ASSEMBLY_TO_TAXID          } from '../modules/local/refseq_assembly_to_taxid'
 include { SEQKIT_SPLIT                      } from '../modules/local/seqkit/split/main'
-
+include { SEQKIT_RMDUP                      } from '../modules/local/seqkit/rmdup/main.nf'
 /*
 ========================================================================================
     IMPORT LOCAL SUBWORKFLOWS
@@ -94,6 +94,7 @@ workflow DB_CREATOR {
     ch_versions = ch_versions.mix(PROCESS_GENOMES.out.versions)
 
     if (params.sequence_files_glob) {
+        // so we can pass the glob pattern to python and not expand within bash
         sequence_files_glob = params.sequence_files_glob
     } else {
         sequence_files_glob = "*.gbff.gz"
@@ -106,19 +107,19 @@ workflow DB_CREATOR {
         ch_versions = ch_versions.mix(PAIRED_OMICS.out.versions)
     }
 
-
-    // TODO: allow not having taxid
-   // REFSEQ_ASSEMBLY_TO_TAXID()
-
+//println PROCESS_GENOMES.out.processed_genome_ch.count().getVal()
+    temp = 3
+    PROCESS_GENOMES.out.processed_genome_ch.buffer(size: temp, remainder: true)
+    .set {tempy}
     PROCESS_GENBANK_FILES(
-        PROCESS_GENOMES.out.processed_genome_ch,
+        tempy,
         params.fasta_splits,
         sequence_files_glob
     )
     ch_versions = ch_versions.mix(PROCESS_GENBANK_FILES.out.versions)
 
     PROCESS_GENBANK_FILES.out.fasta
-        .flatten()
+        .collect()
         .set{ch_fasta}
 
     // if (params.fasta_splits > 1) {
@@ -132,17 +133,22 @@ workflow DB_CREATOR {
     // }
 
 
+    SEQKIT_RMDUP(ch_fasta)
+    SEQKIT_RMDUP.out.fasta.set{single_ch_fasta}
 
-    if (params.fasta_splits > 1) {
-        if(params.blastp || params.mmseqs2) {
-            ch_fasta
-            .collectFile(name:'concatenated.faa.gz', newLine:false, sort:false)
-            .set{single_ch_fasta}
-        }
-    } else {
-        ch_fasta
-        .set{single_ch_fasta}
-    }
+    SEQKIT_SPLIT(single_ch_fasta, 23)
+
+
+    // if (params.fasta_splits > 1) {
+    //     if(params.blastp || params.mmseqs2) {
+    //         ch_fasta
+    //         .collectFile(name:'concatenated.faa.gz', newLine:false, sort:false)
+    //         .set{single_ch_fasta}
+    //     }
+    // } else {
+    //     ch_fasta
+    //     .set{single_ch_fasta}
+    // }
 
     if (params.blastp){
        sg_modules = sg_modules + " blastp"
@@ -201,7 +207,7 @@ workflow DB_CREATOR {
         HMM_HASH.out.socialgene_hmms
             .flatten()
             .combine(
-                ch_fasta
+                SEQKIT_SPLIT.out.fasta.flatten()
             )
             .set{ hmm_ch }
 

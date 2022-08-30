@@ -1,9 +1,10 @@
 
 process PROCESS_GENBANK_FILES {
-    label 'process_high'
+    cpus 1
+    memory '0.2 GB'
 
     input:
-    path genbank_files
+    path "file?.input_genome"
     val nums_splits
     val sequence_files_glob
 
@@ -19,10 +20,13 @@ process PROCESS_GENBANK_FILES {
 
     script:
     """
+
+
+
     socialgene_process_genbank \\
-    --sequence_files_glob "${sequence_files_glob}" \\
+    --sequence_files_glob "*.input_genome" \\
     --outdir '.' \\
-    --n_fasta_splits ${nums_splits}
+    --n_fasta_splits 1
 
     md5_as_filename_after_gzip.sh "protein_info" "protein_info.gz"
     md5_as_filename_after_gzip.sh "locus_to_protein" "locus_to_protein.gz"

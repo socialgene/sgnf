@@ -41,7 +41,6 @@ include { NEO4J_HEADERS                     } from '../modules/local/neo4j_heade
 include { PARAMETER_EXPORT_FOR_NEO4J        } from '../modules/local/parameter_export_for_neo4j.nf'
 include { PROTEIN_FASTA_DOWNLOAD            } from '../modules/local/protein_fasta_download.nf'
 include { PROTHASH_SQLITE                   } from '../modules/local/prothash_sqlite.nf'
-include { PYHMMER                           } from '../modules/local/pyhmmer.nf'
 include { REFSEQ_ASSEMBLY_TO_TAXID          } from '../modules/local/refseq_assembly_to_taxid.nf'
 include { SEQKIT_SPLIT                      } from '../modules/local/seqkit/split/main.nf'
 

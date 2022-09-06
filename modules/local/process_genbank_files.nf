@@ -5,7 +5,6 @@ process PROCESS_GENBANK_FILES {
 
     input:
     path "file?.input_genome"
-    val nums_splits
 
     output:
     path "*.protein_info.gz"        , emit: protein_info

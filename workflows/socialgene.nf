@@ -115,42 +115,28 @@ workflow DB_CREATOR {
     } else {
         fasta_fasta_ch = Channel.empty()
     }
-        ch_read.mix(gbk_fasta_ch, fasta_fasta_ch).set{ch_fasta}
 
 
-    // if (params.fasta_splits > 1) {
-    //     SEQKIT_SPLIT(PROCESS_GENBANK_FILES.out.fasta)
-    //     SEQKIT_SPLIT.out.fasta
-    //         .flatten()
-    //         .set{ch_fasta}
-    // } else {
-    //     PROCESS_GENBANK_FILES.out.fasta
-    //         .set{ch_fasta}
-    // }
+        ch_read.mix(gbk_fasta_ch, fasta_fasta_ch).collect().set{ch_fasta}
 
 
     SEQKIT_RMDUP(ch_fasta)
-    SEQKIT_RMDUP.out.fasta.set{single_ch_fasta}
+    SEQKIT_RMDUP
+        .out
+        .fasta
+        .set{single_ch_fasta}
 
-    SEQKIT_SPLIT(single_ch_fasta, 23)
-
-
-    // if (params.fasta_splits > 1) {
-    //     if(params.blastp || params.mmseqs2) {
-    //         ch_fasta
-    //         .collectFile(name:'concatenated.faa.gz', newLine:false, sort:false)
-    //         .set{single_ch_fasta}
-    //     }
-    // } else {
-    //     ch_fasta
-    //     .set{single_ch_fasta}
-    // }
+    SEQKIT_SPLIT(
+        single_ch_fasta,
+        params.fasta_splits
+        )
 
     if (params.blastp){
-       sg_modules = sg_modules + " blastp"
+        sg_modules = sg_modules + " blastp"
         DIAMOND_MAKEDB(single_ch_fasta)
         DIAMOND_BLASTP(single_ch_fasta, DIAMOND_MAKEDB.out.db)
-        DIAMOND_BLASTP.out.blastout.collect()
+        DIAMOND_BLASTP.out.blastout
+            .collect()
             .set{blast_ch}
         ch_versions = ch_versions.mix(DIAMOND_MAKEDB.out.versions)
         ch_versions = ch_versions.mix(DIAMOND_BLASTP.out.versions)
@@ -178,27 +164,22 @@ workflow DB_CREATOR {
         ch_versions = ch_versions.mix(NCBI_TAXONOMY_INFO.out.versions)
     }
 
-
     if (params.hmmer){
-
+        sg_modules = sg_modules + " hmms"
         GATHER_HMMS()
         ch_versions = ch_versions.mix(GATHER_HMMS.out.versions)
-
         if (params.hmmlist.contains("tigrfam")){
+            sg_modules = sg_modules + " tigrfam"
             // download additional tigrfam info
             TIGRFAM_INFO()
             ch_versions = ch_versions.mix(TIGRFAM_INFO.out.versions)
             ch_versions = ch_versions.mix(TIGRFAM_INFO.out.versions)
-            sg_modules = sg_modules + " tigrfam"
         }
-
         HMM_HASH(
             GATHER_HMMS.out.hmms,
             params.hmm_splits
         )
         ch_versions = ch_versions.mix(HMM_HASH.out.versions)
-
-
         // make a channel that's the cartesian product of hmm model files and fasta files
         HMM_HASH.out.socialgene_hmms
             .flatten()
@@ -207,8 +188,6 @@ workflow DB_CREATOR {
             )
             .set{ hmm_ch }
 
-        //PYHMMER(hmm_ch)
-        //hmmer_result_ch = PYHMMER.out.collect()
         HMMER_HMMSEARCH(hmm_ch)
         ch_versions = ch_versions.mix(HMMER_HMMSEARCH.out.versions.first())
 
@@ -220,19 +199,15 @@ workflow DB_CREATOR {
         HMM_TSV_PARSE(
             HMM_HASH.out.all_hmms_tsv
         )
-        sg_modules = sg_modules + " hmms"
         ch_versions = ch_versions.mix(HMM_TSV_PARSE.out.versions)
-
     } else {
-
         hmmer_result_ch = file( "dummy_file3.txt", checkIfExists: false )
-
     }
 
     NEO4J_HEADERS(sg_modules)
     ch_versions = ch_versions.mix(NEO4J_HEADERS.out.versions)
 
-    outdir_neo4j_ch = Channel.fromPath( params.outdir_neo4j )
+    outdir_neo4j_ch = Channel.fromPath(params.outdir_neo4j)
 
     if (params.build_database) {
         NEO4J_ADMIN_IMPORT(
@@ -251,8 +226,6 @@ workflow DB_CREATOR {
     CUSTOM_DUMPSOFTWAREVERSIONS (
         temp
     )
-
-
 }
 
 /*

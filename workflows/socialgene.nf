@@ -43,7 +43,6 @@ include { NEO4J_ADMIN_IMPORT                } from '../modules/local/neo4j_admin
 include { NEO4J_HEADERS                     } from '../modules/local/neo4j_headers'
 include { PAIRED_OMICS                      } from '../modules/local/paired_omics'
 include { PARAMETER_EXPORT_FOR_NEO4J        } from '../modules/local/parameter_export_for_neo4j'
-include { PROCESS_GENBANK_FILES             } from '../modules/local/process_genbank_files'
 include { PROTEIN_FASTA_DOWNLOAD            } from '../modules/local/protein_fasta_download'
 include { REFSEQ_ASSEMBLY_TO_TAXID          } from '../modules/local/refseq_assembly_to_taxid'
 include { SEQKIT_SPLIT                      } from '../modules/local/seqkit/split/main'
@@ -89,7 +88,6 @@ workflow DB_CREATOR {
     sg_modules = ""
 
     PARAMETER_EXPORT_FOR_NEO4J()
-    ch_fasta = Channel.empty()
 
     if (params.paired_omics_json_path) {
         paired_omics_json_path = file(params.paired_omics_json_path)
@@ -97,14 +95,13 @@ workflow DB_CREATOR {
         sg_modules = sg_modules + " paired_omics"
         ch_versions = ch_versions.mix(PAIRED_OMICS.out.versions)
     }
-
+    ch_read = Channel.empty()
     if (params.ncbi_genome_download_command || params.local_genbank || params.ncbi_datasets_command){
         sg_modules = sg_modules + "base"
         PROCESS_GENBANK()
         ch_versions = ch_versions.mix(PROCESS_GENBANK.out.versions)
         gbk_fasta_ch = PROCESS_GENBANK.out.fasta
     } else {
-
         gbk_fasta_ch = Channel.empty()
     }
 
@@ -118,10 +115,7 @@ workflow DB_CREATOR {
     } else {
         fasta_fasta_ch = Channel.empty()
     }
-
-    ch_fasta.concat(gbk_fasta_ch)
-    ch_fasta.concat(fasta_fasta_ch)
-    println ch_fasta
+        ch_read.mix(gbk_fasta_ch, fasta_fasta_ch).set{ch_fasta}
 
 
     // if (params.fasta_splits > 1) {

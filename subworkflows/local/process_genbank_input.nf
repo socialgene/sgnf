@@ -1,4 +1,4 @@
-include { NCBI_DATASETS_DOWNLOAD            } from "../../modules/local/ncbi_datasets_download"
+include { NCBI_DATASETS_DOWNLOAD            } from '../../modules/local/ncbi_datasets_download'
 include { NCBI_GENOME_DOWNLOAD              } from '../../modules/local/ncbi_genome_download'
 include { PROCESS_GENBANK_FILES             } from '../../modules/local/process_genbank_files'
 
@@ -6,7 +6,7 @@ workflow PROCESS_GENBANK {
 
     main:
         ch_versions = Channel.empty()
-
+genome_file_ch= Channel.empty()
         if (params.ncbi_genome_download_command){
             NCBI_GENOME_DOWNLOAD(params.ncbi_genome_download_command)
             NCBI_GENOME_DOWNLOAD
@@ -27,20 +27,22 @@ workflow PROCESS_GENBANK {
 
             ch_versions_out = ch_versions.mix(NCBI_DATASETS_DOWNLOAD.out.versions)
         }
+                println genome_file_ch
 
-        genome_file_ch
-            .buffer(size: 20, remainder: true)
-            .set{tempy}
 
         PROCESS_GENBANK_FILES(
-                tempy,
+                genome_file_ch,
                 params.fasta_splits
             )
+
+
+        PROCESS_GENBANK_FILES.out.fasta.collect().set{ch_fasta_out}
+
         ch_versions = ch_versions.mix(PROCESS_GENBANK_FILES.out.versions)
 
 
     emit:
-        fasta       = PROCESS_GENBANK_FILES.out.fasta
+        fasta       = ch_fasta_out
         versions    = ch_versions_out
 }
 

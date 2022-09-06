@@ -18,6 +18,7 @@ dependencies:
   - conda-forge::biopython>=1.79
   - bioconda::ncbi-genome-download>=0.3.1
   - conda-forge::sqlite>=3
+  - git
   - pip
   - rsync
   - numpy

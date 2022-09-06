@@ -19,13 +19,10 @@ process PROCESS_GENBANK_FILES {
 
     script:
     """
-
-
-
     socialgene_process_genbank \\
-    --sequence_files_glob "*.input_genome" \\
-    --outdir '.' \\
-    --n_fasta_splits 1
+        --sequence_files_glob "*.input_genome" \\
+        --outdir '.' \\
+        --n_fasta_splits 1
 
     md5_as_filename_after_gzip.sh "protein_info" "protein_info.gz"
     md5_as_filename_after_gzip.sh "locus_to_protein" "locus_to_protein.gz"

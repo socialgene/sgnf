@@ -8,7 +8,7 @@ channels:
 dependencies:
   - conda-forge::python>=3.10
   - bioconda::hmmer>=3.3.2
-  - bioconda::seqkit>=2.1.0
+  - bioconda::seqkit>=2.3.0
   - hcc::aspera-cli
   - bioconda::entrez-direct
   - bioconda::mmseqs2==13.45111

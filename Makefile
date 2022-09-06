@@ -25,7 +25,7 @@ clean:
 
 ## create_conda :	Create the socialgene conda enviornment
 create_conda:
-	conda env create --file conda_environment.yml
+	conda env create --file dockerfiles/environment.yml
 
 ## install_python :	Install the socialgene python package
 install_python:

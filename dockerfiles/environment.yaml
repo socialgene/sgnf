@@ -1,0 +1,28 @@
+name: socialgene_nf
+
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+
+dependencies:
+  - conda-forge::python>=3.10
+  - bioconda::hmmer>=3.3.2
+  - bioconda::seqkit>=2.3.0
+  - hcc::aspera-cli
+  - bioconda::entrez-direct
+  - bioconda::mmseqs2==13.45111
+  - bioconda::diamond>=2.0.15
+  - conda-forge::ncbi-datasets-cli>=13.28
+  - conda-forge::pigz>=2.6
+  - conda-forge::biopython>=1.79
+  - bioconda::ncbi-genome-download>=0.3.1
+  - conda-forge::sqlite>=3
+  - pip
+  - rsync
+  - numpy
+  - wget
+  - grep
+  - conda-forge::gzip >=1.12
+  - pip:
+      - https://test-files.pythonhosted.org/packages/9e/0b/1735e790046936cab3088c1e96d565f5b4b284ae572f61c70006bd5c3a9a/socialgene-2.0.3-py2.py3-none-any.whl

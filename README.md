@@ -21,3 +21,28 @@ curl -s $genome_url > /tmp/GCF_900016785.1_BTsPazieg1.0_genomic.gbff.gz
 
 
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+#################################################
+tar cf - /media/bigdrive2/chase/ncbi_data/gbk/scratch2 | crabz -p 50 > archive.tar.gz
+# Process feature tables
+find . -type f -name "*feature_table.txt.gz" | xargs zgrep -P "CDS\twith_protein" | cut -f 3,7,8,9,10,12 | gzip -6 --rsyncable > reduced.gz
+
+
+
+# Get the tsv (refseq_id\tdecription) for all refseqanonredeundant proteins
+find '/media/bigdrive2/chase/socialgene/2022_07_13/refseq_test/refseq_nr_protein_fasta_dir/download_refseq_nonredundant_complete/complete' -type f -name "complete.nonredundant_protein.*.protein.faa.gz" |\
+xargs zgrep -h ">" |\
+    /media/bigdrive2/chase/socialgene/2022_07_13/parse_fasta.py |\
+    gzip -6 --rsyncable > /media/bigdrive2/chase/socialgene/2022_07_13/id_description.tsv.gz
+#################################################

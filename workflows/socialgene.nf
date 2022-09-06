@@ -45,7 +45,6 @@ include { PAIRED_OMICS                      } from '../modules/local/paired_omic
 include { PARAMETER_EXPORT_FOR_NEO4J        } from '../modules/local/parameter_export_for_neo4j'
 include { PROCESS_GENBANK_FILES             } from '../modules/local/process_genbank_files'
 include { PROTEIN_FASTA_DOWNLOAD            } from '../modules/local/protein_fasta_download'
-include { PYHMMER                           } from '../modules/local/pyhmmer'
 include { REFSEQ_ASSEMBLY_TO_TAXID          } from '../modules/local/refseq_assembly_to_taxid'
 include { SEQKIT_SPLIT                      } from '../modules/local/seqkit/split/main'
 include { SEQKIT_RMDUP                      } from '../modules/local/seqkit/rmdup/main.nf'
@@ -211,8 +210,6 @@ workflow DB_CREATOR {
             )
             .set{ hmm_ch }
 
-        //PYHMMER(hmm_ch)
-        //hmmer_result_ch = PYHMMER.out.collect()
         HMMER_HMMSEARCH(hmm_ch)
         ch_versions = ch_versions.mix(HMMER_HMMSEARCH.out.versions.first())
 

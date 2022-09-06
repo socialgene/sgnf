@@ -4,9 +4,7 @@ process NCBI_DATASETS_DOWNLOAD {
     label 'process_low'
 
     conda (params.enable_conda ? "conda-forge::ncbi-datasets-cli=13.28 conda-forge::pigz==2.6" : null)
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/ncbi-datasets-cli:13.24.3' :
-        'quay.io/biocontainers/ncbi-datasets-cli:13.28' }"
+
 
     input:
     val input_taxon

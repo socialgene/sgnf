@@ -1,7 +1,8 @@
-include { NCBI_DATASETS_DOWNLOAD            } from "../../modules/local/ncbi_datasets_download.nf"
-include { NCBI_GENOME_DOWNLOAD              } from '../../modules/local/ncbi_genome_download.nf'
+include { NCBI_DATASETS_DOWNLOAD            } from "../../modules/local/ncbi_datasets_download"
+include { NCBI_GENOME_DOWNLOAD              } from '../../modules/local/ncbi_genome_download'
+include { PROCESS_GENBANK_FILES             } from '../../modules/local/process_genbank_files'
 
-workflow PROCESS_GENOMES {
+workflow PROCESS_GENBANK {
 
     main:
         ch_versions = Channel.empty()
@@ -27,8 +28,19 @@ workflow PROCESS_GENOMES {
             ch_versions_out = ch_versions.mix(NCBI_DATASETS_DOWNLOAD.out.versions)
         }
 
+        genome_file_ch
+            .buffer(size: 20, remainder: true)
+            .set{tempy}
+
+        PROCESS_GENBANK_FILES(
+                tempy,
+                params.fasta_splits
+            )
+        ch_versions = ch_versions.mix(PROCESS_GENBANK_FILES.out.versions)
+
+
     emit:
-        processed_genome_ch = genome_file_ch
-        versions         = ch_versions_out
+        fasta       = PROCESS_GENBANK_FILES.out.fasta
+        versions    = ch_versions_out
 }
 

@@ -56,8 +56,9 @@ include { SEQKIT_RMDUP                      } from '../modules/local/seqkit/rmdu
 
 include { GATHER_HMMS               } from '../subworkflows/local/gather_hmms'
 include { NCBI_TAXONOMY_INFO        } from '../subworkflows/local/ncbi_taxonomy_info'
-include { PROCESS_GENOMES           } from '../subworkflows/local/process_genomes'
+include { PROCESS_GENBANK           } from '../subworkflows/local/process_genbank_input'
 include { TIGRFAM_INFO              } from '../subworkflows/local/tigrfam_info'
+include { PROCESS_FASTA_INPUT       } from '../subworkflows/local/process_fasta_input'
 
 /*
 ========================================================================================
@@ -77,7 +78,6 @@ include { DIAMOND_MAKEDB                } from '../modules/local/diamond/makedb/
 
 workflow DB_CREATOR {
 
-    sg_modules = "base"
     ch_versions = Channel.empty()
 
     if( !(params.hmmlist instanceof String) ) {
@@ -85,19 +85,11 @@ workflow DB_CREATOR {
     }
     hmmlist = params.hmmlist.join(' ')
 
+    // start with an empty sg_modules
+    sg_modules = ""
 
     PARAMETER_EXPORT_FOR_NEO4J()
-
-    PROCESS_GENOMES()
-
-    ch_versions = ch_versions.mix(PROCESS_GENOMES.out.versions)
-
-    if (params.sequence_files_glob) {
-        // so we can pass the glob pattern to python and not expand within bash
-        sequence_files_glob = params.sequence_files_glob
-    } else {
-        sequence_files_glob = "*.gbff.gz"
-    }
+    ch_fasta = Channel.empty()
 
     if (params.paired_omics_json_path) {
         paired_omics_json_path = file(params.paired_omics_json_path)
@@ -106,20 +98,31 @@ workflow DB_CREATOR {
         ch_versions = ch_versions.mix(PAIRED_OMICS.out.versions)
     }
 
-//println PROCESS_GENOMES.out.processed_genome_ch.count().getVal()
-    temp = 3
-    PROCESS_GENOMES.out.processed_genome_ch.buffer(size: temp, remainder: true)
-    .set {tempy}
-    PROCESS_GENBANK_FILES(
-        tempy,
-        params.fasta_splits,
-        sequence_files_glob
-    )
-    ch_versions = ch_versions.mix(PROCESS_GENBANK_FILES.out.versions)
+    if (params.ncbi_genome_download_command || params.local_genbank || params.ncbi_datasets_command){
+        sg_modules = sg_modules + "base"
+        PROCESS_GENBANK()
+        ch_versions = ch_versions.mix(PROCESS_GENBANK.out.versions)
+        gbk_fasta_ch = PROCESS_GENBANK.out.fasta
+    } else {
 
-    PROCESS_GENBANK_FILES.out.fasta
-        .collect()
-        .set{ch_fasta}
+        gbk_fasta_ch = Channel.empty()
+    }
+
+    if (params.local_fasta){
+        sg_modules = sg_modules + "protein"
+
+        input_fasta_ch = Channel.fromPath(params.local_fasta)
+
+        PROCESS_FASTA_INPUT(input_fasta_ch)
+        fasta_fasta_ch = PROCESS_FASTA_INPUT.out.fasta
+    } else {
+        fasta_fasta_ch = Channel.empty()
+    }
+
+    ch_fasta.concat(gbk_fasta_ch)
+    ch_fasta.concat(fasta_fasta_ch)
+    println ch_fasta
+
 
     // if (params.fasta_splits > 1) {
     //     SEQKIT_SPLIT(PROCESS_GENBANK_FILES.out.fasta)
@@ -210,6 +213,8 @@ workflow DB_CREATOR {
             )
             .set{ hmm_ch }
 
+        //PYHMMER(hmm_ch)
+        //hmmer_result_ch = PYHMMER.out.collect()
         HMMER_HMMSEARCH(hmm_ch)
         ch_versions = ch_versions.mix(HMMER_HMMSEARCH.out.versions.first())
 

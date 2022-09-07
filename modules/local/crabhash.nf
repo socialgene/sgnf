@@ -24,11 +24,11 @@ process CRABHASH {
         ${task.cpus}
 
     cd out
-    sed 's/\$/\\t\\t/' *.tsv | gzip -6 --rsyncable > all.protein_info.gz
+    sed 's/\$/\\t\\t/' *.tsv | gzip -n -6 --rsyncable > all.protein_info.gz
     rm *.tsv
     md5_as_filename.sh 'all.protein_info.gz' 'protein_info.gz'
 
-    pigz -p ${task.cpus} -6 --rsyncable *.fasta --stdout > all.faa.gz
+    pigz -p ${task.cpus} -n -6 --rsyncable *.fasta --stdout > all.faa.gz
     md5_as_filename.sh 'all.faa.gz' 'faa.gz'
     rm *.fasta
 

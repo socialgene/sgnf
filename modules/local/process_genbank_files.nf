@@ -3,6 +3,13 @@ process PROCESS_GENBANK_FILES {
     cpus 1
     memory '0.2 GB'
 
+    publishDir "${params.outdir_neo4j}/import/protein_info", mode: 'copy', overwrite: false, pattern: "*.protein_info.gz"
+    publishDir "${params.outdir_neo4j}/import/genomic_info", mode: 'copy', overwrite: false, pattern: "*.locus_to_protein.gz"
+    publishDir "${params.outdir_neo4j}/import/genomic_info", mode: 'copy', overwrite: false, pattern: "*.assembly_to_locus.gz"
+    publishDir "${params.outdir_neo4j}/import/genomic_info", mode: 'copy', overwrite: false, pattern: "*.assembly_to_taxid.gz"
+    publishDir "${params.outdir_neo4j}/import/genomic_info", mode: 'copy', overwrite: false, pattern: "*.loci.gz"
+    publishDir "${params.outdir_neo4j}/import/genomic_info", mode: 'copy', overwrite: false, pattern: "*.assemblies.gz"
+
     input:
     path "file?.input_genome"
 
@@ -11,9 +18,9 @@ process PROCESS_GENBANK_FILES {
     path "*.locus_to_protein.gz"    , emit: locus_to_protein
     path "*.assembly_to_locus.gz"   , emit: assembly_to_locus
     path "*.assembly_to_taxid.gz"   , emit: assembly_to_taxid
-    path "*.faa.gz"                 , emit: fasta
     path "*.loci.gz"                , emit: loci
     path "*.assemblies.gz"          , emit: assembly
+    path "*.faa.gz"                 , emit: fasta
     path "versions.yml"             , emit: versions
 
     script:

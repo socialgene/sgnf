@@ -13,7 +13,7 @@ process REFSEQ_ASSEMBLY_TO_TAXID {
     curl -s  ftp.ncbi.nlm.nih.gov/genomes/ASSEMBLY_REPORTS/assembly_summary_refseq.txt |\\
         awk -F"\\t" 'BEGIN{OFS="\\t";} {print \$1, \$7}' |\\
         tail -n+3 |\\
-        gzip -3 --rsyncable --stdout > assembly_to_taxid.tsv
+        gzip -n -3 --rsyncable --stdout > assembly_to_taxid.tsv
 
     md5_as_filename.sh "assembly_to_taxid.tsv.gz" "assembly_to_taxid.gz"
     """

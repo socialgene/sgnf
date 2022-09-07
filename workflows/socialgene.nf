@@ -44,7 +44,7 @@ include { NEO4J_HEADERS                     } from '../modules/local/neo4j_heade
 include { PAIRED_OMICS                      } from '../modules/local/paired_omics'
 include { PARAMETER_EXPORT_FOR_NEO4J        } from '../modules/local/parameter_export_for_neo4j'
 include { PROTEIN_FASTA_DOWNLOAD            } from '../modules/local/protein_fasta_download'
-include { REFSEQ_ASSEMBLY_TO_TAXID          } from '../modules/local/refseq_assembly_to_taxid'
+include { SEQKIT_SORT                       } from '../modules/local/seqkit/sort/main'
 include { SEQKIT_SPLIT                      } from '../modules/local/seqkit/split/main'
 include { SEQKIT_RMDUP                      } from '../modules/local/seqkit/rmdup/main.nf'
 /*
@@ -121,11 +121,18 @@ workflow DB_CREATOR {
 
 
     SEQKIT_RMDUP(ch_fasta)
-    SEQKIT_RMDUP
-        .out
-        .fasta
-        .set{single_ch_fasta}
 
+    if (params.testing) {
+        SEQKIT_SORT(SEQKIT_RMDUP.out.fasta)
+        SEQKIT_SORT.out
+            .fasta
+            .set{single_ch_fasta}
+    } else {
+        SEQKIT_RMDUP
+            .out
+            .fasta
+            .set{single_ch_fasta}
+    }
     SEQKIT_SPLIT(
         single_ch_fasta,
         params.fasta_splits
@@ -209,23 +216,19 @@ workflow DB_CREATOR {
 
     outdir_neo4j_ch = Channel.fromPath(params.outdir_neo4j)
 
-    if (params.build_database) {
+    collected_version_files = ch_versions.collectFile(name: 'temp.yml', newLine: true)
+    CUSTOM_DUMPSOFTWAREVERSIONS (
+        collected_version_files
+    )
+       if (params.build_database) {
         NEO4J_ADMIN_IMPORT(
             outdir_neo4j_ch,
-            NEO4J_HEADERS.out.headers,
-            hmmer_result_ch,
-            blast_ch,
-            mmseqs2_ch,
             sg_modules,
-            hmmlist
+            hmmlist,
+            collected_version_files
         )
         ch_versions = ch_versions.mix(NEO4J_ADMIN_IMPORT.out.versions)
     }
-
-    temp = ch_versions.collectFile(name: 'temp.yml', newLine: true)
-    CUSTOM_DUMPSOFTWAREVERSIONS (
-        temp
-    )
 }
 
 /*

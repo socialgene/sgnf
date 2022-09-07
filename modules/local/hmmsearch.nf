@@ -26,7 +26,7 @@ process HMMER_HMMSEARCH {
         --seed 42 \\
         $args \\
         "${hmm}" \\
-        temp.fa > /dev/null 2>&1
+        temp.fa > /dev/null
 
     rm temp.fa
 

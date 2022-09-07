@@ -15,7 +15,7 @@
 //         --sequence_file_path ${fasta} \\
 //         --cpus ${task.cpus} \\
 //         --outpath 'parseddomtblout.gz' |\\
-//     gzip -3 --rsyncable --stdout > 'parseddomtblout.gz'
+//     gzip -n -3 --rsyncable --stdout > 'parseddomtblout.gz'
 
 //     md5_as_filename.sh 'parseddomtblout.gz' 'parseddomtblout.gz'
 

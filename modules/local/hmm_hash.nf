@@ -19,7 +19,7 @@ process HMM_HASH {
         --outdir . \
         --numoutfiles ${hmm_splits}
 
-    pigz -p ${task.cpus} -6 --rsyncable socialgene_nr_hmms_file*
+    pigz -p ${task.cpus} -n -6 --rsyncable socialgene_nr_hmms_file*
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

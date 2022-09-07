@@ -43,4 +43,5 @@ jobs:
         # For example: adding multiple test runs with different parameters
         # Remember that you can parallelise this by using strategy.matrix
         run: |
-          nextflow run ${GITHUB_WORKSPACE} -profile test,docker
+          curl -s "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=AY623658.2&rettype=gbwithparts&retmode=text" | gzip > "/tmp/AY623658.2.gb.gz"
+          nextflow run ${GITHUB_WORKSPACE} -profile BGC0000054,conda --testing --single_outdir '/tmp/sg_test'

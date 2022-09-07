@@ -14,11 +14,11 @@ process TIGRFAM_ROLES {
     """
     wget "https://ftp.ncbi.nlm.nih.gov/hmm/TIGRFAMs/release_15.0/TIGR_ROLE_NAMES"
 
-    awk -F"\t" 'BEGIN{OFS="\t";} \$3 == "mainrole:" {print \$2,\$4}' TIGR_ROLE_NAMES | gzip -3 --rsyncable --stdout > tigrfamrole_to_mainrole.tsv.gz
-    awk -F"\t" 'BEGIN{OFS="\t";} \$3 == "sub1role:" {print \$2,\$4}' TIGR_ROLE_NAMES | gzip -3 --rsyncable --stdout > tigrfamrole_to_subrole.tsv.gz
-    awk -F"\t" 'BEGIN{OFS="\t";} \$3 == "mainrole:" {print \$4}' TIGR_ROLE_NAMES | sort | uniq | gzip -3 --rsyncable --stdout > mainrole.tsv.gz
-    awk -F"\t" 'BEGIN{OFS="\t";} \$3 == "sub1role:" {print \$4}' TIGR_ROLE_NAMES | sort | uniq | gzip -3 --rsyncable --stdout > subrole.tsv.gz
-    awk -F"\t" 'BEGIN{OFS="\t";} {print \$2}' TIGR_ROLE_NAMES | sort | uniq | gzip -3 --rsyncable --stdout > role.tsv.gz
+    awk -F"\t" 'BEGIN{OFS="\t";} \$3 == "mainrole:" {print \$2,\$4}' TIGR_ROLE_NAMES | gzip -n -3 --rsyncable --stdout > tigrfamrole_to_mainrole.tsv.gz
+    awk -F"\t" 'BEGIN{OFS="\t";} \$3 == "sub1role:" {print \$2,\$4}' TIGR_ROLE_NAMES | gzip -n -3 --rsyncable --stdout > tigrfamrole_to_subrole.tsv.gz
+    awk -F"\t" 'BEGIN{OFS="\t";} \$3 == "mainrole:" {print \$4}' TIGR_ROLE_NAMES | sort | uniq | gzip -n -3 --rsyncable --stdout > mainrole.tsv.gz
+    awk -F"\t" 'BEGIN{OFS="\t";} \$3 == "sub1role:" {print \$4}' TIGR_ROLE_NAMES | sort | uniq | gzip -n -3 --rsyncable --stdout > subrole.tsv.gz
+    awk -F"\t" 'BEGIN{OFS="\t";} {print \$2}' TIGR_ROLE_NAMES | sort | uniq | gzip -n -3 --rsyncable --stdout > role.tsv.gz
 
     md5_as_filename.sh \\
         "tigrfamrole_to_mainrole.tsv.gz" \\

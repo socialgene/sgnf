@@ -9,6 +9,10 @@ process NEO4J_HEADERS {
     path "versions.yml" , emit: versions
 
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     socialgene_export_neo4j_headers --outdir . --sg_modules $sg_modules --hmmlist ${params.hmmlist.join(' ')}

@@ -6,6 +6,10 @@ process DOWNLOAD_VIRUS_ORTHOLOGOUS_GROUPS {
     path "virus_orthologous_groups", emit: virus_orthologous_groups
     path "virus_orthologous_groups_versions.yml" , emit: versions
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     # was getting gzip errors when using curl and zcat

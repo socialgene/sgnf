@@ -13,6 +13,10 @@ process SEQKIT_RMDUP {
     path "nr.fa.gz"     , emit: fasta
     path 'versions.yml' , emit: version
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
 

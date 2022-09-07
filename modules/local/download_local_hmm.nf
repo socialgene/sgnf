@@ -10,6 +10,10 @@ process DOWNLOAD_LOCAL_HMM {
     path "local_versions.yml" , emit: versions
 
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     # hmmconvert_loop.sh requires the file to end with '.hmm'

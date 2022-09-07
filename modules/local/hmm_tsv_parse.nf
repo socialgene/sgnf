@@ -10,6 +10,10 @@ process HMM_TSV_PARSE {
     path "*_hmms_out.gz"          , emit: hmms_out
     path "versions.yml" , emit: versions
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
 

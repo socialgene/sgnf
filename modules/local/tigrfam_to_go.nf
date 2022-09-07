@@ -9,6 +9,10 @@ process TIGRFAM_TO_GO {
     path "*.tigrfam_to_go.gz", emit: tigrfam_to_go
     path "*.goterm.gz", emit: goterm
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     zcat $x |\\

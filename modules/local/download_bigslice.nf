@@ -6,6 +6,10 @@ process DOWNLOAD_BIGSLICE {
     path "bigslice", emit: prism
     path "bigslice_versions.yml" , emit: versions
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
 

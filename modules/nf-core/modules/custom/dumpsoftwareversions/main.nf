@@ -18,6 +18,10 @@ process CUSTOM_DUMPSOFTWAREVERSIONS {
     when:
     task.ext.when == null || task.ext.when
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def args = task.ext.args ?: ''
     template 'dumpsoftwareversions.py'

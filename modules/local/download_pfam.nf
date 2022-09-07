@@ -9,6 +9,10 @@ process DOWNLOAD_PFAM {
     path "pfam", emit: prism
     path "pfam_versions.yml" , emit: versions
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
 

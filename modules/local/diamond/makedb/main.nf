@@ -14,6 +14,10 @@ process DIAMOND_MAKEDB {
     path "${fasta}.dmnd", emit: db
     path "versions.yml" , emit: versions
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def args = task.ext.args ?: ''
     """

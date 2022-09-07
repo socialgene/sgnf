@@ -5,6 +5,10 @@ process TAXDUMP_DOWNLOAD {
     path 'taxdump.tar.gz'    , emit: taxdump
     path "versions.yml"      , emit: versions
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     rsync -a \

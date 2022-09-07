@@ -23,6 +23,10 @@ process PROCESS_GENBANK_FILES {
     path "*.faa.gz"                 , emit: fasta
     path "versions.yml"             , emit: versions
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     socialgene_process_genbank \\

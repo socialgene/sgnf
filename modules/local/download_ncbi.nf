@@ -13,6 +13,10 @@ process DOWNLOAD_NCBI {
     path "features"     , emit: feature_table
     path "ncbi_versions.yml" , emit: versions
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     shell:
     """
     mkdir fasta features

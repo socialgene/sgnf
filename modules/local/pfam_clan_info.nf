@@ -12,6 +12,10 @@ process PFAM_CLAN_INFO {
     path "*.pfam_clan_info.gz", emit: pfam_clan_info
 
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
 

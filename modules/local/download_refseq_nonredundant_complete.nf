@@ -8,6 +8,10 @@ process DOWNLOAD_REFSEQ_NONREDUNDANT_COMPLETE {
     path "complete/", emit: fasta
     path "versions.yml" , emit: versions
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     ascp \

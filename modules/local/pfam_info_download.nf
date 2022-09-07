@@ -4,6 +4,10 @@ process PFAM_INFO_DOWNLOAD {
     output:
     path "*.pfam_info.gz", emit: clans
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     wget "ftp://ftp.ebi.ac.uk/pub/databases/Pfam/current_release/Pfam-A.clans.tsv.gz"

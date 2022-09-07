@@ -15,6 +15,10 @@ process NEO4J_ADMIN_IMPORT {
     path 'build_db.sh', emit: build_database_command
     path "versions.yml" , emit: versions
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     touch "${outdir_neo4j}/import.report"

@@ -9,6 +9,10 @@ process DOWNLOAD_ANTISMASH {
     path "antismash", emit: antismash
     path "antismash_versions.yml" , emit: versions
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
 

@@ -8,6 +8,10 @@ process DOWNLOAD_AMRFINDER {
     path "amrfinder", emit: hmms
     path "amrfinder_versions.yml" , emit: versions
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
 

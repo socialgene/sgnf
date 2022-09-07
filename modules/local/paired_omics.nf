@@ -14,6 +14,10 @@ process PAIRED_OMICS {
 
     val true, emit: finished
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     socialgene_paired_omics \\

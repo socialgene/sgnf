@@ -8,7 +8,11 @@
 //     output:
 //     path "*.parseddomtblout.gz", emit: parseddomtblout, optional:true
 
-//     script:
+//
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
 //     """
 //     socialgene_run_pyhmmer \\
 //         --hmm_filepath ${hmm} \\

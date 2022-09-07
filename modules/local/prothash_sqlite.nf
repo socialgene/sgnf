@@ -7,6 +7,10 @@ process PROTHASH_SQLITE {
     output:
     path "hashid.sqlite", emit: fasta
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     socialgene_prothash_sqlite \\

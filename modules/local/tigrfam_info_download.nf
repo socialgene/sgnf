@@ -5,6 +5,10 @@ process TIGRFAM_INFO_DOWNLOAD {
     path "*.TIGRFAMS_GO_LINK.gz", emit: tigerfam_to_go
     path "versions.yml" , emit: versions
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     wget "https://ftp.ncbi.nlm.nih.gov/hmm/TIGRFAMs/release_15.0/TIGRFAMS_GO_LINK"

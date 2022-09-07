@@ -8,6 +8,10 @@ process PROTEIN_FASTA_DOWNLOAD {
     path "*_protein.faa.gz", emit: fasta
     path "versions.yml" , emit: versions
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     shell:
     '''
     rsync -am \

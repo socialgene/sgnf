@@ -9,6 +9,10 @@ process FEATURE_TABLE_DOWNLOAD {
     path "*.featuretable.gz", emit: featuretable
     path "versions.yml" , emit: versions
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     # Download using rsync

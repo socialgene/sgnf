@@ -4,6 +4,10 @@ process ASSEMBLY_FTP_URLS {
     output:
     path "ftpfilepaths", emit: ftpfilepaths
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     if( params.mode == 'dev' )
     """

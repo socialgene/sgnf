@@ -12,6 +12,10 @@ process NUCLEOTIDE_UNIQUE {
     path "*.nucleotide_accessions.gz", emit: nucleotide_accessions
 
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
 

@@ -12,6 +12,10 @@ process HMM_HASH {
     path "socialgene_nr_hmms_file_*", emit: socialgene_hmms
     path "versions.yml" , emit: versions
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     socialgene_clean_hmm \

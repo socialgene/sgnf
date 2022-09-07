@@ -34,6 +34,10 @@ process ANTISMASH {
     path("${prefix}/regions.js")                            , emit: json_sideloading
     path "versions.yml"                                                      , emit: versions
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def args = task.ext.args ?: ''
     prefix = task.ext.suffix ? "${task.ext.suffix}" : "${sequence_input.getSimpleName()}"

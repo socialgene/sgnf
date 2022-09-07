@@ -13,6 +13,10 @@ process NCBI_GENOME_DOWNLOAD {
     path "**/*.gbff.gz",    emit: gbff_files
     path 'versions.yml',   emit: versions
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     ncbi-genome-download $input_args

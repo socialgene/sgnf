@@ -8,6 +8,10 @@ process DOWNLOAD_RESFAMS {
     path "resfams", emit: resfams
     path "resfams_versions.yml" , emit: versions
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     # was getting gzip errors when using curl and zcat

@@ -9,6 +9,10 @@ process ASSEMBLY_TO_LOCUS {
     path "*.assembly_to_locus.gz", emit: assembly_to_locus
     path "nucleotide_accessions.gz", emit: nucleotide_accessions
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
 

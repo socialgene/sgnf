@@ -5,6 +5,10 @@ process PARAMETER_EXPORT_FOR_NEO4J {
     path "*.socialgene_parameters.gz", emit: parameters
 
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def args = task.ext.args ?: "None"
     """

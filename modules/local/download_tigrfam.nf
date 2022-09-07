@@ -8,6 +8,10 @@ process DOWNLOAD_TIGRFAM {
     path "tigrfam", emit: prism
     path "tigrfam_versions.yml" , emit: versions
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     # was getting gzip errors when using curl and zcat

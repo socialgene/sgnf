@@ -5,6 +5,10 @@ process ASSEMBLY_ACCESSION {
     output:
     path "*.assemblies.gz", emit: assemblies
 
+    task.ext.when == null || task.ext.when
+
+    when:
+    task.ext.when == null || task.ext.when
 
     script:
     """

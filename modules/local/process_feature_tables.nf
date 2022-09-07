@@ -13,6 +13,10 @@ process PROCESS_FEATURE_TABLES {
     path "*.loci.gz"                , emit: loci
     path "*.assemblies.gz"          , emit: assembly
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     socialgene_parse_ncbi_feature_tables \\

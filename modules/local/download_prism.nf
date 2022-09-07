@@ -6,6 +6,10 @@ process DOWNLOAD_PRISM {
     path "prism", emit: prism
     path "prism_versions.yml" , emit: versions
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     mkdir prism

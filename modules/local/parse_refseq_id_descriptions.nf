@@ -4,14 +4,18 @@ process PARSE_REFSEQ_ID_DESCRIPTIONS {
 
     input:
     path fasta
-    
+
     output:
     path "*id_description.gz", emit: fasta
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     shell:
-    """    
+    """
     parse_refseq_id_descriptions.sh
-    
+
     md5_as_filename.sh id_description.gz id_description.gz
 
     """

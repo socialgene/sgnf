@@ -16,6 +16,10 @@ process PROTEIN_ACCESSION_TO_HASH {
     output:
     path "protein_info.db", emit: sqlite_db
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     sqlite3 protein_info.db <<EOF

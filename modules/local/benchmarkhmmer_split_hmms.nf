@@ -10,6 +10,10 @@ process SPLIT_HMMS {
     output:
     path "*.domtblout.gz", emit: hmmer_out
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     # needs to be basename because of how input is provided for chtc

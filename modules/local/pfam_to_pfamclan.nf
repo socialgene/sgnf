@@ -8,6 +8,10 @@ process PFAM_TO_PFAMCLAN {
     output:
     path "*.pfam_to_pfamclan.gz", emit: pfam_to_pfamclan
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
 

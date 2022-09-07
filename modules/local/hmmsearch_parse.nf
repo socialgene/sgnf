@@ -7,6 +7,10 @@ process HMMSEARCH_PARSE {
     path "*.parseddomtblout.gz", emit: parseddomtblout, optional:true //optional in case no domains found
     path "versions.yml" , emit: versions
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     for i in `find -L . -type f -iname "*.domtblout.gz"`

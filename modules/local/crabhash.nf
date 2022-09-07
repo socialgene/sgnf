@@ -13,6 +13,10 @@ process CRABHASH {
     path "out/*.faa.gz"          , emit: fasta
     path "**/*.protein_info.gz" , emit: tsv
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def args = task.ext.args ?: ''
     """

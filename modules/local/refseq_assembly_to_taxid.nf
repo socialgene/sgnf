@@ -8,6 +8,10 @@ process REFSEQ_ASSEMBLY_TO_TAXID {
     output:
     path "*.assembly_to_taxid.gz", emit: assembly_to_taxid
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     curl -s  ftp.ncbi.nlm.nih.gov/genomes/ASSEMBLY_REPORTS/assembly_summary_refseq.txt |\\

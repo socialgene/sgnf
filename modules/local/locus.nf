@@ -13,6 +13,10 @@ process LOCUS {
     path "*.locus.gz", emit: locus
 
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
 

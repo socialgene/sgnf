@@ -10,6 +10,10 @@ process TIGRFAM_ROLES {
     path "*.tigrfam_role.gz", emit: tigrfam_role
     path "versions.yml" , emit: versions
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
     wget "https://ftp.ncbi.nlm.nih.gov/hmm/TIGRFAMs/release_15.0/TIGR_ROLE_NAMES"

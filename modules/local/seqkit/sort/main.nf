@@ -13,6 +13,10 @@ process SEQKIT_SORT {
     path "sorted_nr.fa.gz"  , emit: fasta
     path 'versions.yml'     , emit: version
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     """
         seqkit \\

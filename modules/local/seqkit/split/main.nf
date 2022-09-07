@@ -11,6 +11,10 @@ process SEQKIT_SPLIT {
     path("outfolder/*")    , emit: fasta
     path 'versions.yml'   , emit: version
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def args = task.ext.args ?: ''
     """

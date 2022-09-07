@@ -14,6 +14,10 @@ process DIAMOND_BLASTP {
     path('*.blast6.gz')              , emit: blastout
     path "versions.yml"           , emit: versions
 
+
+    when:
+    task.ext.when == null || task.ext.when
+
     script:
     def args = task.ext.args ?: ''
     """

@@ -30,20 +30,15 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
     IMPORT LOCAL MODULES
 ========================================================================================
 */
-include { ANTISMASH                         } from '../modules/local/antismash/main'
-include { ASSEMBLY_FTP_URLS                 } from '../modules/local/assembly_ftp_urls'
-include { FEATURE_TABLE_DOWNLOAD            } from '../modules/local/feature_table_download'
 include { HMMER_HMMSEARCH                   } from '../modules/local/hmmsearch'
 include { HMMSEARCH_PARSE                   } from '../modules/local/hmmsearch_parse'
 include { HMM_HASH                          } from '../modules/local/hmm_hash'
 include { HMM_TSV_PARSE                     } from '../modules/local/hmm_tsv_parse'
 include { MMSEQS2_EASYCLUSTER               } from '../modules/local/mmseqs2_easycluster'
-include { NCBI_DATASETS_DOWNLOAD            } from '../modules/local/ncbi_datasets_download'
 include { NEO4J_ADMIN_IMPORT                } from '../modules/local/neo4j_admin_import'
 include { NEO4J_HEADERS                     } from '../modules/local/neo4j_headers'
 include { PAIRED_OMICS                      } from '../modules/local/paired_omics'
 include { PARAMETER_EXPORT_FOR_NEO4J        } from '../modules/local/parameter_export_for_neo4j'
-include { PROTEIN_FASTA_DOWNLOAD            } from '../modules/local/protein_fasta_download'
 include { SEQKIT_SORT                       } from '../modules/local/seqkit/sort/main'
 include { SEQKIT_SPLIT                      } from '../modules/local/seqkit/split/main'
 include { SEQKIT_RMDUP                      } from '../modules/local/seqkit/rmdup/main.nf'
@@ -79,7 +74,7 @@ workflow DB_CREATOR {
 
     ch_versions = Channel.empty()
 
-    // f not `null`, hmmlist needs to be a list
+    // if not `null`, hmmlist needs to be a list
     if( !(params.hmmlist instanceof String) ) {
         hmmlist = [params.hmmlist]
     }
@@ -119,6 +114,7 @@ workflow DB_CREATOR {
     } else {
         gbk_fasta_ch = Channel.empty()
     }
+
     // Parse local fasta file(s)
     if (params.local_fasta){
         sg_modules = sg_modules + "protein"
@@ -255,10 +251,17 @@ workflow DB_CREATOR {
 
     /*
     ////////////////////////
+    CREATE NEO4J_HEADERS
+    ////////////////////////
+    */
+    NEO4J_HEADERS(sg_modules)
+    ch_versions = ch_versions.mix(NEO4J_HEADERS.out.versions)
+
+    /*
+    ////////////////////////
     OUTPUT SOFTWARE VERSIONS
     ////////////////////////
     */
-    ch_versions = ch_versions.mix(NEO4J_HEADERS.out.versions)
     outdir_neo4j_ch = Channel.fromPath(params.outdir_neo4j)
     collected_version_files = ch_versions.collectFile(name: 'temp.yml', newLine: true)
 
@@ -271,7 +274,7 @@ workflow DB_CREATOR {
     BUILD NEO4J DATABASE
     ////////////////////////
     */
-    NEO4J_HEADERS(sg_modules)
+
 
     if (params.build_database) {
         NEO4J_ADMIN_IMPORT(

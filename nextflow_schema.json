@@ -174,8 +174,8 @@
             "default": "",
             "properties": {
                 "pfam_version": {
-                    "type": "integer",
-                    "default": 35,
+                    "type": "string",
+                    "default": "35.0",
                     "description": "PFAM version. Ffor version numbers see: http://ftp.ebi.ac.uk/pub/databases/Pfam/releases"
                 },
                 "antismash_hmms_git_sha": {
@@ -353,7 +353,7 @@
                 },
                 "testing": {
                     "type": "string",
-                    "default": "false",
+                    "default": "None",
                     "description": "Ignore, only used during testing"
                 }
             }
@@ -508,7 +508,7 @@
                 },
                 "refseq_complete_step_1": {
                     "type": "string",
-                    "default": "false"
+                    "default": "None"
                 },
                 "crabhash_glob": {
                     "type": "string",

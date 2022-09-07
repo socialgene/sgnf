@@ -145,8 +145,6 @@ gbff, gbk
 gzipped/TAR versions of those
 </small></details>| `string` | None |  |  |
 | `paired_omics_json_path` | Paired omics json file, downloaded from: https://pairedomicsdata.bioinformatics.nl/projects | `string` | None |  |  |
-| `sequence_files_glob` | Must be set when using `local_genbank` <details><summary>Help</summary><small>This is required to prevent the command from getting super long when processing lots of files.
-It is required if the `local_genbank` parameter is set.
 
 It's passed on to Python's glob so any valid Python-glob should work- https://docs.python.org/3/library/glob.html
 It should match whatever files are specified by the `local_genbank` parameter

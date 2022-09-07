@@ -34,12 +34,6 @@
                     "default": "None",
                     "description": "Paired omics json file, downloaded from: https://pairedomicsdata.bioinformatics.nl/projects"
                 },
-                "sequence_files_glob": {
-                    "type": "string",
-                    "default": "None",
-                    "description": "Must be set when using `local_genbank`",
-                    "help_text": "This is required to prevent the command from getting super long when processing lots of files. \nIt is required if the `local_genbank` parameter is set.\n\nIt's passed on to Python's glob so any valid Python-glob should work- https://docs.python.org/3/library/glob.html\nIt should match whatever files are specified by the `local_genbank` parameter \ne.g.\n```\nlocal_genbank                           = '/home/chase/Downloads/some_folder/*.gbff.gz'\nsequence_files_glob         = '*.gbff.gz'\n```\n\n```\nlocal_genbank                           = '/home/chase/Downloads/my_single_file.gbff.gz'\nsequence_files_glob         = 'my_single_file.gbff.gz'\n```"
-                },
                 "custom_hmm_file": {
                     "type": "string",
                     "default": "None",

@@ -27,12 +27,17 @@
                     "type": "string",
                     "default": "None",
                     "description": "Path to local GenBank file(s), can be a glob",
-                    "help_text": "Accepted files:\ngbff, gbk\ngzipped/TAR versions of those\n"
+                    "help_text": "Accepted files:\ngbff, gbk\nand gzipped versions of those\n"
+                },
+                "local_fasta": {
+                    "type": "string",
+                    "default": "None"
                 },
                 "paired_omics_json_path": {
                     "type": "string",
                     "default": "None",
-                    "description": "Paired omics json file, downloaded from: https://pairedomicsdata.bioinformatics.nl/projects"
+                    "description": "Paired omics json file, downloaded from: https://pairedomicsdata.bioinformatics.nl/projects",
+                    "hidden": true
                 },
                 "custom_hmm_file": {
                     "type": "string",
@@ -60,7 +65,10 @@
                     "default": "socialgene_downloads"
                 }
             },
-            "required": ["single_outdir", "outdir_download_cache"]
+            "required": [
+                "single_outdir",
+                "outdir_download_cache"
+            ]
         },
         "new_group_1": {
             "title": "New Group 1",
@@ -91,6 +99,11 @@
                     "default": "socialgene_results/genome_downloads",
                     "description": "Storage directory for downloaded genomes",
                     "fa_icon": "fas fa-folder-open"
+                },
+                "outdir_mmseqs2_cache": {
+                    "type": "string",
+                    "default": "socialgene_results/socialgene_per_run/mmseqs2_cache",
+                    "description": "Directory to save MMSEQs results will be saved to"
                 }
             }
         },
@@ -100,12 +113,6 @@
             "description": "",
             "default": "",
             "properties": {
-                "mode": {
-                    "type": "string",
-                    "default": "null",
-                    "description": "Run 'dev' for fast (Not yet implemented)",
-                    "hidden": true
-                },
                 "fasta_splits": {
                     "type": "integer",
                     "default": 1,
@@ -136,10 +143,6 @@
                     "description": "Run MMseqs2 on the input proteins?",
                     "help_text": "https://github.com/soedinglab/MMseqs2"
                 },
-                "hmmer": {
-                    "type": "boolean",
-                    "description": "Annotate proteins with HMMer?"
-                },
                 "blastp": {
                     "type": "boolean",
                     "description": "Should all vs all  BLASTp be run? DO NOT RUN ON LARGE INPUT DATA WITHOUT STRICT FILTERS"
@@ -161,6 +164,24 @@
                 "paired_omics": {
                     "type": "boolean",
                     "description": "Run paired omics pipeline?"
+                }
+            }
+        },
+        "new_group_2": {
+            "title": "New Group 2",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "pfam_version": {
+                    "type": "integer",
+                    "default": 35,
+                    "description": "PFAM version. Ffor version numbers see: http://ftp.ebi.ac.uk/pub/databases/Pfam/releases"
+                },
+                "antismash_hmms_git_sha": {
+                    "type": "string",
+                    "default": "e2d777c6cd035e6bf20f7eec924a350b00b84c7b",
+                    "description": "Controls which version of antismash the antismash HMMS are pulled from"
                 }
             }
         },
@@ -329,6 +350,11 @@
                     "default": "not-used-but-needed-in-lint",
                     "description": "not used, required by nf-core linter",
                     "hidden": true
+                },
+                "testing": {
+                    "type": "string",
+                    "default": "false",
+                    "description": "Ignore, only used during testing"
                 }
             }
         },
@@ -394,7 +420,7 @@
                 },
                 "HMMSEARCH_F3": {
                     "type": "number",
-                    "default": 1e-5,
+                    "default": 1e-05,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 },
@@ -479,6 +505,14 @@
                     "default": "/home/chase/Documents/socialgene_data/refseq_cache",
                     "description": "crabhash ouptut (will be large for NCBI nr runs)",
                     "hidden": true
+                },
+                "refseq_complete_step_1": {
+                    "type": "string",
+                    "default": "false"
+                },
+                "crabhash_glob": {
+                    "type": "string",
+                    "default": "**/*.faa.gz"
                 }
             }
         }
@@ -498,6 +532,9 @@
         },
         {
             "$ref": "#/definitions/socialgene_modules"
+        },
+        {
+            "$ref": "#/definitions/new_group_2"
         },
         {
             "$ref": "#/definitions/max_job_resource_request_options"

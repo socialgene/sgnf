@@ -25,7 +25,6 @@ process HMMER_HMMSEARCH {
     hmmsearch \\
         --domtblout "${fasta}.domtblout" \\
         -Z ${params.HMMSEARCH_Z} \\
-        HMMSEARCH_IEVALUE
         -E ${params.HMMSEARCH_E} \\
         --domE ${params.HMMSEARCH_DOME} \\
         --incE ${params.HMMSEARCH_INCE} \\

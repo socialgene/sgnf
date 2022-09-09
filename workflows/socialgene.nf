@@ -75,10 +75,9 @@ workflow DB_CREATOR {
     ch_versions = Channel.empty()
 
     // if not `null`, hmmlist needs to be a list
-    if( !(params.hmmlist instanceof String) ) {
+    if( params.hmmlist instanceof String ) {
         hmmlist = [params.hmmlist]
     }
-    hmmlist = params.hmmlist.join(' ')
 
     // start with an empty sg_modules
     sg_modules = ""
@@ -213,7 +212,7 @@ workflow DB_CREATOR {
         sg_modules = sg_modules + " hmms"
         GATHER_HMMS()
         ch_versions = ch_versions.mix(GATHER_HMMS.out.versions)
-        if (params.hmmlist.contains("tigrfam")){
+        if (hmmlist.contains("tigrfam")){
             sg_modules = sg_modules + " tigrfam"
             // download additional tigrfam info
             TIGRFAM_INFO()
@@ -234,10 +233,10 @@ workflow DB_CREATOR {
             .set{ hmm_ch }
 
         HMMER_HMMSEARCH(hmm_ch)
-        ch_versions = ch_versions.mix(HMMER_HMMSEARCH.out.versions.first())
+        ch_versions = ch_versions.mix(HMMER_HMMSEARCH.out.versions.last())
 
         HMMSEARCH_PARSE(HMMER_HMMSEARCH.out.domtblout)
-        ch_versions = ch_versions.mix(HMMSEARCH_PARSE.out.versions.first())
+        ch_versions = ch_versions.mix(HMMSEARCH_PARSE.out.versions.last())
 
         hmmer_result_ch = HMMSEARCH_PARSE.out.parseddomtblout.collect()
 
@@ -254,7 +253,7 @@ workflow DB_CREATOR {
     CREATE NEO4J_HEADERS
     ////////////////////////
     */
-    NEO4J_HEADERS(sg_modules)
+    NEO4J_HEADERS(sg_modules, hmmlist)
     ch_versions = ch_versions.mix(NEO4J_HEADERS.out.versions)
 
     /*
@@ -274,8 +273,6 @@ workflow DB_CREATOR {
     BUILD NEO4J DATABASE
     ////////////////////////
     */
-
-
     if (params.build_database) {
         NEO4J_ADMIN_IMPORT(
             outdir_neo4j_ch,

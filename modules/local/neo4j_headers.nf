@@ -3,6 +3,7 @@ process NEO4J_HEADERS {
 
     input:
         val sg_modules
+        val hmmlist
 
     output:
     path "*", emit: headers
@@ -15,7 +16,7 @@ process NEO4J_HEADERS {
 
     script:
     """
-    socialgene_export_neo4j_headers --outdir . --sg_modules $sg_modules --hmmlist ${params.hmmlist.join(' ')}
+    socialgene_export_neo4j_headers --outdir . --sg_modules $sg_modules --hmmlist ${hmmlist}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

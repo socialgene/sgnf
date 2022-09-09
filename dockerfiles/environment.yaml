@@ -26,4 +26,5 @@ dependencies:
   - grep
   - conda-forge::gzip >=1.12
   - pip:
-      - /home/chase/sgpy
+      - /home/chase/Documents/github/kwan_lab/socialgene/sgpy
+

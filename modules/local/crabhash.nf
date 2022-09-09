@@ -10,8 +10,8 @@ process CRABHASH {
     val glob
 
     output:
-    path "out/*.faa.gz"          , emit: fasta
-    path "**/*.protein_info.gz" , emit: tsv
+    path "*.faa.gz"          , emit: fasta
+    path "*.protein_info.gz" , emit: tsv
 
 
     when:
@@ -28,13 +28,18 @@ process CRABHASH {
         ${task.cpus}
 
     cd out
+
     sed 's/\$/\\t\\t/' *.tsv | gzip -n -6 --rsyncable > all.protein_info.gz
     rm *.tsv
+    pigz -p ${task.cpus} -n -6 --rsyncable *.fasta --stdout > all.faa.gz
+    rm *.fasta
+    cd ..
+    mv out/all.protein_info.gz all.protein_info.gz
+    mv out/all.faa.gz all.faa.gz
+
     md5_as_filename.sh 'all.protein_info.gz' 'protein_info.gz'
 
-    pigz -p ${task.cpus} -n -6 --rsyncable *.fasta --stdout > all.faa.gz
     md5_as_filename.sh 'all.faa.gz' 'faa.gz'
-    rm *.fasta
 
     # TODO:  crabhash version
     cat <<-END_VERSIONS > versions.yml

@@ -25,6 +25,7 @@ process HMMER_HMMSEARCH {
     hmmsearch \\
         --domtblout "${fasta}.domtblout" \\
         -Z ${params.HMMSEARCH_Z} \\
+        HMMSEARCH_IEVALUE
         -E ${params.HMMSEARCH_E} \\
         --domE ${params.HMMSEARCH_DOME} \\
         --incE ${params.HMMSEARCH_INCE} \\
@@ -32,10 +33,8 @@ process HMMER_HMMSEARCH {
         --F1 ${params.HMMSEARCH_F1} \\
         --F2 ${params.HMMSEARCH_F2} \\
         --F3 ${params.HMMSEARCH_F3} \\
-
-
+        --seed ${params.HMMSEARCH_SEED} \\
         --cpu $task.cpus \\
-        --seed 42 \\
         $args \\
         "${hmm}" \\
         temp.fa > /dev/null

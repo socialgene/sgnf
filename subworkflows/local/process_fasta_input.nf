@@ -36,7 +36,7 @@ workflow PROCESS_FASTA_INPUT {
     SEQKIT_SPLIT.out.fasta
         .collect()
         .set{fasta_collected_ch}
-    CRABHASH(fasta_collected_ch, params.crabhash_executable_path)
+    CRABHASH(fasta_collected_ch, params.crabhash_path, params.crabhash_glob)
 
 
     emit:

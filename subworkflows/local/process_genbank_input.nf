@@ -1,12 +1,20 @@
+include { MIBIG_DOWNLOAD                    } from '../../modules/local/mibig_download'
 include { NCBI_DATASETS_DOWNLOAD            } from '../../modules/local/ncbi_datasets_download'
 include { NCBI_GENOME_DOWNLOAD              } from '../../modules/local/ncbi_genome_download'
 include { PROCESS_GENBANK_FILES             } from '../../modules/local/process_genbank_files'
+
 
 workflow PROCESS_GENBANK {
 
     main:
         ch_versions = Channel.empty()
         genome_file_ch= Channel.empty()
+
+        if (params.mibig){
+            MIBIG_DOWNLOAD()
+            genome_file_ch = genome_file_ch.mix(MIBIG_DOWNLOAD.out.genbank)
+            ch_versions = ch_versions.mix(MIBIG_DOWNLOAD.out.versions)
+        }
 
         if (params.ncbi_genome_download_command){
             NCBI_GENOME_DOWNLOAD(params.ncbi_genome_download_command)
@@ -26,7 +34,7 @@ workflow PROCESS_GENBANK {
         }
 
         PROCESS_GENBANK_FILES(
-                genome_file_ch.flatten().buffer( size: 2, remainder: true ),
+                genome_file_ch.flatten().buffer( size: params.queueSize, remainder: true ),
                 )
 
         PROCESS_GENBANK_FILES.out.fasta.set{ch_fasta_out}

@@ -7,7 +7,7 @@ process SEQKIT_RMDUP {
         'quay.io/biocontainers/seqkit:2.3.0--h9ee0642_0' }"
 
     input:
-    path fasta
+    path 'file??.gz'
 
     output:
     path "nr.fa.gz"     , emit: fasta

@@ -22,20 +22,30 @@ process MMSEQS2_EASYCLUSTER {
     script:
     def args = task.ext.args ?: ''
     """
+    # have to modify fasta until mmseqs is fixed:
+    # https://github.com/soedinglab/MMseqs2/issues/557
+
+    zcat ${fasta} | sed 's/>/>mmseqsmmseqs/g' | gzip > modified_fasta.faa.gz
+
     mmseqs \\
         easy-cluster \\
-        ${fasta} \\
+        modified_fasta.faa.gz \\
         'mmseqs2_results' \\
         /tmp \\
         --threads $task.cpus \\
         $args
 
-    rm -rf tmp
+    rm -rf tmp modified_fasta.faa.gz
+
+    # change back hash_ids
+    sed -i 's/>mmseqsmmseqs/>/g' mmseqs2_results_all_seqs.fasta
+    sed -i 's/>mmseqsmmseqs/>/g' mmseqs2_results_rep_seq.fasta
+    sed -i 's/^mmseqsmmseqs//g' mmseqs2_results_cluster.tsv
+    sed -i 's/\tmmseqsmmseqs/\t/g' mmseqs2_results_cluster.tsv 
 
     md5_as_filename_after_gzip.sh 'mmseqs2_results_all_seqs.fasta' 'mmseqs2_results_all_seqs.fasta.gz'
     md5_as_filename_after_gzip.sh 'mmseqs2_results_cluster.tsv'    'mmseqs2_results_cluster.tsv.gz'
     md5_as_filename_after_gzip.sh 'mmseqs2_results_rep_seq.fasta'  'mmseqs2_results_rep_seq.fasta.gz'
-
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

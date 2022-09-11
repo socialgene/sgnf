@@ -78,6 +78,9 @@ workflow DB_CREATOR {
     if( params.hmmlist instanceof String ) {
         hmmlist = [params.hmmlist]
     }
+    else {
+        hmmlist = params.hmmlist
+    }
 
     // start with an empty sg_modules
     sg_modules = ""
@@ -145,20 +148,6 @@ workflow DB_CREATOR {
             .set{single_ch_fasta}
     }
 
-    if (params.fasta_splits > 1){
-        SEQKIT_SPLIT(
-            single_ch_fasta,
-            params.fasta_splits
-            )
-        SEQKIT_SPLIT
-            .out
-            .fasta
-            .flatten()
-            .set{ch_split_fasta}
-    } else {
-        ch_split_fasta = single_ch_fasta
-    }
-
     /*
     ////////////////////////
     RUN BLASTP
@@ -224,6 +213,19 @@ workflow DB_CREATOR {
             params.hmm_splits
         )
         ch_versions = ch_versions.mix(HMM_HASH.out.versions)
+        if (params.fasta_splits > 1){
+            SEQKIT_SPLIT(
+                single_ch_fasta,
+                params.fasta_splits
+                )
+            SEQKIT_SPLIT
+                .out
+                .fasta
+                .flatten()
+                .set{ch_split_fasta}
+        } else {
+            ch_split_fasta = single_ch_fasta
+        }        
         // make a channel that's the cartesian product of hmm model files and fasta files
         HMM_HASH.out.socialgene_hmms
             .flatten()

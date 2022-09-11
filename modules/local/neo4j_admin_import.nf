@@ -20,6 +20,7 @@ process NEO4J_ADMIN_IMPORT {
     task.ext.when == null || task.ext.when
 
     script:
+    def hmm_s_delim = hmmlist ? hmmlist.join(' ') : '""'
     """
     touch "${outdir_neo4j}/import.report"
     mkdir -p "${outdir_neo4j}/data"
@@ -39,7 +40,7 @@ process NEO4J_ADMIN_IMPORT {
     --uid None \\
     --gid None \\
     --sg_modules ${sg_modules} \\
-    --hmmlist ${hmmlist} \\
+    --hmmlist ${hmm_s_delim} \\
     --dryrun true
 
     socialgene_create_neo4j_db \\

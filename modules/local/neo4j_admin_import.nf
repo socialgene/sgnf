@@ -50,7 +50,7 @@ process NEO4J_ADMIN_IMPORT {
     --uid None \\
     --gid None \\
     --sg_modules ${sg_modules} \\
-    --hmmlist ${hmmlist}
+    --hmmlist ${hmm_s_delim}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

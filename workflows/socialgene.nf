@@ -78,6 +78,9 @@ workflow DB_CREATOR {
     if( params.hmmlist instanceof String ) {
         hmmlist = [params.hmmlist]
     }
+    else {
+        hmmlist = params.hmmlist
+    }
 
     // start with an empty sg_modules
     sg_modules = ""

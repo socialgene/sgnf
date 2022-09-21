@@ -24,7 +24,7 @@ dependencies:
   - numpy
   - wget
   - grep
+  - conda-forge::pigz==2.6
   - conda-forge::gzip >=1.12
   - pip:
-      - /home/chase/sgpy
-
+      - https://github.com/socialgene/sgpy/archive/9905048f41e912defb8e37695e9201f9bc44bfea.tar.gz

@@ -28,7 +28,8 @@ workflow PROCESS_GENBANK {
 
         }
         if (params.ncbi_datasets_command){
-            NCBI_DATASETS_DOWNLOAD(params.ncbi_datasets_command)
+            opt_input_file = file(params.ncbi_datasets_file)
+            NCBI_DATASETS_DOWNLOAD(params.ncbi_datasets_command, opt_input_file)
             genome_file_ch= genome_file_ch.mix(NCBI_DATASETS_DOWNLOAD.out.gbff_files)
             ch_versions = ch_versions.mix(NCBI_DATASETS_DOWNLOAD.out.versions)
         }

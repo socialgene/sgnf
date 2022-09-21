@@ -1,13 +1,12 @@
 
 process NCBI_DATASETS_DOWNLOAD {
+    debug true
     // https://www.ncbi.nlm.nih.gov/datasets/docs/v1/
     label 'process_low'
 
-    conda (params.enable_conda ? "conda-forge::ncbi-datasets-cli=13.28 conda-forge::pigz==2.6" : null)
-
-
     input:
     val input_taxon
+    path input_file
 
     output:
     path "ncbi_dataset/data/assembly_data_report.jsonl" , emit: assembly_data_report
@@ -21,12 +20,14 @@ process NCBI_DATASETS_DOWNLOAD {
 
     script:
     def args = task.ext.args ?: ''
+    def opt_input_file = input_file.name != 'NO_FILE' ? "--inputfile $input_file" : ''
     """
     # download a taxon
     datasets download \\
         $input_taxon \\
         --dehydrated \\
-        $args
+        $args \\
+        $opt_input_file
 
     # unzip files
     unzip ncbi_dataset.zip

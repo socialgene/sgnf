@@ -18,18 +18,10 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 
 /*
 ========================================================================================
-    CONFIG FILES
-========================================================================================
-*/
-
-//          ch_multiqc_config        = file("$projectDir/assets/multiqc_config.yaml", checkIfExists: true)
-//          ch_multiqc_custom_config = params.multiqc_config ? Channel.fromPath(params.multiqc_config) : Channel.empty()
-
-/*
-========================================================================================
     IMPORT LOCAL MODULES
 ========================================================================================
 */
+
 include { HMMER_HMMSEARCH                   } from '../modules/local/hmmsearch'
 include { HMMSEARCH_PARSE                   } from '../modules/local/hmmsearch_parse'
 include { HMM_HASH                          } from '../modules/local/hmm_hash'
@@ -42,6 +34,7 @@ include { PARAMETER_EXPORT_FOR_NEO4J        } from '../modules/local/parameter_e
 include { SEQKIT_SORT                       } from '../modules/local/seqkit/sort/main'
 include { SEQKIT_SPLIT                      } from '../modules/local/seqkit/split/main'
 include { SEQKIT_RMDUP                      } from '../modules/local/seqkit/rmdup/main.nf'
+
 /*
 ========================================================================================
     IMPORT LOCAL SUBWORKFLOWS
@@ -108,7 +101,7 @@ workflow DB_CREATOR {
     ch_read = Channel.empty()
 
     // Parse genbank files from various sources
-    if (params.ncbi_genome_download_command || params.local_genbank || params.ncbi_datasets_command){
+    if (params.ncbi_genome_download_command || params.local_genbank || params.ncbi_datasets_command || params.mibig){
         sg_modules = sg_modules + "base"
         PROCESS_GENBANK()
         ch_versions = ch_versions.mix(PROCESS_GENBANK.out.versions)
@@ -225,7 +218,7 @@ workflow DB_CREATOR {
                 .set{ch_split_fasta}
         } else {
             ch_split_fasta = single_ch_fasta
-        }        
+        }
         // make a channel that's the cartesian product of hmm model files and fasta files
         HMM_HASH.out.socialgene_hmms
             .flatten()

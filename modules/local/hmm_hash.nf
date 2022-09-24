@@ -1,7 +1,7 @@
 
 process HMM_HASH {
     tag("numfiles: ${hmm_splits}")
-    label 'process_medium'
+    label 'process_low'
 
     input:
     path hmm_directory

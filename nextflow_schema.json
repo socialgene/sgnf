@@ -52,7 +52,7 @@
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
             "properties": {
-                "single_outdir": {
+                "outdir": {
                     "type": "string",
                     "description": "If set, and others not, all other outdirs within this directory",
                     "fa_icon": "fas fa-folder-open",
@@ -66,7 +66,7 @@
                 }
             },
             "required": [
-                "single_outdir",
+                "outdir",
                 "outdir_download_cache"
             ]
         },
@@ -94,9 +94,9 @@
                     "fa_icon": "fas fa-folder-open",
                     "description": "Cache folder where blast results are written to. Important to delete if starting a new pipeline run with different input data but using same cache directory as a previous run."
                 },
-                "genome_downloads": {
+                "outdir_genomes": {
                     "type": "string",
-                    "default": "socialgene_results/genome_downloads",
+                    "default": "socialgene_results/outdir_genomes",
                     "description": "Storage directory for downloaded genomes",
                     "fa_icon": "fas fa-folder-open"
                 },

@@ -129,7 +129,7 @@ workflow DB_CREATOR {
     SEQKIT_RMDUP(ch_fasta)
 
     // If testing, sort the FASTA file to get consistent output, otherwise skip
-    if (params.testing) {
+    if (params.sort_fasta) {
         SEQKIT_SORT(SEQKIT_RMDUP.out.fasta)
         SEQKIT_SORT.out
             .fasta

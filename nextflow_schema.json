@@ -351,10 +351,10 @@
                     "description": "not used, required by nf-core linter",
                     "hidden": true
                 },
-                "testing": {
+                "sort_fasta": {
                     "type": "string",
                     "default": "None",
-                    "description": "Ignore, only used during testing"
+                    "description": "BLAST (and maybe MMseqs2?) differ based on sequence order, setting this to true will sort the protein fasta file first (note: this will make a copy of the data)"
                 }
             }
         },

@@ -13,4 +13,4 @@ dependencies:
   - numpy
   - wget
   - pip:
-      - https://test-files.pythonhosted.org/packages/9e/0b/1735e790046936cab3088c1e96d565f5b4b284ae572f61c70006bd5c3a9a/socialgene-2.0.3-py2.py3-none-any.whl
+    - /home/chase/Documents/github/kwan_lab/socialgene/sgpy

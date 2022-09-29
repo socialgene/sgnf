@@ -27,4 +27,4 @@ dependencies:
   - conda-forge::pigz==2.6
   - conda-forge::gzip >=1.12
   - pip:
-      - https://github.com/socialgene/sgpy/archive/9905048f41e912defb8e37695e9201f9bc44bfea.tar.gz
+      - https://test-files.pythonhosted.org/packages/92/7b/8f06990902264882135a91fccba613d83ddaccbcbbbe5d43c368747959a6/socialgene-1.0.1-py2.py3-none-any.whl

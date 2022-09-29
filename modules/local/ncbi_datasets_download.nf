@@ -35,6 +35,9 @@ process NCBI_DATASETS_DOWNLOAD {
     datasets rehydrate --gzip --directory .
     rm ncbi_dataset.zip
 
+    # These GBFF don't contain the assembly accession, so socialgene uses the filename, change that here:
+    rename_ncbi_datasets_download_taxon.py
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         datasets: \$(datasets version | sed 's/^ *//g')

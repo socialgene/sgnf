@@ -21,9 +21,6 @@ process NCBI_GENOME_DOWNLOAD {
     """
     ncbi-genome-download $input_args
 
-    # GBFF doesn't contain the assembly accession, so socialgene uses the filename, change that here:
-    rename_ncbi_datasets_download_taxon.py
-
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         ncbi-genome-download: \$(ncbi-genome-download --version)

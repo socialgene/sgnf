@@ -77,7 +77,7 @@ ascp \
 
         nextflow run . \
             -profile chtc_prep,conda \
-            --single_outdir $outdir \
+            --outdir $outdir \
             -resume
 ----------------------------------------------------------------------------------------
 */
@@ -110,7 +110,7 @@ process {
 
     withName: 'SEQKIT_RMDUP' {
             publishDir = [
-            path: { "${params.single_outdir}/fasta" },
+            path: { "${params.outdir}/fasta" },
             mode: 'move',
         ]
     }
@@ -118,7 +118,7 @@ process {
     withName: 'HMM_HASH' {
         publishDir = [
             // Save output files to a folder named after the Nextflow process
-            path: { "${params.single_outdir}/hmm_files" },
+            path: { "${params.outdir}/hmm_files" },
             mode: 'copy',
         ]
     }
@@ -126,7 +126,7 @@ process {
     withName: 'HMM_TSV_PARSE' {
         publishDir = [
             // Save output files to a folder named after the Nextflow process
-            path: { "${params.single_outdir}/hmm_info" },
+            path: { "${params.outdir}/hmm_info" },
             mode: 'copy',
         ]
     }
@@ -134,7 +134,7 @@ process {
     withName: 'PROCESS_GENBANK_FILES' {
         publishDir = [
             // Save output files to a folder named after the Nextflow process
-            path: { "${params.single_outdir}/fasta_files" },
+            path: { "${params.outdir}/fasta_files" },
             pattern: "*faa.gz",
             mode: 'move',
         ]

@@ -29,6 +29,8 @@ include { PAIRED_OMICS                      } from '../modules/local/paired_omic
 include { PARAMETER_EXPORT_FOR_NEO4J        } from '../modules/local/parameter_export_for_neo4j'
 include { SEQKIT_SORT                       } from '../modules/local/seqkit/sort/main'
 include { SEQKIT_RMDUP                      } from '../modules/local/seqkit/rmdup/main.nf'
+include { SEQKIT_SPLIT                      } from '../modules/local/seqkit/split/main'
+include { HTCONDOR1                         } from '../modules/local/htcondor'
 
 /*
 ========================================================================================
@@ -38,8 +40,10 @@ include { SEQKIT_RMDUP                      } from '../modules/local/seqkit/rmdu
 
 include { NCBI_TAXONOMY_INFO        } from '../subworkflows/local/ncbi_taxonomy_info'
 include { GENOME_HANDLING           } from '../subworkflows/local/genome_handling'
-include { HMM_ANNOTATION            } from '../subworkflows/local/hmm_annotation'
 include { SG_MODULES                } from '../subworkflows/local/sg_modules'
+include { HMM_PREP                  } from '../subworkflows/local/hmm_prep'
+//include { HMM_RUN                   } from '../subworkflows/local/hmm_run'
+//include { HMM_OUTSOURCED            } from '../subworkflows/local/hmm_outsourced'
 
 /*
 ========================================================================================
@@ -98,127 +102,144 @@ workflow SOCIALGENE {
     GENOME_HANDLING.out.ch_fasta.set{ch_fasta}
     ch_versions = ch_versions.mix(GENOME_HANDLING.out.ch_versions)
 
+    SEQKIT_RMDUP(ch_fasta)
+
     // If testing, sort the FASTA file to get consistent output, otherwise skip
     if (params.sort_fasta) {
         // Use seqkit to remove redundant sequences, based on sequence id because they are already the sequence hash
-        SEQKIT_RMDUP(ch_fasta)
         SEQKIT_SORT(SEQKIT_RMDUP.out.fasta)
         SEQKIT_SORT.out
             .fasta
             .set{single_ch_fasta}
     } else {
-        SEQKIT_RMDUP
-            .out
+        SEQKIT_RMDUP.out
             .fasta
             .set{single_ch_fasta}
     }
 
+    if (params.fasta_splits > 1){
+        SEQKIT_SPLIT(
+            single_ch_fasta,
+            params.fasta_splits
+            )
+        SEQKIT_SPLIT
+            .out
+            .fasta
+            .flatten()
+            .set{ch_split_fasta}
+    } else {
+        ch_split_fasta = single_ch_fasta
+    }
+
+    HMM_PREP(ch_split_fasta, hmmlist)
+
+    ch_split_fasta.collect().set{all_split_fasta}
+
     if (params.htcondor_1){
+        HTCONDOR1(HMM_PREP.out.hmms, all_split_fasta)
 
-
-    }
-    else if (params.htcondor_2) {
-
-
-    /*
-    ////////////////////////
-    HMM ANNOTATION
-    ////////////////////////
-    */
-    if (params.hmmlist){
-        HMM_ANNOTATION(single_ch_fasta, hmmlist)
-        hmmer_result_ch = HMM_ANNOTATION.out.hmmer_result_ch
-    } else {
-        hmmer_result_ch = file( "dummy_file3.txt", checkIfExists: false )
     }
 
 
-
-    /*
-    ////////////////////////
-    BLASTP
-    ////////////////////////
-    */
-    if (params.blastp){
-        DIAMOND_MAKEDB(single_ch_fasta)
-        DIAMOND_BLASTP(single_ch_fasta, DIAMOND_MAKEDB.out.db)
-        DIAMOND_BLASTP.out.blastout
-            .collect()
-            .set{blast_ch}
-        ch_versions = ch_versions.mix(DIAMOND_MAKEDB.out.versions)
-        ch_versions = ch_versions.mix(DIAMOND_BLASTP.out.versions)
-    } else {
-        blast_ch = file( "dummy_file1.txt", checkIfExists: false )
-    }
-
-    /*
-    ////////////////////////
-    MMSEQS2
-    ////////////////////////
-    */
-    if (params.mmseqs2){
-        MMSEQS2_EASYCLUSTER(single_ch_fasta)
-        MMSEQS2_EASYCLUSTER.out.clusterres_cluster
-            .set{mmseqs2_ch}
-        ch_versions = ch_versions.mix(MMSEQS2_EASYCLUSTER.out.versions)
-    } else {
-        mmseqs2_ch = file( "dummy_file2.txt", checkIfExists: false )
-    }
+    // /*
+    // ////////////////////////
+    // HMM ANNOTATION
+    // ////////////////////////
+    // */
+    // if (params.hmmlist){
+    //     HMM_ANNOTATION(ch_split_fasta, hmmlist)
+    //     hmmer_result_ch = HMM_ANNOTATION.out.hmmer_result_ch
+    // } else {
+    //     hmmer_result_ch = file( "dummy_file3.txt", checkIfExists: false )
+    // }
 
 
 
+    // /*
+    // ////////////////////////
+    // BLASTP
+    // ////////////////////////
+    // */
+    // if (params.blastp){
+    //     DIAMOND_MAKEDB(single_ch_fasta)
+    //     DIAMOND_BLASTP(single_ch_fasta, DIAMOND_MAKEDB.out.db)
+    //     DIAMOND_BLASTP.out.blastout
+    //         .collect()
+    //         .set{blast_ch}
+    //     ch_versions = ch_versions.mix(DIAMOND_MAKEDB.out.versions)
+    //     ch_versions = ch_versions.mix(DIAMOND_BLASTP.out.versions)
+    // } else {
+    //     blast_ch = file( "dummy_file1.txt", checkIfExists: false )
+    // }
+
+    // /*
+    // ////////////////////////
+    // MMSEQS2
+    // ////////////////////////
+    // */
+    // if (params.mmseqs2){
+    //     MMSEQS2_EASYCLUSTER(single_ch_fasta)
+    //     MMSEQS2_EASYCLUSTER.out.clusterres_cluster
+    //         .set{mmseqs2_ch}
+    //     ch_versions = ch_versions.mix(MMSEQS2_EASYCLUSTER.out.versions)
+    // } else {
+    //     mmseqs2_ch = file( "dummy_file2.txt", checkIfExists: false )
+    // }
 
 
 
 
 
-    /*
-    ////////////////////////
-    TAXONOMY
-    ////////////////////////
-    */
-    if (params.ncbi_taxonomy){
-        NCBI_TAXONOMY_INFO()
-        ch_versions = ch_versions.mix(NCBI_TAXONOMY_INFO.out.versions)
-    }
 
 
-    /*
-    ////////////////////////
-    NEO4J_HEADERS
-    ////////////////////////
-    */
-    NEO4J_HEADERS(sg_modules, hmmlist)
-    ch_versions = ch_versions.mix(NEO4J_HEADERS.out.versions)
 
-    /*
-    ////////////////////////
-    BUILD NEO4J DATABASE
-    ////////////////////////
-    */
-    // collected_version_files ensures everythin was run first
-    collected_version_files = ch_versions.collectFile(name: 'temp.yml', newLine: true)
+    // /*
+    // ////////////////////////
+    // TAXONOMY
+    // ////////////////////////
+    // */
+    // if (params.ncbi_taxonomy){
+    //     NCBI_TAXONOMY_INFO()
+    //     ch_versions = ch_versions.mix(NCBI_TAXONOMY_INFO.out.versions)
+    // }
 
-    if (params.build_database) {
-        outdir_neo4j_ch = Channel.fromPath(params.outdir_neo4j)
 
-        NEO4J_ADMIN_IMPORT(
-            outdir_neo4j_ch,
-            sg_modules,
-            hmmlist,
-            collected_version_files
-        )
-        ch_versions = ch_versions.mix(NEO4J_ADMIN_IMPORT.out.versions)
-    }
+    // /*
+    // ////////////////////////
+    // NEO4J_HEADERS
+    // ////////////////////////
+    // */
+    // NEO4J_HEADERS(sg_modules, hmmlist)
+    // ch_versions = ch_versions.mix(NEO4J_HEADERS.out.versions)
 
-    /*
-    ////////////////////////
-    OUTPUT SOFTWARE VERSIONS
-    ////////////////////////
-    */
-    CUSTOM_DUMPSOFTWAREVERSIONS (
-        collected_version_files
-    )
+    // /*
+    // ////////////////////////
+    // BUILD NEO4J DATABASE
+    // ////////////////////////
+    // */
+    // // collected_version_files ensures everythin was run first
+    // collected_version_files = ch_versions.collectFile(name: 'temp.yml', newLine: true)
+
+    // if (params.build_database) {
+    //     outdir_neo4j_ch = Channel.fromPath(params.outdir_neo4j)
+
+    //     NEO4J_ADMIN_IMPORT(
+    //         outdir_neo4j_ch,
+    //         sg_modules,
+    //         hmmlist,
+    //         collected_version_files
+    //     )
+    //     ch_versions = ch_versions.mix(NEO4J_ADMIN_IMPORT.out.versions)
+    // }
+
+    // /*
+    // ////////////////////////
+    // OUTPUT SOFTWARE VERSIONS
+    // ////////////////////////
+    // */
+    // CUSTOM_DUMPSOFTWAREVERSIONS (
+    //     collected_version_files
+    // )
 
 }
 

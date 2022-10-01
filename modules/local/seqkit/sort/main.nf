@@ -10,7 +10,7 @@ process SEQKIT_SORT {
     path fasta
 
     output:
-    path "sorted_nr.fa.gz"  , emit: fasta
+    path "sorted_nr.faa.gz"  , emit: fasta
     path 'versions.yml'     , emit: version
 
 
@@ -24,7 +24,7 @@ process SEQKIT_SORT {
             --by-name \\
             ${fasta} \\
             --threads ${task.cpus} \\
-            -o sorted_nr.fa.gz
+            -o sorted_nr.faa.gz
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

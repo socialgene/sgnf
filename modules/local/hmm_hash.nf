@@ -1,6 +1,6 @@
 
 process HMM_HASH {
-    tag("numfiles: ${hmm_splits}")
+    tag("Number of output files: ${hmm_splits}")
     label 'process_low'
 
     input:

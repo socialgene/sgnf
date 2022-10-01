@@ -1,3 +1,11 @@
+ <a href="https://gitpod.io/#https://github.com/socialgene/sgnf">
+  <img
+    src="https://img.shields.io/badge/Run%20with-Gitpod-908a85?logo=gitpod"
+    alt="Run an example with Gitpod"
+  />
+</a>
+
+
 # ![socialgene/sgnf](docs/images/nf-core-socialgene_logo_light.png#gh-light-mode-only) ![socialgene/sgnf](docs/images/nf-core-socialgene_logo_dark.png#gh-dark-mode-only)
 
 [![GitHub Actions CI Status](https://github.com/socialgene/sgnf/workflows/nf-core%20CI/badge.svg)](https://github.com/socialgene/sgnf/actions?query=workflow%3A%22nf-core+CI%22)

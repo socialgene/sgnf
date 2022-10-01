@@ -32,23 +32,7 @@ nextflow.enable.dsl = 2
     NAMED WORKFLOW FOR PIPELINE
 ========================================================================================
 */
-
-include { DB_CREATOR } from './workflows/socialgene'
-//include { REFSEQ } from './workflows/socialgene_refseq'
-include { CHTC_PREP } from './workflows/chtc_prep'
-
-//
-// WORKFLOW: Run mainsocialgene/sgnf analysis pipeline
-//
-workflow SOCIALGENE {
-    if (params.refseq_complete_step_1){
-        CHTC_PREP()
-    } else {
-        DB_CREATOR()
-    }
-
-}
-
+include { SOCIALGENE } from './workflows/socialgene'
 /*
 ========================================================================================
     RUN ALL WORKFLOWS

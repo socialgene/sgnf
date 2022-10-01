@@ -20,6 +20,7 @@ process NEO4J_ADMIN_IMPORT {
     task.ext.when == null || task.ext.when
 
     script:
+    def sg_modules_delim = sg_modules ? sg_modules.join(' ') : '""'
     def hmm_s_delim = hmmlist ? hmmlist.join(' ') : '""'
     """
     touch "${outdir_neo4j}/import.report"
@@ -39,7 +40,7 @@ process NEO4J_ADMIN_IMPORT {
     --additional_args "" \\
     --uid None \\
     --gid None \\
-    --sg_modules ${sg_modules} \\
+    --sg_modules ${sg_modules_delim} \\
     --hmmlist ${hmm_s_delim} \\
     --dryrun true
 
@@ -49,7 +50,7 @@ process NEO4J_ADMIN_IMPORT {
     --additional_args "" \\
     --uid None \\
     --gid None \\
-    --sg_modules ${sg_modules} \\
+    --sg_modules ${sg_modules_delim} \\
     --hmmlist ${hmm_s_delim}
 
     cat <<-END_VERSIONS > versions.yml

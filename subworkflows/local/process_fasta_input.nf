@@ -16,20 +16,20 @@ workflow PROCESS_FASTA_INPUT {
         fasta_paths
 
     main:
-    // override null parameters to some sensible defaults if not set
-    if (params.crabhash_cpus){
-        crabhash_cpus = params.crabhash_cpus
-    } else {
-        crabhash_cpus = params.max_cpus
-    }
-    // if (fasta_paths.size() > crabhash_cpus){
-    //     fasta_paths
-    //         .collectFile(newLine:true, sort:false, cache:true)
-    //         .set{fasta_ch}
-    // } else {
-    //     fasta_paths
-    //         .set{fasta_ch}
-    // }
+        // override null parameters to some sensible defaults if not set
+        if (params.crabhash_cpus){
+            crabhash_cpus = params.crabhash_cpus
+        } else {
+            crabhash_cpus = params.max_cpus
+        }
+        // if (fasta_paths.size() > crabhash_cpus){
+        //     fasta_paths
+        //         .collectFile(newLine:true, sort:false, cache:true)
+        //         .set{fasta_ch}
+        // } else {
+        //     fasta_paths
+        //         .set{fasta_ch}
+        // }
 
 
     SEQKIT_SPLIT(fasta_paths, crabhash_cpus)

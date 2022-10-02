@@ -4,26 +4,32 @@ This is the subworkflow that controls downloading and processing input genomes
 ========================================================================================
 */
 
-include { GATHER_HMMS               } from './gather_hmms'
-include { TIGRFAM_INFO              } from './tigrfam_info'
-include { SEQKIT_SPLIT              } from '../../modules/local/seqkit/split/main'
 include { HMMER_HMMSEARCH           } from '../../modules/local/hmmsearch'
 include { HMMSEARCH_PARSE           } from '../../modules/local/hmmsearch_parse'
-include { HMM_HASH                  } from '../../modules/local/hmm_hash'
 include { HMM_TSV_PARSE             } from '../../modules/local/hmm_tsv_parse'
 
 
-workflow HMM_OUTSOURCED {
+workflow HMM_RUN {
     take:
-        mixed_hmm_fasta_ch
+        fasta_ch
+        hmm_ch
+        all_hmms_tsv
 
     main:
         ch_versions = Channel.empty()
 
+        myFileChannel = Channel.fromPath( params.outsourced_domtblout )
 
+        HMMSEARCH_PARSE(HMMER_HMMSEARCH.out.domtblout)
+        ch_versions = ch_versions.mix(HMMSEARCH_PARSE.out.versions.last())
 
+        hmmer_result_ch = HMMSEARCH_PARSE.out.parseddomtblout.collect()
 
-        ch_versions = ch_versions.mix(HMM_HASH.out.versions)
+        HMM_TSV_PARSE(
+            all_hmms_tsv
+        )
+
+        ch_versions = ch_versions.mix(HMM_TSV_PARSE.out.versions)
 
     emit:
         hmmer_result_ch = hmmer_result_ch

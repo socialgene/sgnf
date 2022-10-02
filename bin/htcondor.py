@@ -209,31 +209,11 @@ find . -name '*.domtblout.gz' -print0 | tar --remove-files -vf chtc_results.tar 
 cat *.sg_md5 > chtc_results.md5
 tar uvf chtc_results.tar chtc_results.md5
 find . -name *.sg_md5 -type f -delete
-```
+rm chtc_results.md5
+"""
 
 with open("submit_server_finish.sh", "w") as out_handle:
     out_handle.writelines(input)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ################################
 # INSTRUCTIONS

@@ -8,11 +8,7 @@ process HTCONDOR1 {
     path "??.faa.gz"
 
     output:
-    path "hmm.tar.gz", emit: hmm
-    path "fasta.tar.gz", emit: fasta
-    path "hmmsearch.sh", emit: hmmsearch_script
-    path "chtc_submission_file.sub", emit: chtc_submission_file
-
+    path "*"
 
     when:
     task.ext.when == null || task.ext.when

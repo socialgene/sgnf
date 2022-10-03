@@ -13,14 +13,14 @@ process PROTHASH_SQLITE {
 
     script:
     """
-    socialgene_prothash_sqlite \\
+    sg_prothash_sqlite \\
         --input $x/'*.tsv' \\
         --outpath 'hashid.sqlite'
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         python: \$(python --version 2>&1 | tail -n 1 | sed 's/^Python //')
-        socialgene: \$(socialgene_version)
+        socialgene: \$(sg_version)
     END_VERSIONS
     """
 }

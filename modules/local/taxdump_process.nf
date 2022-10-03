@@ -15,7 +15,7 @@ process TAXDUMP_PROCESS {
 
     script:
     """
-    socialgene_ncbi_taxonomy \\
+    sg_ncbi_taxonomy \\
         --taxdump_path ${taxdump}
 
     md5_as_filename_after_gzip.sh 'nodes_taxid' 'nodes_taxid.gz'
@@ -24,7 +24,7 @@ process TAXDUMP_PROCESS {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         python: \$(python --version 2>&1 | tail -n 1 | sed 's/^Python //')
-        socialgene: \$(socialgene_version)
+        socialgene: \$(sg_version)
     END_VERSIONS
     """
 }

@@ -19,7 +19,7 @@ process PROCESS_FEATURE_TABLES {
 
     script:
     """
-    socialgene_parse_ncbi_feature_tables \\
+    sg_parse_ncbi_feature_tables \\
     --sequence_files_glob "${sequence_files_glob}" \\
     --outdir '.' \\
     --n_fasta_splits ${nums_splits}
@@ -34,7 +34,7 @@ process PROCESS_FEATURE_TABLES {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         python: \$(python --version 2>&1 | tail -n 1 | sed 's/^Python //')
-        socialgene: \$(socialgene_version)
+        socialgene: \$(sg_version)
     END_VERSIONS
     """
 }

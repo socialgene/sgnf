@@ -12,7 +12,7 @@ process PARAMETER_EXPORT_FOR_NEO4J {
     script:
     def args = task.ext.args ?: "None"
     """
-    socialgene_export_parameters \\
+    sg_export_parameters \\
         --outpath "socialgene_parameters" \\
         --genome_download_command 'TODO:\${genome_download_command@Q}'
 
@@ -21,7 +21,7 @@ process PARAMETER_EXPORT_FOR_NEO4J {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         python: \$(python --version 2>&1 | tail -n 1 | sed 's/^Python //')
-        socialgene: \$(socialgene_version)
+        socialgene: \$(sg_version)
     END_VERSIONS
     """
 }

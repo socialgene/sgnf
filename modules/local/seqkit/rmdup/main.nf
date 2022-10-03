@@ -10,7 +10,7 @@ process SEQKIT_RMDUP {
     path 'file??.gz'
 
     output:
-    path "nr.fa.gz"     , emit: fasta
+    path "nr.faa.gz"     , emit: fasta
     path 'versions.yml' , emit: version
 
 
@@ -27,7 +27,7 @@ process SEQKIT_RMDUP {
             --seq-type protein \\
             --line-width 0 \\
             --threads ${task.cpus} \\
-            -o nr.fa.gz
+            -o nr.faa.gz
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

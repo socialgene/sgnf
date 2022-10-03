@@ -20,7 +20,7 @@ process SPLIT_HMMS {
     # and this uses the same script as on CHTC, for consistency
     # only need the filenames, not full paths as input
 
-    socialgene_run_hmmsearch \\
+    sg_run_hmmsearch \\
         --input_fasta ${fasta}  \\
         --input_hmms ${hmm} \\
         --outpath "domtblout"
@@ -30,7 +30,7 @@ process SPLIT_HMMS {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         python: \$(python --version 2>&1 | tail -n 1 | sed 's/^Python //')
-        socialgene: \$(socialgene_version)
+        socialgene: \$(sg_version)
     END_VERSIONS
     """
 }

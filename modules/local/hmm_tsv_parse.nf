@@ -17,7 +17,7 @@ process HMM_TSV_PARSE {
     script:
     """
 
-    socialgene_hmm_tsv_parser --all_hmms ${x}
+    sg_hmm_tsv_parser --all_hmms ${x}
 
     # python script currently makes a file of each hmm source possible, just delete the empty ones for now:
     find . -type f -name '*hmms_out' -empty -print
@@ -33,7 +33,7 @@ process HMM_TSV_PARSE {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         python: \$(python --version 2>&1 | tail -n 1 | sed 's/^Python //')
-        socialgene: \$(socialgene_version)
+        socialgene: \$(sg_version)
     END_VERSIONS
     """
 }

@@ -22,18 +22,17 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 ========================================================================================
 */
 
-include { HMMER_HMMSEARCH                   } from '../modules/local/hmmsearch'
-include { HMMSEARCH_PARSE                   } from '../modules/local/hmmsearch_parse'
-include { HMM_HASH                          } from '../modules/local/hmm_hash'
-include { HMM_TSV_PARSE                     } from '../modules/local/hmm_tsv_parse'
 include { MMSEQS2_EASYCLUSTER               } from '../modules/local/mmseqs2_easycluster'
 include { NEO4J_ADMIN_IMPORT                } from '../modules/local/neo4j_admin_import'
 include { NEO4J_HEADERS                     } from '../modules/local/neo4j_headers'
 include { PAIRED_OMICS                      } from '../modules/local/paired_omics'
 include { PARAMETER_EXPORT_FOR_NEO4J        } from '../modules/local/parameter_export_for_neo4j'
 include { SEQKIT_SORT                       } from '../modules/local/seqkit/sort/main'
-include { SEQKIT_SPLIT                      } from '../modules/local/seqkit/split/main'
 include { SEQKIT_RMDUP                      } from '../modules/local/seqkit/rmdup/main.nf'
+include { SEQKIT_SPLIT                      } from '../modules/local/seqkit/split/main'
+include { HTCONDOR_PREP                     } from '../modules/local/htcondor_prep'
+include { HMMER_HMMSEARCH                   } from '../modules/local/hmmsearch'
+include { HMMSEARCH_PARSE                   } from '../modules/local/hmmsearch_parse'
 
 /*
 ========================================================================================
@@ -41,11 +40,12 @@ include { SEQKIT_RMDUP                      } from '../modules/local/seqkit/rmdu
 ========================================================================================
 */
 
-include { GATHER_HMMS               } from '../subworkflows/local/gather_hmms'
 include { NCBI_TAXONOMY_INFO        } from '../subworkflows/local/ncbi_taxonomy_info'
-include { PROCESS_GENBANK           } from '../subworkflows/local/process_genbank_input'
-include { TIGRFAM_INFO              } from '../subworkflows/local/tigrfam_info'
-include { PROCESS_FASTA_INPUT       } from '../subworkflows/local/process_fasta_input'
+include { GENOME_HANDLING           } from '../subworkflows/local/genome_handling'
+include { SG_MODULES                } from '../subworkflows/local/sg_modules'
+include { HMM_PREP                  } from '../subworkflows/local/hmm_prep'
+//include { HMM_RUN                   } from '../subworkflows/local/hmm_run'
+//include { HMM_OUTSOURCED            } from '../subworkflows/local/hmm_outsourced'
 
 /*
 ========================================================================================
@@ -63,7 +63,7 @@ include { DIAMOND_MAKEDB                } from '../modules/local/diamond/makedb/
 ========================================================================================
 */
 
-workflow DB_CREATOR {
+workflow SOCIALGENE {
 
     ch_versions = Channel.empty()
 
@@ -75,21 +75,17 @@ workflow DB_CREATOR {
         hmmlist = params.hmmlist
     }
 
-    // start with an empty sg_modules
-    sg_modules = ""
+
+    run_blastp = params.htcondor ? false : params.blastp
+    run_mmseqs2 = params.htcondor ? false : params.mmseqs2
+    run_ncbi_taxonomy = params.htcondor ? false : params.ncbi_taxonomy
+    run_build_database = params.htcondor ? false : params.build_database
+
+    SG_MODULES(hmmlist)
+
+    sg_modules = SG_MODULES.out.sg_modules
 
     PARAMETER_EXPORT_FOR_NEO4J()
-
-    // paired_omics is not currently implemented
-    // if (params.paired_omics_json_path) {
-    //     paired_omics_json_path = file(params.paired_omics_json_path)
-    //     PAIRED_OMICS(paired_omics_json_path)
-    //     sg_modules = sg_modules + " paired_omics"
-    //     ch_versions = ch_versions.mix(PAIRED_OMICS.out.versions)
-    // }
-    // if (params.paired_omics){
-    //     sg_modules = sg_modules + " paired_omics"
-    // }
 
     /*
     ////////////////////////
@@ -97,57 +93,88 @@ workflow DB_CREATOR {
     ////////////////////////
     */
 
-    // Create a channel to mix inputs from different sources
-    ch_read = Channel.empty()
+    GENOME_HANDLING()
 
-    // Parse genbank files from various sources
-    if (params.ncbi_genome_download_command || params.local_genbank || params.ncbi_datasets_command || params.mibig){
-        sg_modules = sg_modules + "base"
-        PROCESS_GENBANK()
-        ch_versions = ch_versions.mix(PROCESS_GENBANK.out.versions)
-        gbk_fasta_ch = PROCESS_GENBANK.out.fasta
-    } else {
-        gbk_fasta_ch = Channel.empty()
-    }
+    GENOME_HANDLING.out.ch_fasta.set{ch_fasta}
+    ch_versions = ch_versions.mix(GENOME_HANDLING.out.ch_versions)
 
-    // Parse local fasta file(s)
-    if (params.local_fasta){
-        sg_modules = sg_modules + "protein"
-        input_fasta_ch = Channel.fromPath(params.local_fasta)
-        PROCESS_FASTA_INPUT(input_fasta_ch)
-        fasta_fasta_ch = PROCESS_FASTA_INPUT.out.fasta
-    } else {
-        fasta_fasta_ch = Channel.empty()
-    }
-
-    ch_read
-        .mix(gbk_fasta_ch, fasta_fasta_ch)
-        .collect()
-        .set{ch_fasta}
-
-    // Use seqkit to remove redundant sequences, based on sequence id because they are already the sequence hash
     SEQKIT_RMDUP(ch_fasta)
 
     // If testing, sort the FASTA file to get consistent output, otherwise skip
     if (params.sort_fasta) {
+        // Use seqkit to remove redundant sequences, based on sequence id because they are already the sequence hash
         SEQKIT_SORT(SEQKIT_RMDUP.out.fasta)
         SEQKIT_SORT.out
             .fasta
             .set{single_ch_fasta}
     } else {
-        SEQKIT_RMDUP
-            .out
+        SEQKIT_RMDUP.out
             .fasta
             .set{single_ch_fasta}
     }
 
+    if (params.fasta_splits > 1){
+        SEQKIT_SPLIT(
+            single_ch_fasta,
+            params.fasta_splits
+            )
+        SEQKIT_SPLIT
+            .out
+            .fasta
+            .flatten()
+            .set{ch_split_fasta}
+    } else {
+        ch_split_fasta = single_ch_fasta
+    }
+
+
     /*
     ////////////////////////
-    RUN BLASTP
+    HMM ANNOTATION
     ////////////////////////
     */
-    if (params.blastp){
-        sg_modules = sg_modules + " blastp"
+    if (params.hmmlist){
+        HMM_PREP(ch_split_fasta, hmmlist)
+        if (params.htcondor){
+            // collect all fasta and all hmms to pass to HTCONDOR_PREP
+            // kept separate to control renaming files in the process
+            ch_split_fasta.collect().set{all_split_fasta}
+            HMM_PREP.out.hmms.collect().set{all_split_hmms}
+
+            HTCONDOR_PREP(all_split_hmms, all_split_fasta)
+            ch_versions = ch_versions.mix(HTCONDOR_PREP.out.versions)
+            domtblout_ch = false
+        } else if (params.domtblout_path){
+            domtblout_ch = Channel.fromPath(params.domtblout_path)
+        } else {
+            // create a channel that's the cartesian product of all hmm files and all fasta files
+            HMM_PREP.out.hmms
+                .flatten()
+                .combine(
+                    ch_split_fasta
+                        .flatten()
+                )
+                .set{ mixed_hmm_fasta_ch }
+            HMMER_HMMSEARCH(mixed_hmm_fasta_ch)
+            ch_versions = ch_versions.mix(HMMER_HMMSEARCH.out.versions.last())
+            domtblout_ch = HMMER_HMMSEARCH.out.domtblout
+        }
+
+        if (domtblout_ch){
+            HMMSEARCH_PARSE(domtblout_ch)
+        }
+        ch_versions = ch_versions.mix(HMMSEARCH_PARSE.out.versions.last())
+
+    } else {
+        hmmer_result_ch = file( "dummy_file3.txt", checkIfExists: false )
+    }
+
+    /*
+    ////////////////////////
+    BLASTP
+    ////////////////////////
+    */
+    if (run_blastp){
         DIAMOND_MAKEDB(single_ch_fasta)
         DIAMOND_BLASTP(single_ch_fasta, DIAMOND_MAKEDB.out.db)
         DIAMOND_BLASTP.out.blastout
@@ -161,14 +188,13 @@ workflow DB_CREATOR {
 
     /*
     ////////////////////////
-    RUN MMSEQS2
+    MMSEQS2
     ////////////////////////
     */
-    if (params.mmseqs2){
+    if (run_mmseqs2){
         MMSEQS2_EASYCLUSTER(single_ch_fasta)
         MMSEQS2_EASYCLUSTER.out.clusterres_cluster
             .set{mmseqs2_ch}
-        sg_modules = sg_modules + " mmseqs2"
         ch_versions = ch_versions.mix(MMSEQS2_EASYCLUSTER.out.versions)
     } else {
         mmseqs2_ch = file( "dummy_file2.txt", checkIfExists: false )
@@ -179,73 +205,14 @@ workflow DB_CREATOR {
     TAXONOMY
     ////////////////////////
     */
-    if (params.ncbi_taxonomy){
+    if (run_ncbi_taxonomy){
         NCBI_TAXONOMY_INFO()
-        sg_modules = sg_modules + " ncbi_taxonomy"
         ch_versions = ch_versions.mix(NCBI_TAXONOMY_INFO.out.versions)
     }
 
     /*
     ////////////////////////
-    HMMER ANNOTATION
-    ////////////////////////
-    */
-    if (params.hmmlist){
-        sg_modules = sg_modules + " hmms"
-        GATHER_HMMS()
-        ch_versions = ch_versions.mix(GATHER_HMMS.out.versions)
-        if (hmmlist.contains("tigrfam")){
-            sg_modules = sg_modules + " tigrfam"
-            // download additional tigrfam info
-            TIGRFAM_INFO()
-            ch_versions = ch_versions.mix(TIGRFAM_INFO.out.versions)
-            ch_versions = ch_versions.mix(TIGRFAM_INFO.out.versions)
-        }
-        HMM_HASH(
-            GATHER_HMMS.out.hmms,
-            params.hmm_splits
-        )
-        ch_versions = ch_versions.mix(HMM_HASH.out.versions)
-        if (params.fasta_splits > 1){
-            SEQKIT_SPLIT(
-                single_ch_fasta,
-                params.fasta_splits
-                )
-            SEQKIT_SPLIT
-                .out
-                .fasta
-                .flatten()
-                .set{ch_split_fasta}
-        } else {
-            ch_split_fasta = single_ch_fasta
-        }
-        // make a channel that's the cartesian product of hmm model files and fasta files
-        HMM_HASH.out.socialgene_hmms
-            .flatten()
-            .combine(
-                ch_split_fasta
-            )
-            .set{ hmm_ch }
-
-        HMMER_HMMSEARCH(hmm_ch)
-        ch_versions = ch_versions.mix(HMMER_HMMSEARCH.out.versions.last())
-
-        HMMSEARCH_PARSE(HMMER_HMMSEARCH.out.domtblout)
-        ch_versions = ch_versions.mix(HMMSEARCH_PARSE.out.versions.last())
-
-        hmmer_result_ch = HMMSEARCH_PARSE.out.parseddomtblout.collect()
-
-        HMM_TSV_PARSE(
-            HMM_HASH.out.all_hmms_tsv
-        )
-        ch_versions = ch_versions.mix(HMM_TSV_PARSE.out.versions)
-    } else {
-        hmmer_result_ch = file( "dummy_file3.txt", checkIfExists: false )
-    }
-
-    /*
-    ////////////////////////
-    CREATE NEO4J_HEADERS
+    NEO4J_HEADERS
     ////////////////////////
     */
     NEO4J_HEADERS(sg_modules, hmmlist)
@@ -253,22 +220,15 @@ workflow DB_CREATOR {
 
     /*
     ////////////////////////
-    OUTPUT SOFTWARE VERSIONS
-    ////////////////////////
-    */
-    outdir_neo4j_ch = Channel.fromPath(params.outdir_neo4j)
-    collected_version_files = ch_versions.collectFile(name: 'temp.yml', newLine: true)
-
-    CUSTOM_DUMPSOFTWAREVERSIONS (
-        collected_version_files
-    )
-
-    /*
-    ////////////////////////
     BUILD NEO4J DATABASE
     ////////////////////////
     */
-    if (params.build_database) {
+    // collected_version_files ensures everythin was run first
+    collected_version_files = ch_versions.collectFile(name: 'temp.yml', newLine: true)
+
+    if (run_build_database) {
+        outdir_neo4j_ch = Channel.fromPath(params.outdir_neo4j)
+
         NEO4J_ADMIN_IMPORT(
             outdir_neo4j_ch,
             sg_modules,
@@ -277,6 +237,16 @@ workflow DB_CREATOR {
         )
         ch_versions = ch_versions.mix(NEO4J_ADMIN_IMPORT.out.versions)
     }
+
+    /*
+    ////////////////////////
+    OUTPUT SOFTWARE VERSIONS
+    ////////////////////////
+    */
+    CUSTOM_DUMPSOFTWAREVERSIONS (
+        collected_version_files
+    )
+
 }
 
 /*

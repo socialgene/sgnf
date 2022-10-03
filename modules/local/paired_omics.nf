@@ -20,7 +20,7 @@ process PAIRED_OMICS {
 
     script:
     """
-    socialgene_paired_omics \\
+    sg_paired_omics \\
         --json_path ${json_path} \\
         --outdir '.'
 

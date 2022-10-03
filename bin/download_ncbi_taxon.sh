@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 aspera=$1
 taxon=$2

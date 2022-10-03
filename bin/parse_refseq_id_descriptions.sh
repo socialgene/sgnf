@@ -1,4 +1,4 @@
-# #!/bin/bash
+#!/bin/bash
 
 # Get the tsv (refseq_id\tdecription) for all refseq nonredeundant proteins
 find -L . -type f -name "complete.nonredundant_protein.*.protein.faa.gz" |\

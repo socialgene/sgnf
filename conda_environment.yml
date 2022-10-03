@@ -1,4 +1,4 @@
-name: socialgene_nf
+name: sgnf
 
 channels:
   - conda-forge
@@ -6,11 +6,5 @@ channels:
   - defaults
 
 dependencies:
-  - conda-forge::python==3.10
-  - bioconda::hmmer==3.3.2
-  - pip
-  - rsync # needed for nextflow
-  - numpy
-  - wget
-  - pip:
-    - /home/chase/Documents/github/kwan_lab/socialgene/sgpy
+  - bioconda::nf-core>=2.5.1
+  - bioconda::nextflow>=22.04.5

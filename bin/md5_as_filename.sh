@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # $1 is the filename to find and hash
 # $2 is the extension to be given to each renamed file

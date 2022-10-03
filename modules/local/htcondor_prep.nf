@@ -1,5 +1,5 @@
 
-process HTCONDOR1 {
+process HTCONDOR_PREP {
     label 'process_low'
     stageInMode 'copy'
 
@@ -15,10 +15,10 @@ process HTCONDOR1 {
 
     script:
     """
-    find . -name '*hmm.gz' -print0 | tar -czvf hmm.tar.gz --null --files-from -
+    find . -name '*hmm.gz' -print0 | tar -cvf hmm.tar --null --files-from -
     find . -name '*hmm.gz' -type f -delete
 
-    find . -name '*faa.gz' -print0 | tar -czvf fasta.tar.gz --null --files-from -
+    find . -name '*faa.gz' -print0 | tar -cvf fasta.tar --null --files-from -
     find . -name '*faa.gz' -type f -delete
 
 

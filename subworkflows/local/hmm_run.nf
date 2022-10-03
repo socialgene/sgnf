@@ -11,8 +11,8 @@ include { HMM_TSV_PARSE             } from '../../modules/local/hmm_tsv_parse'
 
 workflow HMM_RUN {
     take:
-        fasta_ch
         hmm_ch
+        fasta_ch
         all_hmms_tsv
 
     main:
@@ -42,7 +42,7 @@ workflow HMM_RUN {
 
     emit:
         hmmer_result_ch = hmmer_result_ch
-        ch_versions=ch_versions
+        versions        = ch_versions
 
 
 }

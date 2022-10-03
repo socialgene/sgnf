@@ -30,7 +30,9 @@ include { PARAMETER_EXPORT_FOR_NEO4J        } from '../modules/local/parameter_e
 include { SEQKIT_SORT                       } from '../modules/local/seqkit/sort/main'
 include { SEQKIT_RMDUP                      } from '../modules/local/seqkit/rmdup/main.nf'
 include { SEQKIT_SPLIT                      } from '../modules/local/seqkit/split/main'
-include { HTCONDOR1                         } from '../modules/local/htcondor'
+include { HTCONDOR_PREP                     } from '../modules/local/htcondor_prep'
+include { HMMER_HMMSEARCH                   } from '../modules/local/hmmsearch'
+include { HMMSEARCH_PARSE                   } from '../modules/local/hmmsearch_parse'
 
 /*
 ========================================================================================
@@ -72,6 +74,12 @@ workflow SOCIALGENE {
     else {
         hmmlist = params.hmmlist
     }
+
+
+    run_blastp = params.htcondor ? false : params.blastp
+    run_mmseqs2 = params.htcondor ? false : params.mmseqs2
+    run_ncbi_taxonomy = params.htcondor ? false : params.ncbi_taxonomy
+    run_build_database = params.htcondor ? false : params.build_database
 
     SG_MODULES(hmmlist)
 
@@ -119,37 +127,48 @@ workflow SOCIALGENE {
         ch_split_fasta = single_ch_fasta
     }
 
-    HMM_PREP(ch_split_fasta, hmmlist)
 
-    ch_split_fasta.collect().set{all_split_fasta}
+    /*
+    ////////////////////////
+    HMM ANNOTATION
+    ////////////////////////
+    */
+    if (params.hmmlist){
+        HMM_PREP(ch_split_fasta, hmmlist)
+        if (params.htcondor){
+            // collect all fasta and all hmms to pass to HTCONDOR_PREP
+            // kept separate to control renaming files in the process
+            ch_split_fasta.collect().set{all_split_fasta}
+            HMM_PREP.out.hmms.collect().set{all_split_hmms}
 
+            HTCONDOR_PREP(all_split_hmms, all_split_fasta)
+            ch_versions = ch_versions.mix(HTCONDOR_PREP.out.versions)
+            domtblout_ch = false
+        } else if (params.domtblout_path){
+            domtblout_ch = Channel.fromPath(params.domtblout_path)
+        } else {
+            // create a channel that's the cartesian product of all hmm files and all fasta files
+            HMM_PREP.out.hmms
+                .flatten()
+                .combine(
+                    ch_split_fasta
+                        .flatten()
+                )
+                .set{ mixed_hmm_fasta_ch }
+            HMMER_HMMSEARCH(mixed_hmm_fasta_ch)
+            ch_versions = ch_versions.mix(HMMER_HMMSEARCH.out.versions.last())
+            domtblout_ch = HMMER_HMMSEARCH.out.domtblout
+        }
 
-    run_blastp = params.htcondor_1 ? false : params.blast
-    run_mmseqs2 = params.htcondor_1 ? false : params.mmseqs2
-    run_ncbi_taxonomy = params.htcondor_1 ? false : params.ncbi_taxonomy
-    run_build_database = params.htcondor_1 ? false : params.build_database
+        if (domtblout_ch){
+            HMMSEARCH_PARSE(domtblout_ch)
+        }
+        ch_versions = ch_versions.mix(HMMSEARCH_PARSE.out.versions.last())
 
-
-    if (params.htcondor_1){
-        HTCONDOR1(HMM_PREP.out.hmms, all_split_fasta)
-
+    } else {
+        hmmer_result_ch = file( "dummy_file3.txt", checkIfExists: false )
     }
 
-
-    // /*
-    // ////////////////////////
-    // HMM ANNOTATION
-    // ////////////////////////
-    // */
-    // if (params.hmmlist){
-    //     HMM_ANNOTATION(ch_split_fasta, hmmlist)
-    //     hmmer_result_ch = HMM_ANNOTATION.out.hmmer_result_ch
-    // } else {
-    //     hmmer_result_ch = file( "dummy_file3.txt", checkIfExists: false )
-    // }
-
-
-println run_blastp
     /*
     ////////////////////////
     BLASTP
@@ -181,13 +200,6 @@ println run_blastp
         mmseqs2_ch = file( "dummy_file2.txt", checkIfExists: false )
     }
 
-
-
-
-
-
-
-
     /*
     ////////////////////////
     TAXONOMY
@@ -197,7 +209,6 @@ println run_blastp
         NCBI_TAXONOMY_INFO()
         ch_versions = ch_versions.mix(NCBI_TAXONOMY_INFO.out.versions)
     }
-
 
     /*
     ////////////////////////
@@ -232,9 +243,9 @@ println run_blastp
     OUTPUT SOFTWARE VERSIONS
     ////////////////////////
     */
-    // CUSTOM_DUMPSOFTWAREVERSIONS (
-    //     collected_version_files
-    // )
+    CUSTOM_DUMPSOFTWAREVERSIONS (
+        collected_version_files
+    )
 
 }
 

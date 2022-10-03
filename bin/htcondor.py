@@ -18,12 +18,12 @@ class CustomTemplate(Template):
 # write sample_matrix.csv
 ################################
 
-with tarfile.open("hmm.tar.gz", "r:gz") as tar:
+with tarfile.open("hmm.tar", "r") as tar:
     hmm_files = [str(Path(i).name) for i in tar.getnames()]
 
 import tarfile
 
-with tarfile.open("fasta.tar.gz", "r:gz") as tar:
+with tarfile.open("fasta.tar", "r") as tar:
     fasta_files = [str(Path(i).name) for i in tar.getnames()]
 
 with open("sample_matrix.csv", "a") as out_handle:
@@ -159,12 +159,12 @@ input = """#!/bin/bash
 # unpack files
 ##################
 
-mkdir genomes
-tar -xzvf fasta.tar.gz -C './sg_input_fasta'
-mkdir hmms
-tar -xzvf hmm.tar.gz -C './sg_input_hmms'
+mkdir sg_input_fasta
+tar -xvf fasta.tar -C './sg_input_fasta'
+mkdir sg_input_hmms
+tar -xvf hmm.tar -C './sg_input_hmms'
 
-cp ./hmms/* /squid/%$%{htcondor_squid_username}/
+cp ./sg_input_hmms/* /squid/%$%{htcondor_squid_username}/
 # make sure the squid files will be accessible
 chmod +r /squid/%$%{htcondor_squid_username}/*
 
@@ -205,10 +205,10 @@ with open("submit_server_setup.sh", "w") as out_handle:
 ################################
 
 input = """#!/bin/bash
-find . -name '*.domtblout.gz' -print0 | tar --remove-files -vf chtc_results.tar --null --files-from -
+find . -name '*.domtblout.gz' -print0 | tar --remove-files -cvf chtc_results.tar --null --files-from -
 cat *.sg_md5 > chtc_results.md5
 tar uvf chtc_results.tar chtc_results.md5
-find . -name *.sg_md5 -type f -delete
+find . -name '*.sg_md5' -type f -delete
 rm chtc_results.md5
 """
 
@@ -220,7 +220,7 @@ with open("submit_server_finish.sh", "w") as out_handle:
 ################################
 
 
-"""Data files:
+input ="""Data files:
     fasta.tar.gz
     hmm.tar.gz
     sample_matrix.csv
@@ -229,7 +229,7 @@ Scripts:
     chtc_submission_file.sub
     hmmsearch.sh
     submit_server_setup.sh
-
+    submit_server_finish.sh
 
 Transfer the files to the CHTC submit server you were assigned to by replacing `username` and `htcondor_dir` below then running the scp command
 
@@ -237,12 +237,32 @@ Note: make sure it's the correct submit server!
 
 
 username='cmclark8'
-htcondor_dir='/home/chase/Documents/github/kwan_lab/socialgene/sgnf/work/a3/07cff8cf4fe4489b389922a8cbc572/a'
+htcondor_dir='/home/chase/Documents/socialgene_data/ultraquickstart/htcondor_cache'
 
 scp  ${htcondor_dir}/* ${username}@submit2.chtc.wisc.edu:~${username}
 
 You'll be asked to enter your UW password (the same one you use for email and the same one to login to the CHTC submit node)
 
+
+-----
+On the CHTC submit server
+
+rm -rf logs outputs errors
+mkdir logs outputs errors
+
+# this doesn't check if files already exist on the submit node or SQUID, do that manually first
+sh submit_server_setup.sh
+
+# submit
+condor_submit chtc_submission_file.sub
+
+# tar files for download
+
+sh submit_server_finish.sh
+
 """
 
 
+
+with open("instructions.txt", "w") as out_handle:
+    out_handle.writelines(input)

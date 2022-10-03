@@ -9,6 +9,7 @@ process SPLIT_HMMS {
 
     output:
     path "*.domtblout.gz", emit: hmmer_out
+    path "versions.yml" , emit: versions
 
 
     when:

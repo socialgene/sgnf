@@ -9,6 +9,7 @@ process HTCONDOR_PREP {
 
     output:
     path "*"
+    path "versions.yml" , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -44,5 +45,10 @@ process HTCONDOR_PREP {
 
     htcondor.py
 
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        python: \$(python --version 2>&1 | tail -n 1 | sed 's/^Python //')
+        socialgene: \$(sg_version)
+    END_VERSIONS
     """
 }

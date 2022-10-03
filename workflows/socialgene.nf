@@ -162,8 +162,9 @@ workflow SOCIALGENE {
 
         if (domtblout_ch){
             HMMSEARCH_PARSE(domtblout_ch)
+            ch_versions = ch_versions.mix(HMMSEARCH_PARSE.out.versions.last())
         }
-        ch_versions = ch_versions.mix(HMMSEARCH_PARSE.out.versions.last())
+
 
     } else {
         hmmer_result_ch = file( "dummy_file3.txt", checkIfExists: false )

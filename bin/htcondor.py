@@ -148,7 +148,6 @@ with open("chtc_submission_file.sub", "w") as out_handle:
     out_handle.writelines(result)
 
 
-
 ################################
 # write submit_server_setup.sh
 ################################
@@ -198,8 +197,6 @@ with open("submit_server_setup.sh", "w") as out_handle:
     out_handle.writelines(result)
 
 
-
-
 ################################
 # write submit_server_finish.sh
 ################################
@@ -220,7 +217,7 @@ with open("submit_server_finish.sh", "w") as out_handle:
 ################################
 
 
-input ="""Data files:
+input = """Data files:
     fasta.tar.gz
     hmm.tar.gz
     sample_matrix.csv
@@ -261,7 +258,6 @@ condor_submit chtc_submission_file.sub
 sh submit_server_finish.sh
 
 """
-
 
 
 with open("instructions.txt", "w") as out_handle:

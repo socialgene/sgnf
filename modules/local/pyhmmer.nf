@@ -14,7 +14,7 @@
 
     script:
 //     """
-//     socialgene_run_pyhmmer \\
+//     sg_run_pyhmmer \\
 //         --hmm_filepath ${hmm} \\
 //         --sequence_file_path ${fasta} \\
 //         --cpus ${task.cpus} \\
@@ -26,7 +26,7 @@
 //     cat <<-END_VERSIONS > versions.yml
 //     "${task.process}":
 //         python: \$(python --version 2>&1 | tail -n 1 | sed 's/^Python //')
-//         socialgene: \$(socialgene_version)
+//         socialgene: \$(sg_version)
 //     END_VERSIONS
 //     """
 // }

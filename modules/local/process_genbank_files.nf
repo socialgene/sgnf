@@ -29,7 +29,7 @@ process PROCESS_GENBANK_FILES {
 
     script:
     """
-    socialgene_process_genbank \\
+    sg_process_genbank \\
         --sequence_files_glob "*.input_genome" \\
         --outdir '.' \\
         --n_fasta_splits 1
@@ -46,7 +46,7 @@ process PROCESS_GENBANK_FILES {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         python: \$(python --version 2>&1 | tail -n 1 | sed 's/^Python //')
-        socialgene: \$(socialgene_version)
+        socialgene: \$(sg_version)
     END_VERSIONS
     """
 }

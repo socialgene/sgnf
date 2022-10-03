@@ -15,7 +15,7 @@ process HMMSEARCH_PARSE {
     """
     for i in `find -L . -type f -iname "*.domtblout.gz"`
     do
-        socialgene_process_domtblout \\
+        sg_process_domtblout \\
             --domtblout_file "\${i}" \\
             --outpath "parseddomtblout"
         md5_as_filename_after_gzip.sh "parseddomtblout" "parseddomtblout.gz"
@@ -23,7 +23,7 @@ process HMMSEARCH_PARSE {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        socialgene: \$(socialgene_version)
+        socialgene: \$(sg_version)
     END_VERSIONS
     """
 }

@@ -50,7 +50,7 @@ versions_this_module["${task.process}"] = {
     "yaml": yaml.__version__,
 }
 
-with open("$versions") as f:
+with open("temp.yml") as f:
     versions_by_process = yaml.load(f, Loader=yaml.BaseLoader) | versions_this_module
 
 # aggregate versions by the module name (derived from fully-qualified process name)
@@ -87,3 +87,4 @@ with open("software_versions_mqc.yml", "w") as f:
 
 with open("versions.yml", "w") as f:
     yaml.dump(versions_this_module, f, default_flow_style=False)
+

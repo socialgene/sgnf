@@ -18,7 +18,7 @@ process HMM_HASH {
 
     script:
     """
-    socialgene_clean_hmm \
+    sg_clean_hmm \
         --input_dir . \
         --outdir . \
         --numoutfiles ${hmm_splits}
@@ -28,7 +28,7 @@ process HMM_HASH {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         python: \$(python --version 2>&1 | tail -n 1 | sed 's/^Python //')
-        socialgene: \$(socialgene_version)
+        socialgene: \$(sg_version)
     END_VERSIONS
     """
 }

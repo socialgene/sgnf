@@ -34,7 +34,7 @@ process NEO4J_ADMIN_IMPORT {
 
     rm -f neo4j-graph-data-science-2.0.3.zip
 
-    socialgene_create_neo4j_db \\
+    sg_create_neo4j_db \\
     --neo4j_top_dir \${PWD}/${outdir_neo4j} \\
     --cpus ${task.cpus} \\
     --additional_args "" \\
@@ -44,7 +44,7 @@ process NEO4J_ADMIN_IMPORT {
     --hmmlist ${hmm_s_delim} \\
     --dryrun true
 
-    socialgene_create_neo4j_db \\
+    sg_create_neo4j_db \\
     --neo4j_top_dir \${PWD}/${outdir_neo4j} \\
     --cpus ${task.cpus} \\
     --additional_args "" \\
@@ -56,7 +56,8 @@ process NEO4J_ADMIN_IMPORT {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         python: \$(python --version 2>&1 | tail -n 1 | sed 's/^Python //')
-        socialgene: \$(socialgene_version)
+        socialgene: \$(sg_version)
+        neo4j-version: \$(sg_neo4j_version)
         neo4j-graph-data-science: '2.0.3'
     END_VERSIONS
     """

@@ -49,4 +49,4 @@ RUN ./bin/micromamba create --name socialgene_nf && \
 ARG MAMBA_DOCKERFILE_ACTIVATE=1  # (otherwise python will not be found)
 
 
-ENV PATH="$PATH:/opt/conda/envs/socialgene_nf/bin:/opt/conda/condabin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+ENV PATH="/opt/conda/envs/socialgene_nf/bin:$PATH:/opt/conda/condabin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:"

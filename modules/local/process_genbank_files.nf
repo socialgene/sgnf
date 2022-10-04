@@ -1,7 +1,7 @@
 
 process PROCESS_GENBANK_FILES {
     cpus 1
-    memory '0.2 GB'
+    memory '2.5GB'
 
     publishDir "${params.outdir_neo4j}/import/protein_info", mode: 'copy', overwrite: false, pattern: "*.protein_info.gz"
     publishDir "${params.outdir_neo4j}/import/genomic_info", mode: 'copy', overwrite: false, pattern: "*.locus_to_protein.gz"

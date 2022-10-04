@@ -28,7 +28,7 @@ workflow PROCESS_GENBANK {
 
         }
         if (params.ncbi_datasets_command){
-            
+
             opt_input_file = file(params.ncbi_datasets_file)
 
             if (opt_input_file.name == "NO_FILE"){
@@ -36,15 +36,14 @@ workflow PROCESS_GENBANK {
             } else {
                 ch_opt_input_file = Channel.fromList(opt_input_file.splitText( by: 5000 , compress:false, file:true))
             }
-          println ch_opt_input_file
 
             NCBI_DATASETS_DOWNLOAD(params.ncbi_datasets_command, ch_opt_input_file)
             genome_file_ch= genome_file_ch.mix(NCBI_DATASETS_DOWNLOAD.out.gbff_files)
             ch_versions = ch_versions.mix(NCBI_DATASETS_DOWNLOAD.out.versions)
         }
-        
-      
-      
+
+
+
 
         PROCESS_GENBANK_FILES(
                 genome_file_ch.flatten().toSortedList().flatten().buffer( size: 500, remainder: true ),

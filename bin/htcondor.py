@@ -157,7 +157,7 @@ input = """#!/bin/bash
 ##################
 # unpack files
 ##################
-
+mkdir -p logs outputs errors
 mkdir sg_input_fasta
 tar -xvf fasta.tar -C './sg_input_fasta'
 mkdir sg_input_hmms

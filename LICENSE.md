@@ -9,7 +9,7 @@ Contact: chasingmicrobes @ gmail.com
 
 By downloading, installing, or otherwise accessing or using the Software, you (“Recipient”) agree to receive and use the above-identified SOFTWARE subject to the following terms, obligations and restrictions. If you do not agree to all of the following terms, obligations and restrictions you are not permitted to download, install, execute, access, or use the SOFTWARE:
 
-1. Originators of the SOFTWARE. Provider is willing to license its rights in the SOFTWARE (“Provider’s Rights”) to academic researchers to use free of charge solely for academic, non-commercial research purposes subject to the terms and conditions outlined herein. The SOFTWARE was created at the University of Wisconsin ("UW") by Chase M Clark.
+1. Originators of the SOFTWARE. Provider is willing to license its rights in the SOFTWARE (“Provider’s Rights”) to academic researchers to use free of charge solely for academic, non-commercial research purposes subject to the terms and conditions outlined herein. The SOFTWARE was created at the University of Wisconsin ("UW") by Chase M. Clark.
 
 2. Limited License. Provider hereby grants to Recipient a non-commercial, non-transferable, royalty-free, non-exclusive license, without the right to sublicense, under Provider’s Rights to download, install, access, execute and use the SOFTWARE solely for academic, non-commercial research purposes. SOFTWARE may not be used, directly or indirectly, to perform services for a fee or for the production or manufacture of products for sale to third parties. The foregoing license does not include any license to third party intellectual property that may be contained in the SOFTWARE; obtaining a license to such rights is Recipient’s responsibility.
 

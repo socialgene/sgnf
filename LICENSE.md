@@ -1,7 +1,7 @@
 Copyright (c) Chase M. Clark
 
 # Commercial Use
-Contact: chasingmicrobes @ gmail.com
+For commercial use, contact: ChasingMicrobes@gmail.com
 
 # ACADEMIC SOFTWARE END USER LICENSE AGREEMENT
 

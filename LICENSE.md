@@ -1,5 +1,8 @@
 Copyright (c) Chase M. Clark
 
+# Commercial Use
+Contact chasingmicrobes @ gmail.com
+
 # ACADEMIC SOFTWARE END USER LICENSE AGREEMENT
 
 ## For SOCIALGENE (“SOFTWARE”)

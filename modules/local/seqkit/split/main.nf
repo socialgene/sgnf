@@ -20,6 +20,7 @@ process SEQKIT_SPLIT {
     """
     seqkit \\
         split \\
+        $args \\
         -j ${task.cpus} \\
         ${fasta} \\
         -p ${nsplits} \\

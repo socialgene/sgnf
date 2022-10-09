@@ -93,24 +93,29 @@ workflow SOCIALGENE {
     ////////////////////////
     */
 
-    GENOME_HANDLING()
+    if (!params.sgnr_fasta){
 
-    GENOME_HANDLING.out.ch_fasta.set{ch_fasta}
-    ch_versions = ch_versions.mix(GENOME_HANDLING.out.ch_versions)
+        GENOME_HANDLING()
+        GENOME_HANDLING.out.ch_fasta.set{ch_fasta}
+        ch_versions = ch_versions.mix(GENOME_HANDLING.out.ch_versions)
 
-    SEQKIT_RMDUP(ch_fasta)
-
-    // If testing, sort the FASTA file to get consistent output, otherwise skip
-    if (params.sort_fasta) {
-        // Use seqkit to remove redundant sequences, based on sequence id because they are already the sequence hash
-        SEQKIT_SORT(SEQKIT_RMDUP.out.fasta)
-        SEQKIT_SORT.out
-            .fasta
-            .set{single_ch_fasta}
-    } else {
+        SEQKIT_RMDUP(ch_fasta)
         SEQKIT_RMDUP.out
-            .fasta
-            .set{single_ch_fasta}
+                .fasta
+                .set{ch_nr_fasta}
+
+        if (params.sort_fasta) {
+            // If testing, sort the FASTA file to get consistent output, otherwise skip
+            // Use seqkit to remove redundant sequences, based on sequence id because they are already the sequence hash
+            SEQKIT_SORT(ch_nr_fasta)
+            SEQKIT_SORT.out
+                .fasta
+                .set{single_ch_fasta}
+        } else {
+            single_ch_fasta = ch_nr_fasta
+        }
+    } else {
+        single_ch_fasta = Channel.fromPath( params.sgnr_fasta)
     }
 
     if (params.fasta_splits > 1){
@@ -126,6 +131,7 @@ workflow SOCIALGENE {
     } else {
         ch_split_fasta = single_ch_fasta
     }
+
 
 
     /*

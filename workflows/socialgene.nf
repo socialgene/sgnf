@@ -118,59 +118,57 @@ workflow SOCIALGENE {
         single_ch_fasta = Channel.fromPath( params.sgnr_fasta)
     }
 
-    if (params.fasta_splits > 1){
-        SEQKIT_SPLIT(
-            single_ch_fasta,
-            params.fasta_splits
-            )
-        SEQKIT_SPLIT
-            .out
-            .fasta
-            .flatten()
-            .set{ch_split_fasta}
-    } else {
-        ch_split_fasta = single_ch_fasta
-    }
-
-
-
     /*
     ////////////////////////
     HMM ANNOTATION
     ////////////////////////
     */
     if (params.hmmlist){
-        HMM_PREP(ch_split_fasta, hmmlist)
-        if (params.htcondor){
-            // collect all fasta and all hmms to pass to HTCONDOR_PREP
-            // kept separate to control renaming files in the process
-            ch_split_fasta.collect().set{all_split_fasta}
-            HMM_PREP.out.hmms.collect().set{all_split_hmms}
 
-            HTCONDOR_PREP(all_split_hmms, all_split_fasta)
-            ch_versions = ch_versions.mix(HTCONDOR_PREP.out.versions)
-            domtblout_ch = false
-        } else if (params.domtblout_path){
+        if (params.domtblout_path){
             domtblout_ch = Channel.fromPath(params.domtblout_path)
         } else {
-            // create a channel that's the cartesian product of all hmm files and all fasta files
-            HMM_PREP.out.hmms
-                .flatten()
-                .combine(
-                    ch_split_fasta
-                        .flatten()
-                )
-                .set{ mixed_hmm_fasta_ch }
-            HMMER_HMMSEARCH(mixed_hmm_fasta_ch)
-            ch_versions = ch_versions.mix(HMMER_HMMSEARCH.out.versions.last())
-            domtblout_ch = HMMER_HMMSEARCH.out.domtblout
-        }
+            if (params.fasta_splits > 1){
+                SEQKIT_SPLIT(
+                    single_ch_fasta,
+                    params.fasta_splits
+                    )
+                SEQKIT_SPLIT
+                    .out
+                    .fasta
+                    .flatten()
+                    .set{ch_split_fasta}
+            } else {
+                ch_split_fasta = single_ch_fasta
+            }
+            HMM_PREP(ch_split_fasta, hmmlist)
+            if (params.htcondor){
+                // collect all fasta and all hmms to pass to HTCONDOR_PREP
+                // kept separate to control renaming files in the process
+                ch_split_fasta.collect().set{all_split_fasta}
+                HMM_PREP.out.hmms.collect().set{all_split_hmms}
 
+                HTCONDOR_PREP(all_split_hmms, all_split_fasta)
+                ch_versions = ch_versions.mix(HTCONDOR_PREP.out.versions)
+                domtblout_ch = false
+            } else {
+                // create a channel that's the cartesian product of all hmm files and all fasta files
+                HMM_PREP.out.hmms
+                    .flatten()
+                    .combine(
+                        ch_split_fasta
+                            .flatten()
+                    )
+                    .set{ mixed_hmm_fasta_ch }
+                HMMER_HMMSEARCH(mixed_hmm_fasta_ch)
+                ch_versions = ch_versions.mix(HMMER_HMMSEARCH.out.versions.last())
+                domtblout_ch = HMMER_HMMSEARCH.out.domtblout
+            }
+        }
         if (domtblout_ch){
             HMMSEARCH_PARSE(domtblout_ch)
             ch_versions = ch_versions.mix(HMMSEARCH_PARSE.out.versions.last())
         }
-
 
     } else {
         hmmer_result_ch = file( "dummy_file3.txt", checkIfExists: false )

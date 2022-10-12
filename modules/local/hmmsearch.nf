@@ -1,4 +1,7 @@
 process HMMER_HMMSEARCH {
+    cpus 1
+    label 'process_single'
+    label 'process_long'
 
     input:
     tuple path(hmm), path(fasta)

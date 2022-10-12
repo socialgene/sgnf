@@ -29,11 +29,10 @@ workflow PROCESS_GENBANK {
         }
         if (params.ncbi_datasets_command){
 
-            opt_input_file = file(params.ncbi_datasets_file)
-
-            if (opt_input_file.name == "NO_FILE"){
-                ch_opt_input_file = opt_input_file
+            if (params.ncbi_datasets_file){
+                ch_opt_input_file = null
             } else {
+                opt_input_file = file(params.ncbi_datasets_file)
                 ch_opt_input_file = Channel.fromList(opt_input_file.splitText( by: 5000 , compress:false, file:true))
             }
 

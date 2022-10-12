@@ -23,6 +23,11 @@
                     "description": "Taxonomic name  (maybe NCBI taxonomy id as well?) see extended help before using",
                     "help_text": "Note/Warning: \nSpecifying a taxon directly has the potential to download a large number of genomes that you may not be prepared to handle.\nI highly recommend searching here (https://www.ncbi.nlm.nih.gov/genome/browse#!/prokaryotes/) first to get an idea of how many input genomes you can expect.\n\n\nThe input argument you provide will replace the `$args` in the command below:\n\n` datasets download genome taxon \"$args\" --include-gbff --exclude-genomic-cds --exclude-protein --exclude-rna --exclude-seq`\n\nInfo on use of NCBI datasets can be found here: https://www.ncbi.nlm.nih.gov/datasets/docs/v1/reference-docs/command-line/datasets/"
                 },
+                "ncbi_datasets_file": {
+                    "type": "string",
+                    "default": "None",
+                    "description": "Instead of using the 'ncbi_datasets_command', the path to a file of NCBI genome accessions to download can provided (single accessio per line)"
+                },
                 "local_genbank": {
                     "type": "string",
                     "default": "None",
@@ -43,6 +48,10 @@
                     "type": "string",
                     "default": "None",
                     "description": "File path of a custom HMMER hmm file"
+                },
+                "mibig": {
+                    "type": "boolean",
+                    "description": "Set to true to include all MIBiG BGCs as input"
                 }
             }
         },
@@ -333,12 +342,6 @@
                     "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
                     "hidden": true
                 },
-                "outdir": {
-                    "type": "string",
-                    "default": "not-used-but-needed-in-lint",
-                    "description": "not used, required by nf-core linter",
-                    "hidden": true
-                },
                 "fasta": {
                     "type": "string",
                     "default": "not-used-but-needed-in-lint",
@@ -378,13 +381,13 @@
                 },
                 "HMMSEARCH_E": {
                     "type": "number",
-                    "default": 10,
+                    "default": 10.0,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 },
                 "HMMSEARCH_DOME": {
                     "type": "number",
-                    "default": 10,
+                    "default": 10.0,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 },
@@ -423,36 +426,6 @@
                     "default": 1e-05,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
-                },
-                "HMMSEARCH_BITCUTOFFS": {
-                    "type": "string",
-                    "default": "None",
-                    "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
-                    "hidden": true
-                },
-                "HMMSEARCH_BIASFILTER": {
-                    "type": "string",
-                    "default": "None",
-                    "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
-                    "hidden": true
-                },
-                "HMMSEARCH_BACKGROUND": {
-                    "type": "string",
-                    "default": "None",
-                    "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
-                    "hidden": true
-                },
-                "HMMSEARCH_NULL2": {
-                    "type": "string",
-                    "default": "None",
-                    "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
-                    "hidden": true
-                },
-                "HMMSEARCH_DOMZ": {
-                    "type": "string",
-                    "default": "None",
-                    "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
-                    "hidden": true
                 }
             }
         },
@@ -468,32 +441,6 @@
                     "hidden": true,
                     "description": "chtc_prep_only"
                 },
-                "refseq_nr_protein_fasta_dir": {
-                    "type": "string",
-                    "default": "None",
-                    "fa_icon": "fas fa-folder-open",
-                    "description": "Directory containing downloaded nr fasta files",
-                    "hidden": true
-                },
-                "refseq_nr_protein_fasta_glob": {
-                    "type": "string",
-                    "default": "**/complete.nonredundant_protein*.protein.faa.gz",
-                    "description": "Glob specifying nr fasta files",
-                    "hidden": true
-                },
-                "feature_table_dir": {
-                    "type": "string",
-                    "default": "None",
-                    "fa_icon": "fas fa-folder-open",
-                    "description": "Directory containing downloaded genome feature tables",
-                    "hidden": true
-                },
-                "feature_table_glob": {
-                    "type": "string",
-                    "default": "**/*_feature_table.txt.gz",
-                    "description": "Glob specifying genome feature tables",
-                    "hidden": true
-                },
                 "crabhash_path": {
                     "type": "string",
                     "default": "None",
@@ -506,13 +453,119 @@
                     "description": "crabhash ouptut (will be large for NCBI nr runs)",
                     "hidden": true
                 },
-                "refseq_complete_step_1": {
-                    "type": "string",
-                    "default": "None"
-                },
                 "crabhash_glob": {
                     "type": "string",
                     "default": "**/*.faa.gz"
+                }
+            }
+        },
+        "large_data": {
+            "title": "Large Data",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "queueSize": {
+                    "type": "integer",
+                    "default": 15
+                },
+                "sgnr_fasta": {
+                    "type": "string",
+                    "default": "false"
+                },
+                "domtblout_path": {
+                    "type": "string",
+                    "default": "false"
+                }
+            }
+        },
+        "htcondor_specific_paramters": {
+            "title": "HTCONDOR specific paramters",
+            "type": "object",
+            "description": "These parameters are specific to UW-Madison's CHTC high throuput computing cluster",
+            "default": "",
+            "properties": {
+                "htcondor": {
+                    "type": "boolean",
+                    "hidden": true
+                },
+                "htcondor_request_memory": {
+                    "type": "string",
+                    "default": "1GB",
+                    "hidden": true
+                },
+                "htcondor_request_cpus": {
+                    "type": "integer",
+                    "default": 1,
+                    "hidden": true
+                },
+                "htcondor_request_disk": {
+                    "type": "string",
+                    "default": "5GB",
+                    "hidden": true
+                },
+                "htcondor_max_idle": {
+                    "type": "integer",
+                    "default": 100,
+                    "hidden": true
+                },
+                "htcondor_squid_username": {
+                    "type": "string",
+                    "default": "cmclark8",
+                    "hidden": true
+                },
+                "htcondor_WantGlideIn": {
+                    "type": "boolean",
+                    "default": true,
+                    "hidden": true
+                },
+                "htcondor_WantFlocking": {
+                    "type": "boolean",
+                    "default": true,
+                    "hidden": true
+                },
+                "htcondor_directory": {
+                    "type": "string",
+                    "default": "socialgene_results/htcondor_cache",
+                    "hidden": true
+                }
+            },
+            "required": [
+                "htcondor",
+                "htcondor_request_memory",
+                "htcondor_request_cpus",
+                "htcondor_request_disk",
+                "htcondor_max_idle",
+                "htcondor_squid_username",
+                "htcondor_WantGlideIn",
+                "htcondor_WantFlocking"
+            ]
+        },
+        "hmm_database_versions": {
+            "title": "HMM Database Versions",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "amrfinder_version": {
+                    "type": "string",
+                    "default": "2021-03-01.1",
+                    "hidden": true
+                },
+                "bigslice_versions": {
+                    "type": "string",
+                    "default": "v1.0.0/bigslice-models.2020-04-27",
+                    "hidden": true
+                },
+                "vog_version": {
+                    "type": "string",
+                    "default": "vog211",
+                    "hidden": true
+                },
+                "tigrfam_version": {
+                    "type": "string",
+                    "default": "15.0",
+                    "hidden": true
                 }
             }
         }
@@ -550,6 +603,21 @@
         },
         {
             "$ref": "#/definitions/big_data_mode"
+        },
+        {
+            "$ref": "#/definitions/large_data"
+        },
+        {
+            "$ref": "#/definitions/htcondor_specific_paramters"
+        },
+        {
+            "$ref": "#/definitions/hmm_database_versions"
         }
-    ]
+    ],
+    "properties": {
+        "crabhash_cpus": {
+            "type": "integer",
+            "default": 20
+        }
+    }
 }

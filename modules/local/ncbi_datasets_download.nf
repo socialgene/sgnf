@@ -9,9 +9,9 @@ process NCBI_DATASETS_DOWNLOAD {
     path input_file
 
     output:
-    path "ncbi_dataset/data/assembly_data_report.jsonl" , emit: assembly_data_report, optional:true
-    path "ncbi_dataset/data/*/sequence_report.jsonl.gz" , emit: sequence_report, optional:true
-    path "ncbi_dataset/data/dataset_catalog.json"       , emit: dataset_catalog, optional:true
+    path "ncbi_dataset/data/assembly_data_report.jsonl" , emit: assembly_data_report
+    path "ncbi_dataset/data/*/sequence_report.jsonl.gz" , emit: sequence_report
+    path "ncbi_dataset/data/dataset_catalog.json"       , emit: dataset_catalog
     path "**/*.gbff.gz"                                 , emit: gbff_files
     path "versions.yml"                                 , emit: versions
 

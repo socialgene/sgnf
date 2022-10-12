@@ -5,10 +5,10 @@ process DOWNLOAD_HMM_DATABASE {
     //errorStrategy 'retry'
     //maxErrors 2
 
-    conda (params.enable_conda ? "anaconda::wget conda-forge::tar" : null)
-
     input:
     tuple val(database), val(version)
+
+
 
     output:
     path "${database}", emit: hmms
@@ -19,14 +19,12 @@ process DOWNLOAD_HMM_DATABASE {
 
     script:
     """
-    hmm_download_${database}.sh" $version
-    """
-    afterScript:
-    """
+    hmm_download_${database}.sh $version
+
     # convert hmm models to HMMER version 3
     hmmconvert_loop.sh
 
-    # remove any non-socialgene files
+    # remove all files not needed by socialgene
     remove_files_keep_directory_structure.sh  "${database}"
     """
 }

@@ -30,7 +30,7 @@ workflow GATHER_HMMS {
         "virus_orthologous_groups": params.vog_version,
     ]
 
-    Channel.fromList(params.hmmlist).flatMap { it -> [ i1, hmm_map[i]] }.set{hmmlist_ch}
+    Channel.fromList(params.hmmlist).map{ it -> [ it, hmm_map[it]] }.set{hmmlist_ch}
 
 
 

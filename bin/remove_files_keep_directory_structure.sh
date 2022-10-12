@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # remove any non-socialgene files
-find -type f ! -iname "*_socialgene.gz" -delete
+find $1 -type f ! -iname "*_socialgene.gz" -delete
 # remove empty directories
-find . -type d -empty -delete
+find $1 -type d -empty -delete
 
 

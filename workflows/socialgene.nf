@@ -40,7 +40,7 @@ include { HMMSEARCH_PARSE                   } from '../modules/local/hmmsearch_p
 ========================================================================================
 */
 
-include { NCBI_TAXONOMY_INFO        } from '../subworkflows/local/ncbi_taxonomy_info'
+include { NCBI_TAXONOMY        } from '../subworkflows/local/ncbi_taxonomy'
 include { GENOME_HANDLING           } from '../subworkflows/local/genome_handling'
 include { SG_MODULES                } from '../subworkflows/local/sg_modules'
 include { HMM_PREP                  } from '../subworkflows/local/hmm_prep'
@@ -211,8 +211,8 @@ workflow SOCIALGENE {
     ////////////////////////
     */
     if (run_ncbi_taxonomy){
-        NCBI_TAXONOMY_INFO()
-        ch_versions = ch_versions.mix(NCBI_TAXONOMY_INFO.out.versions)
+        NCBI_TAXONOMY()
+        ch_versions = ch_versions.mix(NCBI_TAXONOMY.out.versions)
     }
 
     /*

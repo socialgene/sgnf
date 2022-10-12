@@ -57,7 +57,7 @@ include { NCBI_DATASETS_DOWNLOAD                    } from "../modules/local/ncb
 
 
 include { GATHER_HMMS               } from "../subworkflows/local/gather_hmms.nf"
-include { NCBI_TAXONOMY_INFO        } from '../subworkflows/local/ncbi_taxonomy_info.nf'
+include { NCBI_TAXONOMY        } from '../subworkflows/local/ncbi_taxonomy.nf'
 
 include { TIGRFAM_INFO              } from '../subworkflows/local/tigrfam_info.nf'
 
@@ -127,7 +127,7 @@ workflow CHTC_PREP {
         outdir_neo4j_ch = Channel.fromPath( params.outdir_neo4j )
 
         sg_modules = "protein" + " " + "paramaters" + " " + "mmseqs2" + " " + "ncbi_taxonomy"  + " " + "hmms" + " " + "base_hmm"
-        NCBI_TAXONOMY_INFO()
+        NCBI_TAXONOMY()
         TIGRFAM_INFO()
 
         NEO4J_HEADERS(sg_modules)

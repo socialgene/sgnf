@@ -1,3 +1,5 @@
+Note: This is all pre-alpha stuff (i.e. being worked on extensively, there will be breaking changes, the repo may be burnt down and rebuilt at any time). Extensive documentation will be made available at a later date when this is ready for general use.
+
  <a href="https://gitpod.io/#https://github.com/socialgene/sgnf">
   <img
     src="https://img.shields.io/badge/Run%20with-Gitpod-908a85?logo=gitpod"
@@ -5,8 +7,7 @@
   />
 </a>
 
-
-# ![socialgene/sgnf](docs/images/nf-core-socialgene_logo_light.png#gh-light-mode-only) ![socialgene/sgnf](docs/images/nf-core-socialgene_logo_dark.png#gh-dark-mode-only)
+# socialgene/sgnf
 
 [![GitHub Actions CI Status](https://github.com/socialgene/sgnf/workflows/nf-core%20CI/badge.svg)](https://github.com/socialgene/sgnf/actions?query=workflow%3A%22nf-core+CI%22)
 [![GitHub Actions Linting Status](https://github.com/socialgene/sgnf/workflows/nf-core%20linting/badge.svg)](https://github.com/socialgene/sgnf/actions?query=workflow%3A%22nf-core+linting%22)
@@ -21,36 +22,3 @@
 [![Get help on Slack](http://img.shields.io/badge/slack-nf--core%20%23socialgene-4A154B?labelColor=000000&logo=slack)](https://nfcore.slack.com/channels/socialgene)
 [![Follow on Twitter](http://img.shields.io/badge/twitter-%40nf__core-1DA1F2?labelColor=000000&logo=twitter)](https://twitter.com/nf_core)
 [![Watch on YouTube](http://img.shields.io/badge/youtube-nf--core-FF0000?labelColor=000000&logo=youtube)](https://www.youtube.com/c/nf-core)
-
-```bash
-
-genome_url='https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/900/016/785/GCF_900016785.1_BTsPazieg1.0/GCF_900016785.1_BTsPazieg1.0_genomic.gbff.gz'
-curl -s $genome_url > /tmp/GCF_900016785.1_BTsPazieg1.0_genomic.gbff.gz
-
-
-```
-
-
-
-
-
-
-
-
-
-
-
-
-#################################################
-tar cf - /media/bigdrive2/chase/ncbi_data/gbk/scratch2 | crabz -p 50 > archive.tar.gz
-# Process feature tables
-find . -type f -name "*feature_table.txt.gz" | xargs zgrep -P "CDS\twith_protein" | cut -f 3,7,8,9,10,12 | gzip -6 --rsyncable > reduced.gz
-
-
-
-# Get the tsv (refseq_id\tdecription) for all refseqanonredeundant proteins
-find '/media/bigdrive2/chase/socialgene/2022_07_13/refseq_test/refseq_nr_protein_fasta_dir/download_refseq_nonredundant_complete/complete' -type f -name "complete.nonredundant_protein.*.protein.faa.gz" |\
-xargs zgrep -h ">" |\
-    /media/bigdrive2/chase/socialgene/2022_07_13/parse_fasta.py |\
-    gzip -6 --rsyncable > /media/bigdrive2/chase/socialgene/2022_07_13/id_description.tsv.gz
-#################################################

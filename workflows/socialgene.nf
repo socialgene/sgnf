@@ -67,14 +67,21 @@ workflow SOCIALGENE {
 
     ch_versions = Channel.empty()
 
+    def hmmlist = []
     // if not `null`, hmmlist needs to be a list
     if( params.hmmlist instanceof String ) {
-        hmmlist = [params.hmmlist]
+        hmmlist.addAll([params.hmmlist])
     }
     else {
-        hmmlist = params.hmmlist
+        hmmlist.addAll(params.hmmlist)
     }
 
+    if (params.custom_hmm_file) {
+        hmmlist.addAll(["local"])
+    }
+
+
+    println hmmlist
 
     run_blastp = params.htcondor ? false : params.blastp
     run_mmseqs2 = params.htcondor ? false : params.mmseqs2
@@ -123,7 +130,7 @@ workflow SOCIALGENE {
     HMM ANNOTATION
     ////////////////////////
     */
-    if (params.hmmlist){
+    if (params.hmmlist || params.custom_hmm_file){
 
         if (params.domtblout_path){
             domtblout_ch = Channel.fromPath(params.domtblout_path)

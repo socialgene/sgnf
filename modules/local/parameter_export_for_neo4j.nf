@@ -4,8 +4,6 @@ process PARAMETER_EXPORT_FOR_NEO4J {
     output:
     path "*.socialgene_parameters.gz", emit: parameters
 
-
-
     when:
     task.ext.when == null || task.ext.when
 

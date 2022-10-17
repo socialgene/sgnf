@@ -14,7 +14,7 @@ process DOWNLOAD_HMM_DATABASE {
     path "${database}", emit: hmms
     path "versions.yml" , emit: versions
 
-    script:
+    when:
     task.ext.when == null || task.ext.when
 
     script:

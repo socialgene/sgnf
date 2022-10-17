@@ -6,10 +6,8 @@ process DOWNLOAD_LOCAL_HMM {
     path x
 
     output:
-    path "local", emit: local
-    path "local_versions.yml" , emit: versions
-
-
+    path "local", emit: hmms
+    path "versions.yml" , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -21,9 +19,9 @@ process DOWNLOAD_LOCAL_HMM {
     mkdir local
     mv "${x}_socialgene" ./local/"${x}_socialgene"
 
-    cat <<-END_VERSIONS > local_versions.yml
+    cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        hmmer: \$(hmmsearch -h | grep -o '^# HMMER [0-9.]*' | sed 's/^# HMMER *//')
+        hmmconvert: \$(hmmsearch -h | grep -o '^# HMMER [0-9.]*' | sed 's/^# HMMER *//')
     END_VERSIONS
     """
 }

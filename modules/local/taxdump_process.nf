@@ -1,5 +1,5 @@
 process TAXDUMP_PROCESS {
-    label 'process_low'
+    label 'process_single'
 
     input:
     path taxdump

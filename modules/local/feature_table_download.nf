@@ -1,5 +1,5 @@
 process FEATURE_TABLE_DOWNLOAD {
-    label 'process_low'
+    label 'process_single'
 
 
     input:

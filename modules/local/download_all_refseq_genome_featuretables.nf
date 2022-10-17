@@ -1,6 +1,6 @@
 
 process DOWNLOAD_ALL_REFSEQ_GENOME_FEATURETABLES {
-    label 'process_low'
+    label 'process_single'
 
     output:
     path "*.all_features_reduced.gz", emit: fasta

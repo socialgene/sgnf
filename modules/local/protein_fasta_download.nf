@@ -1,5 +1,5 @@
 process PROTEIN_FASTA_DOWNLOAD {
-    label 'process_low'
+    label 'process_single'
     errorStrategy 'retry'
     maxRetries 2
 

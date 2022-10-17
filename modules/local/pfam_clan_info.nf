@@ -1,6 +1,6 @@
 
 process PFAM_CLAN_INFO {
-    label 'process_low'
+    label 'process_single'
 
 
 

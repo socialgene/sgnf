@@ -1,5 +1,5 @@
 process REFSEQ_ASSEMBLY_TO_TAXID {
-    label 'process_low'
+    label 'process_single'
     errorStrategy 'retry'
     maxErrors 3
 

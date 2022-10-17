@@ -1,5 +1,5 @@
 process PARAMETER_EXPORT_FOR_NEO4J {
-    label 'process_low'
+    label 'process_single'
 
     output:
     path "*.socialgene_parameters.gz", emit: parameters

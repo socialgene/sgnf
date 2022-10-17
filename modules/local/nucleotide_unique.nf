@@ -1,6 +1,6 @@
 
 process NUCLEOTIDE_UNIQUE {
-    label 'process_low'
+    label 'process_single'
 
 
 

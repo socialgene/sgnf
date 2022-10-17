@@ -1,6 +1,6 @@
 
 process TIGRFAM_TO_ROLE {
-    label 'process_low'
+    label 'process_single'
 
     output:
     path "*.tigrfam_to_role.gz", emit: tigrfam_to_role

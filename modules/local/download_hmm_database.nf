@@ -2,8 +2,8 @@
 process DOWNLOAD_HMM_DATABASE {
     tag "${database}"
     label 'process_low'
-    //errorStrategy 'retry'
-    //maxErrors 2
+    errorStrategy 'retry'
+    maxErrors 2
 
     input:
     tuple val(database), val(version)

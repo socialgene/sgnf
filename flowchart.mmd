@@ -1,0 +1,201 @@
+flowchart TD
+    p0((Channel.empty))
+    p1[SOCIALGENE:PARAMETER_EXPORT_FOR_NEO4J]
+    p2(( ))
+    p3((Channel.empty))
+    p4((Channel.empty))
+    p5((Channel.empty))
+    p6((Channel.empty))
+    p7((Channel.fromPath))
+    p8([mix])
+    p9([flatten])
+    p10([toSortedList])
+    p11([flatten])
+    p12([buffer])
+    p13[SOCIALGENE:GENOME_HANDLING:PROCESS_GENBANK:PROCESS_GENBANK_FILES]
+    p14(( ))
+    p15(( ))
+    p16(( ))
+    p17(( ))
+    p18(( ))
+    p19(( ))
+    p20([mix])
+    p21([mix])
+    p22((Channel.empty))
+    p23([mix])
+    p24([collect])
+    p25([mix])
+    p26[SOCIALGENE:SEQKIT_RMDUP]
+    p27(( ))
+    p28[SOCIALGENE:SEQKIT_SORT]
+    p29(( ))
+    p30(( ))
+    p31[SOCIALGENE:SEQKIT_SPLIT]
+    p32(( ))
+    p33([flatten])
+    p34((Channel.empty))
+    p35(( ))
+    p36((Channel.empty))
+    p37((Channel.empty))
+    p38((Channel.fromList))
+    p39([map])
+    p40[SOCIALGENE:HMM_PREP:GATHER_HMMS:DOWNLOAD_HMM_DATABASE]
+    p41([mix])
+    p42([mix])
+    p43((Channel.fromPath))
+    p44[SOCIALGENE:HMM_PREP:GATHER_HMMS:DOWNLOAD_LOCAL_HMM]
+    p45([mix])
+    p46([mix])
+    p47(( ))
+    p48([toList])
+    p49(( ))
+    p50[SOCIALGENE:HMM_PREP:HMM_HASH]
+    p51(( ))
+    p52[SOCIALGENE:HMM_PREP:HMM_TSV_PARSE]
+    p53(( ))
+    p54(( ))
+    p55(( ))
+    p56([flatten])
+    p57([flatten])
+    p58([combine])
+    p59[SOCIALGENE:HMMER_HMMSEARCH]
+    p60([last])
+    p61([mix])
+    p62[SOCIALGENE:HMMSEARCH_PARSE]
+    p63(( ))
+    p64([last])
+    p65([mix])
+    p66[SOCIALGENE:DIAMOND_MAKEDB]
+    p67[SOCIALGENE:DIAMOND_BLASTP]
+    p68([collect])
+    p69(( ))
+    p70([mix])
+    p71([mix])
+    p72((Channel.empty))
+    p73[SOCIALGENE:NCBI_TAXONOMY:TAXDUMP_DOWNLOAD]
+    p74[SOCIALGENE:NCBI_TAXONOMY:TAXDUMP_PROCESS]
+    p75(( ))
+    p76(( ))
+    p77([mix])
+    p78([mix])
+    p79([mix])
+    p80(( ))
+    p81(( ))
+    p82[SOCIALGENE:NEO4J_HEADERS]
+    p83(( ))
+    p84([mix])
+    p85([collectFile])
+    p86((Channel.fromPath))
+    p87(( ))
+    p88[SOCIALGENE:NEO4J_ADMIN_IMPORT]
+    p89(( ))
+    p90(( ))
+    p91([mix])
+    p92(( ))
+    p93[SOCIALGENE:CUSTOM_DUMPSOFTWAREVERSIONS]
+    p94(( ))
+    p95(( ))
+    p96(( ))
+    p0 -->|ch_versions| p25
+    p1 --> p2
+    p3 -->|ch_versions| p21
+    p4 -->|ch_read| p23
+    p5 -->|ch_versions| p20
+    p6 -->|genome_file_ch| p8
+    p7 -->|temp_file_ch| p8
+    p8 -->|genome_file_ch| p9
+    p9 --> p10
+    p10 --> p11
+    p11 --> p12
+    p12 --> p13
+    p13 --> p19
+    p13 --> p18
+    p13 --> p17
+    p13 --> p16
+    p13 --> p15
+    p13 --> p14
+    p13 -->|gbk_fasta_ch| p23
+    p13 --> p20
+    p20 -->|versions| p21
+    p21 -->|ch_versions| p25
+    p22 -->|fasta_fasta_ch| p23
+    p23 --> p24
+    p24 -->|ch_fasta| p26
+    p25 -->|ch_versions| p61
+    p26 -->|ch_nr_fasta| p28
+    p26 --> p27
+    p28 -->|single_ch_fasta| p31
+    p28 --> p29
+    p30 -->|nsplits| p31
+    p31 --> p33
+    p31 --> p32
+    p33 -->|ch_split_fasta| p57
+    p34 -->|versions| p35
+    p36 -->|ch_versions| p42
+    p37 -->|ch_hmms| p41
+    p38 --> p39
+    p39 -->|hmmlist_ch| p40
+    p40 --> p41
+    p40 --> p42
+    p41 -->|ch_hmms| p45
+    p42 -->|ch_versions| p46
+    p43 -->|custom_hmm_file_ch| p44
+    p44 --> p45
+    p44 --> p46
+    p45 -->|ch_hmms| p48
+    p46 -->|versions| p47
+    p48 -->|hmms| p50
+    p49 -->|hmm_splits| p50
+    p50 --> p52
+    p50 -->|hmms| p56
+    p50 --> p51
+    p52 --> p55
+    p52 --> p54
+    p52 --> p53
+    p56 --> p58
+    p57 --> p58
+    p58 -->|mixed_hmm_fasta_ch| p59
+    p59 -->|domtblout_ch| p62
+    p59 --> p60
+    p60 --> p61
+    p61 -->|ch_versions| p65
+    p62 --> p63
+    p62 --> p64
+    p64 --> p65
+    p65 -->|ch_versions| p70
+    p28 -->|single_ch_fasta| p66
+    p66 --> p67
+    p66 --> p70
+    p28 -->|single_ch_fasta| p67
+    p67 --> p68
+    p67 --> p71
+    p68 -->|blast_ch| p69
+    p70 -->|ch_versions| p71
+    p71 -->|ch_versions| p79
+    p72 -->|ch_versions| p77
+    p73 --> p74
+    p73 --> p77
+    p74 --> p76
+    p74 --> p75
+    p74 --> p78
+    p77 -->|ch_versions| p78
+    p78 -->|versions| p79
+    p79 -->|ch_versions| p84
+    p80 -->|sg_modules| p82
+    p81 -->|hmmlist| p82
+    p82 --> p83
+    p82 --> p84
+    p84 -->|ch_versions| p85
+    p85 -->|collected_version_files| p88
+    p86 -->|outdir_neo4j_ch| p88
+    p80 -->|sg_modules| p88
+    p87 -->|hmmlist| p88
+    p88 --> p90
+    p88 --> p89
+    p88 --> p91
+    p84 -->|ch_versions| p91
+    p91 -->|ch_versions| p92
+    p85 -->|collected_version_files| p93
+    p93 --> p96
+    p93 --> p95
+    p93 --> p94

@@ -1,6 +1,6 @@
 process TAXDUMP_PROCESS {
     label 'process_single'
-
+    memory = '20 GB'
     input:
     path taxdump
 

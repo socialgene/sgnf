@@ -10,6 +10,8 @@ include { PROCESS_FASTA_INPUT       } from './process_fasta_input'
 workflow GENOME_HANDLING {
     main:
         ch_versions = Channel.empty()
+        gbk_fasta_ch = Channel.empty()
+        gbk_file_ch= Channel.empty()
 
         // Create a channel to mix inputs from different sources
         ch_read = Channel.empty()
@@ -19,9 +21,9 @@ workflow GENOME_HANDLING {
             PROCESS_GENBANK()
             ch_versions = ch_versions.mix(PROCESS_GENBANK.out.versions)
             gbk_fasta_ch = PROCESS_GENBANK.out.fasta
-        } else {
-            gbk_fasta_ch = Channel.empty()
+            gbk_file_ch = PROCESS_GENBANK.out.gbk
         }
+
 
         // Parse local fasta file(s)
         if (params.local_fasta){
@@ -38,6 +40,7 @@ workflow GENOME_HANDLING {
             .set{ch_fasta}
 
     emit:
+        ch_gbk   = gbk_file_ch
         ch_fasta = ch_fasta
         ch_versions = ch_versions
 

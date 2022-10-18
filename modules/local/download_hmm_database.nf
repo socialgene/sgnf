@@ -8,8 +8,6 @@ process DOWNLOAD_HMM_DATABASE {
     input:
     tuple val(database), val(version)
 
-
-
     output:
     path "${database}", emit: hmms
     path "versions.yml" , emit: versions

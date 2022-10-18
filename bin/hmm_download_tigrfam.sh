@@ -9,9 +9,6 @@ mv "TIGRFAMs_${1}_HMM.hmm" tigrfam
 # convert hmm models to HMMER version 3
 hmmconvert_loop.sh
 
-# remove any non-socialgene files
-remove_files_keep_directory_structure.sh "tigrfam"
-
 cat <<-END_VERSIONS > versions.yml
 "tigrfam":
     version: ${1}

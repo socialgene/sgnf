@@ -14,7 +14,7 @@ md5sum -c vog.hmm.tar.gz.md5
 tar -xzvf vog.hmm.tar.gz
 rm vog.hmm.tar.gz
 rm vog.hmm.tar.gz.md5
-
+cd ..
 cat <<-END_VERSIONS > versions.yml
 virus_orthologous_groups:
     version: $1

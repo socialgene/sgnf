@@ -56,12 +56,15 @@ include { HMM_PREP                  } from '../subworkflows/local/hmm_prep'
 include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
 include { DIAMOND_BLASTP                } from '../modules/local/diamond/blastp/main'
 include { DIAMOND_MAKEDB                } from '../modules/local/diamond/makedb/main'
+include { ANTISMASH                     } from '../modules/local/antismash/main'
 
 /*
 ========================================================================================
     RUN MAIN WORKFLOW
 ========================================================================================
 */
+
+available_hmms=["antismash","amrfinder","bigslice","classiphage","pfam","prism","resfams","tigrfam","virus_orthologous_groups"]
 
 workflow SOCIALGENE {
 
@@ -76,12 +79,13 @@ workflow SOCIALGENE {
         hmmlist.addAll(params.hmmlist)
     }
 
+    if (hmmlist.contains("all")) {
+        hmmlist = available_hmms
+    }
+
     if (params.custom_hmm_file) {
         hmmlist.addAll(["local"])
     }
-
-
-    println hmmlist
 
     run_blastp = params.htcondor ? false : params.blastp
     run_mmseqs2 = params.htcondor ? false : params.mmseqs2
@@ -104,6 +108,9 @@ workflow SOCIALGENE {
 
         GENOME_HANDLING()
         GENOME_HANDLING.out.ch_fasta.set{ch_fasta}
+
+        ANTISMASH(GENOME_HANDLING.out.ch_gbk)
+
         ch_versions = ch_versions.mix(GENOME_HANDLING.out.ch_versions)
 
         SEQKIT_RMDUP(ch_fasta)

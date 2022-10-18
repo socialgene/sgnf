@@ -8,23 +8,23 @@ workflow PROCESS_GENBANK {
 
     main:
         ch_versions = Channel.empty()
-        genome_file_ch= Channel.empty()
+        gbk_file_ch= Channel.empty()
 
         if (params.mibig){
             MIBIG_DOWNLOAD()
-            genome_file_ch = genome_file_ch.mix(MIBIG_DOWNLOAD.out.genbank)
+            gbk_file_ch = gbk_file_ch.mix(MIBIG_DOWNLOAD.out.genbank)
             ch_versions = ch_versions.mix(MIBIG_DOWNLOAD.out.versions)
         }
 
         if (params.ncbi_genome_download_command){
             NCBI_GENOME_DOWNLOAD(params.ncbi_genome_download_command)
-            genome_file_ch = genome_file_ch.mix(NCBI_GENOME_DOWNLOAD.out.gbff_files)
+            gbk_file_ch = gbk_file_ch.mix(NCBI_GENOME_DOWNLOAD.out.gbff_files)
             ch_versions = ch_versions.mix(NCBI_GENOME_DOWNLOAD.out.versions)
         }
 
         if (params.local_genbank) {
             temp_file_ch = Channel.fromPath( params.local_genbank )
-            genome_file_ch= genome_file_ch.mix(temp_file_ch)
+            gbk_file_ch= gbk_file_ch.mix(temp_file_ch)
 
         }
         if (params.ncbi_datasets_command){
@@ -37,7 +37,7 @@ workflow PROCESS_GENBANK {
             }
 
             NCBI_DATASETS_DOWNLOAD(params.ncbi_datasets_command, ch_opt_input_file)
-            genome_file_ch= genome_file_ch.mix(NCBI_DATASETS_DOWNLOAD.out.gbff_files)
+            gbk_file_ch= gbk_file_ch.mix(NCBI_DATASETS_DOWNLOAD.out.gbff_files)
             ch_versions = ch_versions.mix(NCBI_DATASETS_DOWNLOAD.out.versions)
         }
 
@@ -45,7 +45,7 @@ workflow PROCESS_GENBANK {
 
 
         PROCESS_GENBANK_FILES(
-                genome_file_ch.flatten().toSortedList().flatten().buffer( size: 500, remainder: true ),
+                gbk_file_ch.flatten().toSortedList().flatten().buffer( size: 500, remainder: true ),
                 )
 
        PROCESS_GENBANK_FILES.out.fasta.set{ch_fasta_out}
@@ -54,6 +54,7 @@ workflow PROCESS_GENBANK {
 
 
     emit:
+        gbk         = gbk_file_ch.flatten().toSortedList().flatten()
         fasta       = ch_fasta_out
         versions    = ch_versions
 }

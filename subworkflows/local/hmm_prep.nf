@@ -17,7 +17,7 @@ workflow HMM_PREP {
     main:
         ch_versions = Channel.empty()
 
-        GATHER_HMMS()
+        GATHER_HMMS(hmmlist)
        // ch_versions = ch_versions.mix(GATHER_HMMS.out.versions)
 
         if (hmmlist.contains("tigrfam")){

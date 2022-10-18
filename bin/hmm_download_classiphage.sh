@@ -26,7 +26,9 @@ rm -rf __MACOSX
 find ./ -name "*cons.hmm" -exec mv -t . {} +
 
 rm Ino_refined_HMMs.zip Myo_refined_HMMs.zip Podo_refined_HMMs.zip Sipho_refined_HMMs.zip
-rm -rf Ino_refined_HMMs Myo_refined_HMMs Podo_refined_HMMs Sipho_refined_HMMs
+rm -r Ino_refined_HMMs Myo_refined_HMMs Podo_refined_HMMs Sipho_refined_HMMs
+
+cd ..
 
 cat <<-END_VERSIONS > versions.yml
 "classiphage":

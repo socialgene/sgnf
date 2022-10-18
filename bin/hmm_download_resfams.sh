@@ -13,9 +13,6 @@ mv resfams.hmm resfams
 # convert hmm models to HMMER version 3
 hmmconvert_loop.sh
 
-# remove any non-socialgene files
-remove_files_keep_directory_structure.sh "resfams"
-
 cat <<-END_VERSIONS > versions.yml
 "resfams":
     version: 'Resfams HMM Database (Core) - v1.2, updated 2015-01-27'

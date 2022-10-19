@@ -5,14 +5,14 @@ process ANTISMASH {
     conda (params.enable_conda ? "bioconda::antismash==6.1.1" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/antismash:6.1.1' :
-        'antismashsg:latest' }"
+        'antismash_c:latest' }"
 
-    containerOptions {
-        workflow.containerEngine == 'docker' ?
-        "-v \$PWD/$antismash_dir:/usr/local/lib/python3.8/site-packages/antismash" :
-        ''
-        }
-    conda.createTimeout = '1 h'
+    // containerOptions {
+    //     workflow.containerEngine == 'docker' ?
+    //     "-v \$PWD/$antismash_dir:/usr/local/lib/python3.8/site-packages/antismash" :
+    //     ''
+    //     }
+
     input:
     path(sequence_input)
 
@@ -46,7 +46,7 @@ process ANTISMASH {
     antismash \\
         $args \\
         -c $task.cpus \\
-        --output-dir /json \\
+        --output-dir $prefix \\
         --skip-zip-file \\
         --allow-long-headers \\
         --skip-sanitisation \\

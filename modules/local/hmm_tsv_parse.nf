@@ -24,9 +24,8 @@ process HMM_TSV_PARSE {
     # Info about HMM nodes
     md5_as_filename_after_gzip.sh "sg_hmm_nodes_out" "sg_hmm_nodes_out.gz"
 
-    # Info about hmm from source database(s)
+    # # Info about hmm from source database(s)
     ls |\\
-        zgrep .hmms_out |\\
         while read -r line ; do md5_as_filename_after_gzip.sh "\$line" "\$line".gz; done
 
     cat <<-END_VERSIONS > versions.yml

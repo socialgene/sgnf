@@ -52,11 +52,11 @@ include { HMM_PREP                  } from '../subworkflows/local/hmm_prep'
     IMPORT NF-CORE MODULES/SUBWORKFLOWS
 ========================================================================================
 */
-
-include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/nf-core/modules/custom/dumpsoftwareversions/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 include { DIAMOND_BLASTP                } from '../modules/local/diamond/blastp/main'
 include { DIAMOND_MAKEDB                } from '../modules/local/diamond/makedb/main'
 include { ANTISMASH                     } from '../modules/local/antismash/main'
+
 
 /*
 ========================================================================================
@@ -87,6 +87,9 @@ workflow SOCIALGENE {
         hmmlist.addAll(["local"])
     }
 
+
+    println hmmlist
+
     run_blastp = params.htcondor ? false : params.blastp
     run_mmseqs2 = params.htcondor ? false : params.mmseqs2
     run_ncbi_taxonomy = params.htcondor ? false : params.ncbi_taxonomy
@@ -108,10 +111,11 @@ workflow SOCIALGENE {
 
         GENOME_HANDLING()
         GENOME_HANDLING.out.ch_fasta.set{ch_fasta}
+        ch_versions = ch_versions.mix(GENOME_HANDLING.out.ch_versions)
+
+
 
         ANTISMASH(GENOME_HANDLING.out.ch_gbk)
-
-        ch_versions = ch_versions.mix(GENOME_HANDLING.out.ch_versions)
 
         SEQKIT_RMDUP(ch_fasta)
         SEQKIT_RMDUP.out

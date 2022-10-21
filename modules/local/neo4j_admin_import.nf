@@ -11,9 +11,9 @@ process NEO4J_ADMIN_IMPORT {
     val bro
 
     output:
-    path "${outdir_neo4j}/import.report", emit: placeholder
-    path 'build_db.sh', emit: build_database_command
-    path "versions.yml" , emit: versions
+    path "${outdir_neo4j}/import.report"      , emit: placeholder
+    path 'command_to_build_neo4j_database.sh' , emit: command_to_build_neo4j_database
+    path "versions.yml"                       , emit: versions
 
 
     when:
@@ -42,7 +42,9 @@ process NEO4J_ADMIN_IMPORT {
     --gid None \\
     --sg_modules ${sg_modules_delim} \\
     --hmmlist ${hmm_s_delim} \\
-    --dryrun true
+    --dryrun true \\
+    --dryrun_filepath './command_to_build_neo4j_database.sh'
+
 
     sg_create_neo4j_db \\
     --neo4j_top_dir \${PWD}/${outdir_neo4j} \\

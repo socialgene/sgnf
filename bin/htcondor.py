@@ -6,6 +6,7 @@ import itertools
 import tarfile
 from pathlib import Path
 from socialgene.config import env_vars as sg_env
+import tarfile
 
 env_vars = dict(os.environ)
 
@@ -20,8 +21,6 @@ class CustomTemplate(Template):
 
 with tarfile.open("hmm.tar", "r") as tar:
     hmm_files = [str(Path(i).name) for i in tar.getnames()]
-
-import tarfile
 
 with tarfile.open("fasta.tar", "r") as tar:
     fasta_files = [str(Path(i).name) for i in tar.getnames()]

@@ -28,11 +28,12 @@ process NEO4J_ADMIN_IMPORT {
     mkdir -p "${outdir_neo4j}/plugins"
     mkdir -p "${outdir_neo4j}/logs"
 
-    wget -q https://github.com/neo4j/graph-data-science/releases/download/2.0.3/neo4j-graph-data-science-2.0.3.zip
+    NEO4J_DS_VERSION='2.0.3'
+    wget -q https://github.com/neo4j/graph-data-science/releases/download/${NEO4J_DS_VERSION}/neo4j-graph-data-science-${NEO4J_DS_VERSION}.zip
 
-    unzip neo4j-graph-data-science-2.0.3.zip -d "${outdir_neo4j}/plugins"
+    unzip neo4j-graph-data-science-${NEO4J_DS_VERSION}.zip -d "${outdir_neo4j}/plugins"
 
-    rm -f neo4j-graph-data-science-2.0.3.zip
+    rm -f neo4j-graph-data-science-${NEO4J_DS_VERSION}.zip
 
     sg_create_neo4j_db \\
     --neo4j_top_dir \${PWD}/${outdir_neo4j} \\
@@ -60,7 +61,7 @@ process NEO4J_ADMIN_IMPORT {
         python: \$(python --version 2>&1 | tail -n 1 | sed 's/^Python //')
         socialgene: \$(sg_version)
         neo4j-version: \$(sg_neo4j_version)
-        neo4j-graph-data-science: '2.0.3'
+        neo4j-graph-data-science: '${NEO4J_DS_VERSION}'
     END_VERSIONS
     """
 }

@@ -7,22 +7,16 @@ process ANTISMASH {
     conda (params.enable_conda ? "bioconda::antismash==6.1.1" : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/antismash:6.1.1' :
-        'bro:latest' }"
-
-    // containerOptions {
-    //     workflow.containerEngine == 'docker' ?
-    //     "-v \$PWD/$antismash_dir:/usr/local/lib/python3.8/site-packages/antismash" :
-    //     ''
-    //     }
+        'chasemc2/antismash_nf:6.1.1' }"
 
     input:
     path(sequence_input)
 
     output:
-    path("${prefix}/*.gbk")                                 , emit: gbk_input, optional:true
-    path("${prefix}/*region*.gbk")                          , emit: gbk_results, optional:true
-    path("${prefix}/regions.js")                            , emit: json_sideloading, optional:true
-    path "versions.yml"                                     , emit: versions
+    path("${prefix}/*.gbk.gz")         , emit: gbk_input, optional:true
+    path("${prefix}/*region*.gbk.gz")  , emit: gbk_results, optional:true
+    path("${prefix}/regions.js.gz")    , emit: json_sideloading, optional:true
+    path "versions.yml"             , emit: versions
 
 
     when:
@@ -52,7 +46,7 @@ process ANTISMASH {
         --logfile $prefix/${prefix}.log \\
         $sequence_input
 
-
+    gzip "${prefix}/*.gbk" "${prefix}/*region*.gbk" "${prefix}/regions.js"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

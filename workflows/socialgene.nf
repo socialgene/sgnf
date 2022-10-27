@@ -114,8 +114,9 @@ workflow SOCIALGENE {
         ch_versions = ch_versions.mix(GENOME_HANDLING.out.ch_versions)
 
 
-
-        ANTISMASH(GENOME_HANDLING.out.ch_gbk)
+        if (params.antismash){
+            ANTISMASH(GENOME_HANDLING.out.ch_gbk)
+        }
 
         SEQKIT_RMDUP(ch_fasta)
         SEQKIT_RMDUP.out

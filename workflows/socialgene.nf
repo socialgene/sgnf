@@ -260,6 +260,13 @@ workflow SOCIALGENE {
             collected_version_files
         )
         ch_versions = ch_versions.mix(NEO4J_ADMIN_IMPORT.out.versions)
+    } else {
+        NEO4J_ADMIN_IMPORT(
+                outdir_neo4j_ch,
+                sg_modules,
+                hmmlist,
+                collected_version_files
+        )
     }
 
     /*

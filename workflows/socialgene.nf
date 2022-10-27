@@ -25,7 +25,6 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 include { MMSEQS2_EASYCLUSTER               } from '../modules/local/mmseqs2_easycluster'
 include { NEO4J_ADMIN_IMPORT                } from '../modules/local/neo4j_admin_import'
 include { NEO4J_HEADERS                     } from '../modules/local/neo4j_headers'
-include { PAIRED_OMICS                      } from '../modules/local/paired_omics'
 include { PARAMETER_EXPORT_FOR_NEO4J        } from '../modules/local/parameter_export_for_neo4j'
 include { SEQKIT_SORT                       } from '../modules/local/seqkit/sort/main'
 include { SEQKIT_RMDUP                      } from '../modules/local/seqkit/rmdup/main.nf'
@@ -100,6 +99,7 @@ workflow SOCIALGENE {
     sg_modules = SG_MODULES.out.sg_modules
 
     PARAMETER_EXPORT_FOR_NEO4J()
+    paramters_ch = PARAMETER_EXPORT_FOR_NEO4J.out.parameters
 
     /*
     ////////////////////////
@@ -118,7 +118,8 @@ workflow SOCIALGENE {
             ANTISMASH(GENOME_HANDLING.out.ch_gbk)
         }
 
-        SEQKIT_RMDUP(ch_fasta)
+        GENOME_HANDLING.out.ch_fasta.flatten().collectFile(name:'collected_fasta.faa.gz').set{ collected_fasta}
+        SEQKIT_RMDUP(collected_fasta)
         SEQKIT_RMDUP.out
                 .fasta
                 .set{ch_nr_fasta}
@@ -186,10 +187,19 @@ workflow SOCIALGENE {
         }
         if (domtblout_ch){
             HMMSEARCH_PARSE(domtblout_ch)
+            hmmer_result_ch = HMMSEARCH_PARSE.out.parseddomtblout.collect()
             ch_versions = ch_versions.mix(HMMSEARCH_PARSE.out.versions.last())
         }
 
+        hmm_tsv_parse_ch = HMM_PREP.out.hmm_tsv_nodes.concat(
+            HMM_PREP.out.hmm_tsv_out
+        ).collect()
+
+        tigrfam_ch = HMM_PREP.out.tigr_ch
+
     } else {
+        hmm_tsv_parse_ch =  file( "dummy_file3.txt", checkIfExists: false )
+        tigrfam_ch =  file( "dummy_file3.txt", checkIfExists: false )
         hmmer_result_ch = file( "dummy_file3.txt", checkIfExists: false )
     }
 
@@ -207,7 +217,7 @@ workflow SOCIALGENE {
         ch_versions = ch_versions.mix(DIAMOND_MAKEDB.out.versions)
         ch_versions = ch_versions.mix(DIAMOND_BLASTP.out.versions)
     } else {
-        blast_ch = file( "dummy_file1.txt", checkIfExists: false )
+        blast_ch = file( "dummy_file.txt", checkIfExists: false )
     }
 
     /*
@@ -221,7 +231,7 @@ workflow SOCIALGENE {
             .set{mmseqs2_ch}
         ch_versions = ch_versions.mix(MMSEQS2_EASYCLUSTER.out.versions)
     } else {
-        mmseqs2_ch = file( "dummy_file2.txt", checkIfExists: false )
+        mmseqs2_ch = file( "dummy_file.txt", checkIfExists: false )
     }
 
     /*
@@ -231,7 +241,12 @@ workflow SOCIALGENE {
     */
     if (run_ncbi_taxonomy){
         NCBI_TAXONOMY()
+        taxdump_ch = NCBI_TAXONOMY.out.taxid_to_taxid.concat(
+                        NCBI_TAXONOMY.out.nodes_taxid
+                        ).collect()
         ch_versions = ch_versions.mix(NCBI_TAXONOMY.out.versions)
+    } else {
+        taxdump_ch = file( "dummy_file.txt", checkIfExists: false )
     }
 
     /*
@@ -240,6 +255,7 @@ workflow SOCIALGENE {
     ////////////////////////
     */
     NEO4J_HEADERS(sg_modules, hmmlist)
+    neo4j_header_ch = NEO4J_HEADERS.out.headers.collect()
     ch_versions = ch_versions.mix(NEO4J_HEADERS.out.versions)
 
     /*
@@ -251,23 +267,23 @@ workflow SOCIALGENE {
     collected_version_files = ch_versions.collectFile(name: 'temp.yml', newLine: true)
 
     if (run_build_database) {
-        outdir_neo4j_ch = Channel.fromPath(params.outdir_neo4j)
 
         NEO4J_ADMIN_IMPORT(
-            outdir_neo4j_ch,
             sg_modules,
             hmmlist,
-            collected_version_files
+            neo4j_header_ch,
+            taxdump_ch,
+            hmm_tsv_parse_ch,
+            blast_ch,
+            mmseqs2_ch,
+            hmmer_result_ch,
+            tigrfam_ch,
+            paramters_ch
         )
+
         ch_versions = ch_versions.mix(NEO4J_ADMIN_IMPORT.out.versions)
-    } else {
-        NEO4J_ADMIN_IMPORT(
-                outdir_neo4j_ch,
-                sg_modules,
-                hmmlist,
-                collected_version_files
-        )
     }
+
 
     /*
     ////////////////////////

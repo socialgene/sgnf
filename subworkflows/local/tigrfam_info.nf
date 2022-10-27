@@ -14,6 +14,7 @@ workflow TIGRFAM_INFO {
 
     main:
         ch_versions = Channel.empty()
+        tigr_ch = Channel.empty()
 
         TIGRFAM_INFO_DOWNLOAD()
         TIGRFAM_TO_GO(
@@ -26,9 +27,17 @@ workflow TIGRFAM_INFO {
         ch_versions = ch_versions.mix(TIGRFAM_ROLES.out.versions)
         ch_versions = ch_versions.mix(TIGRFAM_TO_ROLE.out.versions)
 
+        tigr_ch.mix(
+            TIGRFAM_ROLES.out.tigrfamrole_to_mainrole,
+            TIGRFAM_ROLES.out.tigrfamrole_to_subrole,
+            TIGRFAM_ROLES.out.tigrfam_mainrole,
+            TIGRFAM_ROLES.out.tigrfam_subrole,
+            TIGRFAM_ROLES.out.tigrfam_role
+        ).collect()
+
     emit:
-        versions = ch_versions
-
-
+    tigr_ch  = tigr_ch
+    versions = ch_versions
 
 }
+

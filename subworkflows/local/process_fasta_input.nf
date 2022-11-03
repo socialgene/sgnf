@@ -40,6 +40,6 @@ workflow PROCESS_FASTA_INPUT {
 
 
     emit:
-        fasta = CRABHASH.out.fasta
-        tsv = CRABHASH.out.tsv
+        fasta           = CRABHASH.out.fasta
+        protein_info    = CRABHASH.out.protein_info
 }

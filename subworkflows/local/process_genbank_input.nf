@@ -44,25 +44,21 @@ workflow PROCESS_GENBANK {
 
 
         PROCESS_GENBANK_FILES(
-                gbk_file_ch.flatten().toSortedList().flatten().buffer( size: 500, remainder: true ),
+                gbk_file_ch.flatten().toSortedList().flatten().buffer( size: 1, remainder: true ),
                 )
 
-        genome_info_ch.mix(
-                PROCESS_GENBANK_FILES.out.protein_info,
-                PROCESS_GENBANK_FILES.out.locus_to_protein,
-                PROCESS_GENBANK_FILES.out.assembly_to_locus,
-                PROCESS_GENBANK_FILES.out.assembly_to_taxid,
-                PROCESS_GENBANK_FILES.out.loci,
-                PROCESS_GENBANK_FILES.out.assembly
-            ).collect()
+        PROCESS_GENBANK_FILES.out.fasta.set{ch_fasta_out}
 
-       PROCESS_GENBANK_FILES.out.fasta.set{ch_fasta_out}
+        ch_versions = ch_versions.mix(PROCESS_GENBANK_FILES.out.versions)
 
-       ch_versions = ch_versions.mix(PROCESS_GENBANK_FILES.out.versions)
+
+        PROCESS_GENBANK_FILES.out.genomic_info.set{genome_info}
+        PROCESS_GENBANK_FILES.out.protein_info.set{protein_info}
 
 
     emit:
-        genome_info_ch  = genome_info_ch
+        genome_info     = genome_info
+        protein_info    = protein_info
         gbk             = gbk_file_ch.flatten().toSortedList().flatten()
         fasta           = ch_fasta_out
         versions        = ch_versions

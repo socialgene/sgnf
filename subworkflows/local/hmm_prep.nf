@@ -25,7 +25,7 @@ workflow HMM_PREP {
             tigr_ch         = TIGRFAM_INFO.out.tigr_ch
             ch_versions = ch_versions.mix(TIGRFAM_INFO.out.versions)
         } else {
-           tigr_ch= file( "dummy_file3.txt", checkIfExists: false )
+           tigr_ch= file("${baseDir}/assets/EMPTY_FILE")
         }
 
         HMM_HASH(

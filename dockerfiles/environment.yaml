@@ -26,5 +26,6 @@ dependencies:
   - grep
   - conda-forge::pigz==2.6
   - conda-forge::gzip >=1.12
+  - openjdk
   - pip:
-      - /home/chase/Documents/github/kwan_lab/socialgene/sgpy #https://test-files.pythonhosted.org/packages/db/ea/5d6b6adbcc7a538723c3eb3990b52054809f52d30f9ebdecad7614467fdf/socialgene-1.0.3-py2.py3-none-any.whl
+      - git+https://github.com/socialgene/sgpy.git@92d266ba49d9b42c8e75fc08c474f94e3d768afe

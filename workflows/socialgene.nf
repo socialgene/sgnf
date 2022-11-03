@@ -99,7 +99,7 @@ workflow SOCIALGENE {
     sg_modules = SG_MODULES.out.sg_modules
 
     PARAMETER_EXPORT_FOR_NEO4J()
-    paramters_ch = PARAMETER_EXPORT_FOR_NEO4J.out.parameters
+    parameters_ch = PARAMETER_EXPORT_FOR_NEO4J.out.parameters
 
     /*
     ////////////////////////
@@ -198,9 +198,11 @@ workflow SOCIALGENE {
         tigrfam_ch = HMM_PREP.out.tigr_ch
 
     } else {
-        hmm_tsv_parse_ch =  file( "dummy_file3.txt", checkIfExists: false )
-        tigrfam_ch =  file( "dummy_file3.txt", checkIfExists: false )
-        hmmer_result_ch = file( "dummy_file3.txt", checkIfExists: false )
+
+
+        hmm_tsv_parse_ch =  file("${baseDir}/assets/EMPTY_FILE")
+        tigrfam_ch =  file("${baseDir}/assets/EMPTY_FILE")
+        hmmer_result_ch = file("${baseDir}/assets/EMPTY_FILE")
     }
 
     /*
@@ -217,7 +219,7 @@ workflow SOCIALGENE {
         ch_versions = ch_versions.mix(DIAMOND_MAKEDB.out.versions)
         ch_versions = ch_versions.mix(DIAMOND_BLASTP.out.versions)
     } else {
-        blast_ch = file( "dummy_file.txt", checkIfExists: false )
+        blast_ch = file("${baseDir}/assets/EMPTY_FILE")
     }
 
     /*
@@ -231,7 +233,7 @@ workflow SOCIALGENE {
             .set{mmseqs2_ch}
         ch_versions = ch_versions.mix(MMSEQS2_EASYCLUSTER.out.versions)
     } else {
-        mmseqs2_ch = file( "dummy_file.txt", checkIfExists: false )
+        mmseqs2_ch = file("${baseDir}/assets/EMPTY_FILE")
     }
 
     /*
@@ -246,7 +248,7 @@ workflow SOCIALGENE {
                         ).collect()
         ch_versions = ch_versions.mix(NCBI_TAXONOMY.out.versions)
     } else {
-        taxdump_ch = file( "dummy_file.txt", checkIfExists: false )
+        taxdump_ch = file("${baseDir}/assets/EMPTY_FILE")
     }
 
     /*
@@ -267,7 +269,6 @@ workflow SOCIALGENE {
     collected_version_files = ch_versions.collectFile(name: 'temp.yml', newLine: true)
 
     if (run_build_database) {
-
         NEO4J_ADMIN_IMPORT(
             sg_modules,
             hmmlist,
@@ -278,7 +279,9 @@ workflow SOCIALGENE {
             mmseqs2_ch,
             hmmer_result_ch,
             tigrfam_ch,
-            paramters_ch
+            parameters_ch,
+            GENOME_HANDLING.out.ch_genome_info,
+            GENOME_HANDLING.out.ch_protein_info
         )
 
         ch_versions = ch_versions.mix(NEO4J_ADMIN_IMPORT.out.versions)

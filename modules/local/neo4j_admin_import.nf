@@ -2,76 +2,62 @@ process NEO4J_ADMIN_IMPORT {
     tag 'Building Neo4j database'
     label 'process_high'
 
-    stageInMode = 'rellink'
+    container 'chasemc2/neo4j:5.1'
 
     input:
     val sg_modules
     val hmmlist
-    path "socialgene_neo4jbro/import/neo4j_headers/*"
-    path "socialgene_neo4jbro/import/taxdump_process/*"
-    path "socialgene_neo4jbro/import/hmm_tsv_parse/*"
-    path "socialgene_neo4jbro/import/diamond_blastp/*"
-    path "socialgene_neo4jbro/import/mmseqs2_easycluster/*"
-    path "socialgene_neo4jbro/import/parsed_domtblout/*"
-    path "socialgene_neo4jbro/import/tigrfam_info/*"
-    path "socialgene_neo4jbro/import/parameters/*"
-    //path "socialgene_neo4jbro/import/protein_info/*"
+    path "import/neo4j_headers/*"
+    path "import/taxdump_process/*"
+    path "import/hmm_tsv_parse/*"
+    path "import/diamond_blastp/*"
+    path "import/mmseqs2_easycluster/*"
+    path "import/parsed_domtblout/*"
+    path "import/tigrfam_info/*"
+    path "import/parameters/*"
+    path "import/genomic_info/*"
+    path "import/protein_info/*"
 
     output:
-    path 'socialgene_neo4jbro/*'              , emit: data
-    path 'command_to_build_neo4j_database.sh' , emit: command_to_build_neo4j_database
-    path "versions.yml"                       , emit: versions
+    path 'data/*'           , emit: data
+    path 'logs/*'           , emit: logs
+    path 'import.report'    , emit: import_report
+    path "versions.yml"     , emit: versions
+
 
     when:
     task.ext.when == null || task.ext.when
+
+
 
     script:
     def sg_modules_delim = sg_modules ? sg_modules.join(' ') : '""'
     def hmm_s_delim = hmmlist ? hmmlist.join(' ') : '""'
     """
+
     NEO4J_DS_VERSION='2.0.3'
+    hey=\$PWD
+    #export NEO4J_HOME=\$PWD
+    #export NEO4J_CONF='/neo4j-community-5.1.0/conf/neo4j.conf'
 
-    cd socialgene_neo4jbro
+    mv ./import/*  /neo4j-community-5.1.0/import/
+    cd /neo4j-community-5.1.0
 
-    touch 'import.report'
-    mkdir -p 'data'
-    mkdir -p 'plugins'
-    mkdir -p 'logs'
+  #  mkdir data
+  #  mkdir plugins
+  #  mkdir logs
+   # touch import.report
 
-    wget -q https://github.com/neo4j/graph-data-science/releases/download/\${NEO4J_DS_VERSION}/neo4j-graph-data-science-\${NEO4J_DS_VERSION}.zip
+    skjdnjkskds.sh
 
-    unzip neo4j-graph-data-science-\${NEO4J_DS_VERSION}.zip -d "./plugins"
+    cd \$hey
+    mkdir data logs
+    mv /neo4j-community-5.1.0/import/* ./import/
+    mv /neo4j-community-5.1.0/data/* ./data/
+    mv /neo4j-community-5.1.0/logs/* ./logs/
+    mv /neo4j-community-5.1.0/import.report import.report
 
-    rm -f neo4j-graph-data-science-\${NEO4J_DS_VERSION}.zip
+    touch versions.yml
 
-    # save the command-line args
-    sg_create_neo4j_db \\
-    --neo4j_top_dir  '.' \\
-    --cpus ${task.cpus} \\
-    --additional_args "" \\
-    --uid None \\
-    --gid None \\
-    --sg_modules ${sg_modules_delim} \\
-    --hmmlist ${hmm_s_delim} \\
-    --dryrun true \\
-    --dryrun_filepath './command_to_build_neo4j_database.sh'
-
-
-    sg_create_neo4j_db \\
-    --neo4j_top_dir '.' \\
-    --cpus ${task.cpus} \\
-    --additional_args "" \\
-    --uid None \\
-    --gid None \\
-    --sg_modules ${sg_modules_delim} \\
-    --hmmlist ${hmm_s_delim}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        python: \$(python --version 2>&1 | tail -n 1 | sed 's/^Python //')
-        socialgene: \$(sg_version)
-        neo4j-version: \$(sg_neo4j_version)
-        neo4j-graph-data-science: '\${NEO4J_DS_VERSION}'
-    END_VERSIONS
     """
 }

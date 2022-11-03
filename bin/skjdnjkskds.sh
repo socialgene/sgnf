@@ -1,4 +1,4 @@
-/neo4j-community-5.1.0/bin/neo4j-admin \
+neo4j-admin \
 database import full \
 --nodes=antismash=import/neo4j_headers/antismash_hmms_out.header,import/hmm_tsv_parse/.*\.antismash_hmms_out.gz \
 --relationships=BLASTP=import/neo4j_headers/blastp.header,import/diamond_blastp/.*\.blast6.gz \

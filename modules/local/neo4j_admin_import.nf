@@ -2,7 +2,7 @@ process NEO4J_ADMIN_IMPORT {
     tag 'Building Neo4j database'
     label 'process_high'
 
-    container 'chasemc2/neo4j:5.1'
+    container 'chasemc2/chasemc2/neo4j:5.1'
 
     input:
     val sg_modules
@@ -35,27 +35,21 @@ process NEO4J_ADMIN_IMPORT {
     def hmm_s_delim = hmmlist ? hmmlist.join(' ') : '""'
     """
 
-    NEO4J_DS_VERSION='2.0.3'
     hey=\$PWD
     #export NEO4J_HOME=\$PWD
     #export NEO4J_CONF='/neo4j-community-5.1.0/conf/neo4j.conf'
 
-    mv ./import/*  /neo4j-community-5.1.0/import/
-    cd /neo4j-community-5.1.0
-
-  #  mkdir data
-  #  mkdir plugins
-  #  mkdir logs
-   # touch import.report
+    mv ./import/*  /var/lib/neo4j/import/
+    cd /var/lib/neo4j
 
     skjdnjkskds.sh
 
     cd \$hey
     mkdir data logs
-    mv /neo4j-community-5.1.0/import/* ./import/
-    mv /neo4j-community-5.1.0/data/* ./data/
-    mv /neo4j-community-5.1.0/logs/* ./logs/
-    mv /neo4j-community-5.1.0/import.report import.report
+    mv /var/lib/neo4j/import/* ./import/
+    mv /var/lib/neo4j/data/* ./data/
+    mv /var/lib/neo4j/logs/* ./logs/
+    mv /var/lib/neo4j/import.report import.report
 
     touch versions.yml
 

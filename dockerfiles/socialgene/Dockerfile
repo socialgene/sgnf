@@ -32,7 +32,6 @@ COPY --from=micromamba /usr/local/bin/_dockerfile_setup_root_prefix.sh /usr/loca
 RUN /usr/local/bin/_dockerfile_initialize_user_accounts.sh && \
     /usr/local/bin/_dockerfile_setup_root_prefix.sh
 
-
 COPY environment.yaml /tmp/env.yaml
 RUN ./bin/micromamba create --name socialgene_nf && \
     ./bin/micromamba install --yes --file /tmp/env.yaml && \
@@ -41,15 +40,3 @@ RUN ./bin/micromamba create --name socialgene_nf && \
 ARG MAMBA_DOCKERFILE_ACTIVATE=1  # (otherwise python will not be found)
 
 ENV PATH="/opt/conda/envs/socialgene_nf/bin:$PATH:/opt/conda/condabin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/var/lib/neo4j/bin/neo4j-admin"
-
-RUN wget -q https://neo4j.com/artifact.php?name=neo4j-community-5.1.0-unix.tar.gz -O neo4j-community-5.1.0-unix.tar.gz
-RUN tar -xf neo4j-community-5.1.0-unix.tar.gz && rm  neo4j-community-5.1.0-unix.tar.gz
-RUN touch neo4j-community-5.1.0/import.report
-# RUN rm -rf neo4j-community-5.1.0/data neo4j-community-5.1.0/import neo4j-community-5.1.0/plugins neo4j-community-5.1.0/logs
-RUN chmod -R 777 /neo4j-community-5.1.0
-
-RUN touch /root/.bashrc \
-    && ./bin/micromamba shell init -s bash -p /opt/conda  \
-    && grep -v '[ -z "\$PS1" ] && return' /root/.bashrc  > /opt/conda/bashrc   # this line has been modified
-
-USER $MAMBA_USER

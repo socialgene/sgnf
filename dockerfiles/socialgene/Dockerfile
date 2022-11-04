@@ -39,4 +39,22 @@ RUN ./bin/micromamba create --name socialgene_nf && \
 
 ARG MAMBA_DOCKERFILE_ACTIVATE=1  # (otherwise python will not be found)
 
-ENV PATH="/opt/conda/envs/socialgene_nf/bin:$PATH:/opt/conda/condabin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/var/lib/neo4j/bin/neo4j-admin"
+### Add Neo4j, remove then re-add the needed directories/files to avoid any potential permission issues
+RUN wget -q https://neo4j.com/artifact.php?name=neo4j-community-5.1.0-unix.tar.gz -O neo4j-community-5.1.0-unix.tar.gz \
+    && tar -xf neo4j-community-5.1.0-unix.tar.gz  \
+    && rm neo4j-community-5.1.0-unix.tar.gz \
+    && mv ./neo4j-community-5.1.0 /home/neo4j-community-5.1.0 \
+    && mv /home/neo4j-community-5.1.0 home/neo4j \
+    && rm -r /home/neo4j/data /home/neo4j/logs /home/neo4j/import \
+    && mkdir -p /home/neo4j/data /home/neo4j/logs /home/neo4j/import \
+    && touch /home/neo4j/import.report \
+    && chmod -R 777 /home/neo4j/data /home/neo4j/logs /home/neo4j/import /home/neo4j/import.report
+
+
+RUN touch /root/.bashrc \
+    && ./bin/micromamba shell init -s bash -p /opt/conda  \
+    && grep -v '[ -z "\$PS1" ] && return' /root/.bashrc  > /opt/conda/bashrc   # this line has been modified
+
+USER $MAMBA_USER
+
+ENV PATH="/opt/conda/envs/socialgene_nf/bin:$PATH:/opt/conda/condabin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/neo4j/bin"

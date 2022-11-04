@@ -39,19 +39,23 @@ process NEO4J_ADMIN_IMPORT {
     #export NEO4J_HOME=\$PWD
     #export NEO4J_CONF='/neo4j-community-5.1.0/conf/neo4j.conf'
 
-    mv ./import/*  /var/lib/neo4j/import/
-    cd /var/lib/neo4j
+    mv ./import/*  /home/neo4j/import/
+    cd /home/neo4j
 
     skjdnjkskds.sh
 
     cd \$hey
     mkdir data logs
-    mv /var/lib/neo4j/import/* ./import/
-    mv /var/lib/neo4j/data/* ./data/
-    mv /var/lib/neo4j/logs/* ./logs/
-    mv /var/lib/neo4j/import.report import.report
+    mv /home/neo4j/import/* ./import/
+    mv /home/neo4j/data/* ./data/
+    mv /home/neo4j/logs/* ./logs/
+    cp /home/neo4j/import.report ./import.report
 
-    touch versions.yml
-
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        python: \$(python --version 2>&1 | tail -n 1 | sed 's/^Python //')
+        socialgene: \$(sg_version)
+        neo4j: \$(neo4j-admin --version)
+    END_VERSIONS
     """
 }

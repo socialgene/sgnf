@@ -66,7 +66,7 @@ include { ANTISMASH                     } from '../modules/local/antismash/main'
 available_hmms=["antismash","amrfinder","bigslice","classiphage","pfam","prism","resfams","tigrfam","virus_orthologous_groups"]
 
 workflow SOCIALGENE {
-
+println "Manifest's pipeline version: $workflow.profile"
     ch_versions = Channel.empty()
 
     def hmmlist = []

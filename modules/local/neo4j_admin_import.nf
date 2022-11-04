@@ -2,8 +2,6 @@ process NEO4J_ADMIN_IMPORT {
     tag 'Building Neo4j database'
     label 'process_high'
 
-    container 'chasemc2/chasemc2/neo4j:5.1'
-
     input:
     val sg_modules
     val hmmlist
@@ -19,30 +17,44 @@ process NEO4J_ADMIN_IMPORT {
     path "import/protein_info/*"
 
     output:
-    path 'data/*'           , emit: data
-    path 'logs/*'           , emit: logs
-    path 'import.report'    , emit: import_report
-    path "versions.yml"     , emit: versions
-
+    path 'data/*'                               , emit: data
+    path 'logs/*'                               , emit: logs
+    path 'import.report'                        , emit: import_report
+    path "versions.yml"                         , emit: versions
+    path "command_to_build_neo4j_database.sh"   , emit: command_to_build_neo4j_database
 
     when:
     task.ext.when == null || task.ext.when
-
-
 
     script:
     def sg_modules_delim = sg_modules ? sg_modules.join(' ') : '""'
     def hmm_s_delim = hmmlist ? hmmlist.join(' ') : '""'
     """
-
     hey=\$PWD
-    #export NEO4J_HOME=\$PWD
-    #export NEO4J_CONF='/neo4j-community-5.1.0/conf/neo4j.conf'
 
     mv ./import/*  /home/neo4j/import/
     cd /home/neo4j
 
-    skjdnjkskds.sh
+    sg_create_neo4j_db \\
+    --neo4j_top_dir . \\
+    --cpus ${task.cpus} \\
+    --additional_args "" \\
+    --uid None \\
+    --gid None \\
+    --sg_modules ${sg_modules_delim} \\
+    --hmmlist ${hmm_s_delim} \\
+    --dryrun true \\
+    --dryrun_filepath "\${hey}/command_to_build_neo4j_database.sh"
+
+    sg_create_neo4j_db \\
+    --neo4j_top_dir . \\
+    --cpus ${task.cpus} \\
+    --additional_args "" \\
+    --uid None \\
+    --gid None \\
+    --sg_modules ${sg_modules_delim} \\
+    --hmmlist ${hmm_s_delim}
+
 
     cd \$hey
     mkdir data logs

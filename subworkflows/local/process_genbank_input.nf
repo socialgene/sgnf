@@ -9,6 +9,7 @@ workflow PROCESS_GENBANK {
     main:
         ch_versions = Channel.empty()
         gbk_file_ch= Channel.empty()
+        genome_info_ch= Channel.empty()
 
         if (params.mibig){
             MIBIG_DOWNLOAD()
@@ -42,20 +43,24 @@ workflow PROCESS_GENBANK {
         }
 
 
-
-
         PROCESS_GENBANK_FILES(
                 gbk_file_ch.flatten().toSortedList().flatten().buffer( size: 500, remainder: true ),
                 )
 
-       PROCESS_GENBANK_FILES.out.fasta.set{ch_fasta_out}
+        PROCESS_GENBANK_FILES.out.fasta.set{ch_fasta_out}
 
-       ch_versions = ch_versions.mix(PROCESS_GENBANK_FILES.out.versions)
+        ch_versions = ch_versions.mix(PROCESS_GENBANK_FILES.out.versions)
+
+
+        PROCESS_GENBANK_FILES.out.genomic_info.set{genome_info}
+        PROCESS_GENBANK_FILES.out.protein_info.set{protein_info}
 
 
     emit:
-        gbk         = gbk_file_ch.flatten().toSortedList().flatten()
-        fasta       = ch_fasta_out
-        versions    = ch_versions
+        genome_info     = genome_info
+        protein_info    = protein_info
+        gbk             = gbk_file_ch.flatten().toSortedList().flatten()
+        fasta           = ch_fasta_out
+        versions        = ch_versions
 }
 

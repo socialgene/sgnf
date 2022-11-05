@@ -22,7 +22,7 @@ process PROCESS_GENBANK_FILES {
     path "*.assemblies.gz"          , emit: assembly
     path "*.faa.gz"                 , emit: fasta
     path "versions.yml"             , emit: versions
-
+    tuple path("*.locus_to_protein.gz"), path("*.assembly_to_locus.gz"), path("*.assembly_to_taxid.gz"), path("*.loci.gz"), path("*.assemblies.gz") , emit: genomic_info
 
     when:
     task.ext.when == null || task.ext.when

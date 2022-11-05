@@ -21,7 +21,9 @@ workflow NCBI_TAXONOMY {
         ch_versions = ch_versions.mix(TAXDUMP_PROCESS.out.versions)
 
     emit:
-        versions = ch_versions
+        nodes_taxid     = TAXDUMP_PROCESS.out.nodes_taxid
+        taxid_to_taxid  = TAXDUMP_PROCESS.out.taxid_to_taxid
+        versions        = ch_versions
 
 
 }

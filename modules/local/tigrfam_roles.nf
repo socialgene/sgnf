@@ -3,13 +3,12 @@ process TIGRFAM_ROLES {
     label 'process_single'
 
     output:
-    path "*.tigrfamrole_to_mainrole.gz", emit: tigrfamrole_to_mainrole
-    path "*.tigrfamrole_to_subrole.gz", emit: tigrfamrole_to_subrole
-    path "*.tigrfam_mainrole.gz", emit: tigrfam_mainrole
-    path "*.tigrfam_subrole.gz", emit: tigrfam_subrole
-    path "*.tigrfam_role.gz", emit: tigrfam_role
-    path "versions.yml" , emit: versions
-
+    path "*.tigrfamrole_to_mainrole.gz" , emit: tigrfamrole_to_mainrole
+    path "*.tigrfamrole_to_subrole.gz"  , emit: tigrfamrole_to_subrole
+    path "*.tigrfam_mainrole.gz"        , emit: tigrfam_mainrole
+    path "*.tigrfam_subrole.gz"         , emit: tigrfam_subrole
+    path "*.tigrfam_role.gz"            , emit: tigrfam_role
+    path "versions.yml"                 , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

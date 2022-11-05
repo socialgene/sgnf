@@ -24,6 +24,7 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 
 include { MMSEQS2_EASYCLUSTER               } from '../modules/local/mmseqs2_easycluster'
 include { NEO4J_ADMIN_IMPORT                } from '../modules/local/neo4j_admin_import'
+include { NEO4J_ADMIN_IMPORT_DRYRUN         } from '../modules/local/neo4j_admin_import_dryrun'
 include { NEO4J_HEADERS                     } from '../modules/local/neo4j_headers'
 include { PARAMETER_EXPORT_FOR_NEO4J        } from '../modules/local/parameter_export_for_neo4j'
 include { SEQKIT_SORT                       } from '../modules/local/seqkit/sort/main'
@@ -267,6 +268,11 @@ println "Manifest's pipeline version: $workflow.profile"
     */
     // collected_version_files ensures everythin was run first
     collected_version_files = ch_versions.collectFile(name: 'temp.yml', newLine: true)
+
+    NEO4J_ADMIN_IMPORT_DRYRUN(
+            sg_modules,
+            hmmlist
+        )
 
     if (run_build_database) {
         NEO4J_ADMIN_IMPORT(

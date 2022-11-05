@@ -28,4 +28,4 @@ dependencies:
   - conda-forge::gzip >=1.12
   - openjdk
   - pip:
-      - git+https://github.com/socialgene/sgpy.git@5c96b4d99ca4d42fa45d325f2614c8e025fe1920
+      - git+https://github.com/socialgene/sgpy.git@6086310d5677db40bbede20d119c683154978947

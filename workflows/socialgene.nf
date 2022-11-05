@@ -87,9 +87,6 @@ println "Manifest's pipeline version: $workflow.profile"
         hmmlist.addAll(["local"])
     }
 
-
-    println hmmlist
-
     run_blastp = params.htcondor ? false : params.blastp
     run_mmseqs2 = params.htcondor ? false : params.mmseqs2
     run_ncbi_taxonomy = params.htcondor ? false : params.ncbi_taxonomy

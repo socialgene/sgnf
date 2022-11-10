@@ -13,10 +13,10 @@ process ANTISMASH {
     path(sequence_input)
 
     output:
-    path("${prefix}/*.gbk.gz")         , emit: gbk_input, optional:true
-    path("${prefix}/*region*.gbk.gz")  , emit: gbk_results, optional:true
-    path("${prefix}/regions.js.gz")    , emit: json_sideloading, optional:true
-    path "versions.yml"             , emit: versions
+    path("${prefix}_regions.gbk.gz")    , emit: regions_gbk, optional:true
+    path("${prefix}_regions.js.gz")     , emit: regions_json, optional:true
+    path("${prefix}.tgz")               , emit: all, optional:true
+    path "versions.yml"                 , emit: versions
 
 
     when:
@@ -46,7 +46,12 @@ process ANTISMASH {
         --logfile $prefix/${prefix}.log \\
         $sequence_input
 
-    gzip "${prefix}/*.gbk" "${prefix}/*region*.gbk" "${prefix}/regions.js"
+    find ${prefix} -name "*region*gbk"  -exec gzip --stdout {} +  > ${prefix}_regions.gbk.gz
+
+    gzip --stdout "${prefix}/regions.js" > "${prefix}_regions.js.gz"
+
+    tar -C ${prefix} -cf - . | gzip --rsyncable > ${prefix}.tgz
+    rm -r ${prefix}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

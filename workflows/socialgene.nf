@@ -21,7 +21,8 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
     IMPORT LOCAL MODULES
 ========================================================================================
 */
-
+include { ANTISMASH                         } from '../modules/local/antismash/main'
+include { ANTISMASH_GBK_TO_TABLE            } from '../modules/local/antismash/antismash_gbk_to_table'
 include { MMSEQS2_EASYCLUSTER               } from '../modules/local/mmseqs2_easycluster'
 include { NEO4J_ADMIN_IMPORT                } from '../modules/local/neo4j_admin_import'
 include { NEO4J_ADMIN_IMPORT_DRYRUN         } from '../modules/local/neo4j_admin_import_dryrun'
@@ -55,7 +56,6 @@ include { HMM_PREP                  } from '../subworkflows/local/hmm_prep'
 include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 include { DIAMOND_BLASTP                } from '../modules/local/diamond/blastp/main'
 include { DIAMOND_MAKEDB                } from '../modules/local/diamond/makedb/main'
-include { ANTISMASH                     } from '../modules/local/antismash/main'
 
 
 /*
@@ -91,6 +91,7 @@ println "Manifest's pipeline version: $workflow.profile"
     run_mmseqs2 = params.htcondor ? false : params.mmseqs2
     run_ncbi_taxonomy = params.htcondor ? false : params.ncbi_taxonomy
     run_build_database = params.htcondor ? false : params.build_database
+    run_antismash = params.htcondor ? false : params.antismash
 
     SG_MODULES(hmmlist)
 
@@ -105,16 +106,11 @@ println "Manifest's pipeline version: $workflow.profile"
     ////////////////////////
     */
 
-    if (!params.sgnr_fasta){
 
         GENOME_HANDLING()
         GENOME_HANDLING.out.ch_fasta.set{ch_fasta}
         ch_versions = ch_versions.mix(GENOME_HANDLING.out.ch_versions)
 
-
-        if (params.antismash){
-            ANTISMASH(GENOME_HANDLING.out.ch_gbk)
-        }
 
         GENOME_HANDLING.out.ch_fasta.flatten().collectFile(name:'collected_fasta.faa.gz').set{ collected_fasta}
         SEQKIT_RMDUP(collected_fasta)
@@ -132,9 +128,6 @@ println "Manifest's pipeline version: $workflow.profile"
         } else {
             single_ch_fasta = ch_nr_fasta
         }
-    } else {
-        single_ch_fasta = Channel.fromPath( params.sgnr_fasta)
-    }
 
     /*
     ////////////////////////
@@ -143,9 +136,7 @@ println "Manifest's pipeline version: $workflow.profile"
     */
     if (params.hmmlist || params.custom_hmm_file){
 
-        if (params.domtblout_path){
-            domtblout_ch = Channel.fromPath(params.domtblout_path)
-        } else {
+
             if (params.fasta_splits > 1){
                 SEQKIT_SPLIT(
                     single_ch_fasta,
@@ -169,6 +160,10 @@ println "Manifest's pipeline version: $workflow.profile"
                 HTCONDOR_PREP(all_split_hmms, all_split_fasta)
                 ch_versions = ch_versions.mix(HTCONDOR_PREP.out.versions)
                 domtblout_ch = false
+            } else if (params.domtblout_path){
+                domtblout_ch = Channel.fromPath(params.domtblout_path)
+
+
             } else {
                 // create a channel that's the cartesian product of all hmm files and all fasta files
                 HMM_PREP.out.hmms
@@ -180,11 +175,15 @@ println "Manifest's pipeline version: $workflow.profile"
                     .set{ mixed_hmm_fasta_ch }
                 HMMER_HMMSEARCH(mixed_hmm_fasta_ch)
                 ch_versions = ch_versions.mix(HMMER_HMMSEARCH.out.versions.last())
+
                 domtblout_ch = HMMER_HMMSEARCH.out.domtblout
+
             }
-        }
+
+
+
         if (domtblout_ch){
-            HMMSEARCH_PARSE(domtblout_ch)
+            HMMSEARCH_PARSE(domtblout_ch.buffer( size: 50, remainder: true ))
             hmmer_result_ch = HMMSEARCH_PARSE.out.parseddomtblout.collect()
             ch_versions = ch_versions.mix(HMMSEARCH_PARSE.out.versions.last())
         }
@@ -203,6 +202,15 @@ println "Manifest's pipeline version: $workflow.profile"
         hmmer_result_ch = file("${baseDir}/assets/EMPTY_FILE")
     }
 
+    /*
+    ////////////////////////
+    ANTISMASH
+    ////////////////////////
+    */
+    if (run_antismash){
+        ANTISMASH(GENOME_HANDLING.out.ch_gbk)
+        ANTISMASH_GBK_TO_TABLE(ANTISMASH.out.regions_gbk.collect())
+    }
     /*
     ////////////////////////
     BLASTP
@@ -270,21 +278,21 @@ println "Manifest's pipeline version: $workflow.profile"
             sg_modules,
             hmmlist
         )
-
+    // all the '.collect()'s were added to ensure a cardinality of 1 for all inputs to database build
     if (run_build_database) {
         NEO4J_ADMIN_IMPORT(
-            sg_modules,
-            hmmlist,
-            neo4j_header_ch,
-            taxdump_ch,
-            hmm_tsv_parse_ch,
-            blast_ch,
-            mmseqs2_ch,
-            hmmer_result_ch,
-            tigrfam_ch,
-            parameters_ch,
-            GENOME_HANDLING.out.ch_genome_info,
-            GENOME_HANDLING.out.ch_protein_info
+            sg_modules.collect(),
+            hmmlist.collect(),
+            neo4j_header_ch.collect(),
+            taxdump_ch.collect(),
+            hmm_tsv_parse_ch.collect(),
+            blast_ch.collect(),
+            mmseqs2_ch.collect(),
+            hmmer_result_ch.collect(),
+            tigrfam_ch.collect(),
+            parameters_ch.collect(),
+            GENOME_HANDLING.out.ch_genome_info.collect(),
+            GENOME_HANDLING.out.ch_protein_info.collect()
         )
 
         ch_versions = ch_versions.mix(NEO4J_ADMIN_IMPORT.out.versions)

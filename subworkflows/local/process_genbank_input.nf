@@ -44,7 +44,7 @@ workflow PROCESS_GENBANK {
 
 
         PROCESS_GENBANK_FILES(
-                gbk_file_ch.flatten().toSortedList().flatten().buffer( size: 500, remainder: true ),
+                gbk_file_ch.flatten().toSortedList().flatten().buffer( size: 100, remainder: true ),
                 )
 
         PROCESS_GENBANK_FILES.out.fasta.set{ch_fasta_out}

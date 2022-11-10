@@ -20,7 +20,7 @@ workflow GATHER_HMMS {
 
         if (hmmlist){
             if (hmmlist.contains("prism")){
-                println "You have chosen to annotate proteins with Prism. Prism HMM database/models cannot be redistributed "
+                println '\033[0;34m You have chosen to annotate proteins with Prism. You cannot redistribute these HMM database/models.\033[0m'
             }
 
             hmm_map = [

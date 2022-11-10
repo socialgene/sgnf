@@ -37,7 +37,7 @@ workflow GENOME_HANDLING {
             input_fasta_ch = Channel.fromPath(params.local_fasta)
             PROCESS_FASTA_INPUT(input_fasta_ch)
             fasta_fasta_ch = PROCESS_FASTA_INPUT.out.fasta
-            fasta_protein_info_ch.mix(PROCESS_FASTA_INPUT.out.protein_info)
+            fasta_protein_info_ch = PROCESS_FASTA_INPUT.out.protein_info
 
         } else {
             fasta_fasta_ch = Channel.empty()

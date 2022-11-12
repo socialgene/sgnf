@@ -17,7 +17,8 @@ process ANTISMASH_GBK_TO_TABLE {
     """
     antismash_gbk_to_table \
      --input '*regions.gbk.gz' \
-     --output antismash_gbk_to_table.tsv
+     --output antismash_gbk_to_table.tsv \
+     --header
 
     gzip -6 --rsyncable antismash_gbk_to_table.tsv
 

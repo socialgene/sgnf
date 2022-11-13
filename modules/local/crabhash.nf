@@ -3,11 +3,11 @@ process CRABHASH {
     label 'process_high'
     label 'process_high_memory'
 
+    stageInMode 'copy'
+    container 'chasemc2/crabhash:0.1.0'
 
     input:
-    path x
-    path crabhash_path
-    val glob
+    path 'file??.fasta.gz'
 
     output:
     path "*.faa.gz"          , emit: fasta
@@ -22,8 +22,8 @@ process CRABHASH {
     """
     RUST_BACKTRACE=1
     mkdir out
-    ${crabhash_path}/crabhash \\
-        '${glob}' \\
+    crabhash \\
+        '*.fasta.gz' \\
         'out' \\
         ${task.cpus}
 

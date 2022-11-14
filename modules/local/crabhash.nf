@@ -3,7 +3,6 @@ process CRABHASH {
     label 'process_high'
     label 'process_high_memory'
 
-    stageInMode 'copy'
     container 'chasemc2/crabhash:0.1.0'
 
     input:

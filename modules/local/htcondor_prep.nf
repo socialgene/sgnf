@@ -1,14 +1,21 @@
 
 process HTCONDOR_PREP {
     label 'process_single'
-    stageInMode 'copy'
+
 
     input:
     path "??.hmm.gz"
     path "??.faa.gz"
 
     output:
-    path "*"
+    path "hmm.tar"
+    path "fasta.tar"
+    path "submit_server_setup.sh"
+    path "chtc_submission_file.sub"
+    path "instructions.txt"
+    path "sample_matrix.csv"
+    path "hmmsearch.sh"
+    path "submit_server_finish.sh"
     path "versions.yml" , emit: versions
 
     when:
@@ -16,12 +23,8 @@ process HTCONDOR_PREP {
 
     script:
     """
-    find . -name '*hmm.gz' -print0 | tar -cvf hmm.tar --null --files-from -
-    find . -name '*hmm.gz' -type f -delete
-
-    find . -name '*faa.gz' -print0 | tar -cvf fasta.tar --null --files-from -
-    find . -name '*faa.gz' -type f -delete
-
+    find . -name '*hmm.gz' -print0 | tar -chvf hmm.tar --null --files-from -
+    find . -name '*faa.gz' -print0 | tar -chvf fasta.tar --null --files-from -
 
     # export env variables which the socialgene python library will read
     export HMMSEARCH_Z=${params.HMMSEARCH_Z}

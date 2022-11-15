@@ -32,11 +32,11 @@ workflow PROCESS_FASTA_INPUT {
         // }
 
 
-    SEQKIT_SPLIT(fasta_paths, crabhash_cpus)
-    SEQKIT_SPLIT.out.fasta
-        .collect()
-        .set{fasta_collected_ch}
-    CRABHASH(fasta_collected_ch)
+    // SEQKIT_SPLIT(fasta_paths, crabhash_cpus)
+    // SEQKIT_SPLIT.out.fasta
+    //     .collect()
+    //     .set{fasta_collected_ch}
+    CRABHASH(fasta_paths)
 
 
     emit:

@@ -23,7 +23,7 @@ process SEQKIT_SPLIT {
         $args \\
         -j ${task.cpus} \\
         ${fasta} \\
-        -p ${nsplits} \\
+        -s 40,000 \\
         --extension '.gz' \\
         -O outfolder
 

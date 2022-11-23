@@ -8,7 +8,7 @@ channels:
 dependencies:
   - conda-forge::python>=3.10
   - bioconda::hmmer>=3.3.2
-  - bioconda::seqkit>=2.3.0
+  - bioconda::seqkit==2.3.0
   - hcc::aspera-cli
   - bioconda::entrez-direct
   - bioconda::mmseqs2==13.45111
@@ -17,6 +17,8 @@ dependencies:
   - conda-forge::pigz>=2.6
   - conda-forge::biopython>=1.79
   - bioconda::ncbi-genome-download>=0.3.1
+  - bioconda::tabix=1.11
+  - bioconda::samtools=1.16.1
   - conda-forge::sqlite>=3
   - git
   - pip
@@ -28,5 +30,5 @@ dependencies:
   - conda-forge::gzip >=1.12
   - openjdk
   - pip:
-      - git+https://github.com/socialgene/sgpy.git@6086310d5677db40bbede20d119c683154978947
+      - git+https://github.com/socialgene/sgpy.git@315e72807deb6c41beac57de67cfd64ca7f37efa
       - git+https://github.com/socialgene/antismash_gbk_to_table.git@e8d8b9f83eae0305550cd3b32e53c2a11f32c69e

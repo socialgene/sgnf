@@ -19,6 +19,7 @@ process NEO4J_ADMIN_IMPORT {
     output:
     path 'data/*'                               , emit: data
     path 'logs/*'                               , emit: logs
+    path 'plugins/*'                            , emit: plugins
     path 'import.report'                        , emit: import_report
     path "versions.yml"                         , emit: versions
     path "command_to_build_neo4j_database.sh"   , emit: command_to_build_neo4j_database
@@ -62,6 +63,8 @@ process NEO4J_ADMIN_IMPORT {
     mv /home/neo4j/data/* ./data/
     mv /home/neo4j/logs/* ./logs/
     cp /home/neo4j/import.report ./import.report
+    mkdir plugins
+    touch ./plugins/emptyfile
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -1,6 +1,6 @@
 process SEQKIT_SPLIT {
     label 'process_high_memory'
-    
+
     conda (params.enable_conda ? 'bioconda::seqkit=2.3.0' : null)
 
     input:
@@ -23,7 +23,7 @@ process SEQKIT_SPLIT {
         $args \\
         -j ${task.cpus} \\
         ${fasta} \\
-        -s 40,000 \\
+        -p ${nsplits} \\
         --extension '.gz' \\
         -O outfolder
 

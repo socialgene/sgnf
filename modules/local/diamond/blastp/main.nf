@@ -20,6 +20,7 @@ process DIAMOND_BLASTP {
 
     script:
     def args = task.ext.args ?: ''
+    def args2 = task.ext.args2 ?: ''
     """
     DB=`find -L ./ -name "*.dmnd" | sed 's/.dmnd//'`
 
@@ -30,7 +31,7 @@ process DIAMOND_BLASTP {
         --db \$DB \\
         --query $fasta \\
         --outfmt 6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qcovhsp \\
-        $args \\
+        $args $args2 \\
         --compress 1 \\
         --out blastp_all_vs_all.blast6.txt.gz
 

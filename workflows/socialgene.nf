@@ -29,11 +29,12 @@ include { NEO4J_ADMIN_IMPORT_DRYRUN         } from '../modules/local/neo4j_admin
 include { NEO4J_HEADERS                     } from '../modules/local/neo4j_headers'
 include { PARAMETER_EXPORT_FOR_NEO4J        } from '../modules/local/parameter_export_for_neo4j'
 include { SEQKIT_SORT                       } from '../modules/local/seqkit/sort/main'
-include { SEQKIT_RMDUP                      } from '../modules/local/seqkit/rmdup/main.nf'
+include { DEDUP_AND_INDEX                   } from '../modules/local/dedup_and_index'
 include { SEQKIT_SPLIT                      } from '../modules/local/seqkit/split/main'
 include { HTCONDOR_PREP                     } from '../modules/local/htcondor_prep'
 include { HMMER_HMMSEARCH                   } from '../modules/local/hmmsearch'
 include { HMMSEARCH_PARSE                   } from '../modules/local/hmmsearch_parse'
+include { INDEX_FASTA                       } from '../modules/local/index_fasta'
 
 /*
 ========================================================================================
@@ -113,10 +114,10 @@ println "Manifest's pipeline version: $workflow.profile"
 
 
         GENOME_HANDLING.out.ch_fasta.flatten().collectFile(name:'collected_fasta.faa.gz').set{ collected_fasta}
-        SEQKIT_RMDUP(collected_fasta)
-        SEQKIT_RMDUP.out
-                .fasta
-                .set{ch_nr_fasta}
+        DEDUP_AND_INDEX(collected_fasta)
+        DEDUP_AND_INDEX.out
+            .fasta
+            .set{ch_nr_fasta}
 
         if (params.sort_fasta) {
             // If testing, sort the FASTA file to get consistent output, otherwise skip
@@ -138,15 +139,18 @@ println "Manifest's pipeline version: $workflow.profile"
 
 
             if (params.fasta_splits > 1){
-                SEQKIT_SPLIT(
-                    single_ch_fasta,
-                    params.fasta_splits
-                    )
-                SEQKIT_SPLIT
-                    .out
-                    .fasta
-                    .flatten()
-                    .set{ch_split_fasta}
+                 SEQKIT_SPLIT(
+                     single_ch_fasta,
+                     params.fasta_splits
+                     )
+                 SEQKIT_SPLIT
+                     .out
+                     .fasta
+                     .flatten()
+                     .set{ch_split_fasta}
+
+//            ch_split_fasta = single_ch_fasta.splitFasta(size:'15.MB', file:true, compress:true, decompress:true)
+
             } else {
                 ch_split_fasta = single_ch_fasta
             }
@@ -297,6 +301,9 @@ println "Manifest's pipeline version: $workflow.profile"
 
         ch_versions = ch_versions.mix(NEO4J_ADMIN_IMPORT.out.versions)
     }
+
+
+
 
 
     /*

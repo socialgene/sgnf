@@ -43,7 +43,7 @@ docker run --interactive --rm \
                 --relationships=SOURCE_DB=import/neo4j_headers/bigslice_hmms_out_relationships.header,import/hmm_tsv_parse/.*\.bigslice_hmms_out \
                 --relationships=ANNOTATES=import/neo4j_headers/protein_to_hmm_header.tsv,import/parsed_domtblout/.*\.parseddomtblout* \
                 --relationships=ASSEMBLES_TO=import/neo4j_headers/assembly_to_locus.header,import/process_genbank/.*\.assembly_to_locus \
-                --relationships=CONTAINS=import/neo4j_headers/locus_to_protein.header,import/process_genbank/.*\.locus_to_protein \
+                --relationships=ENCODES=import/neo4j_headers/locus_to_protein.header,import/process_genbank/.*\.locus_to_protein \
                 --relationships=GO_ANN=import/neo4j_headers/tigrfam_to_go.header,import/tigrfam_info/.*\.tigrfam_to_go \
                 --relationships=ROLE_ANN=import/neo4j_headers/tigrfam_to_role.header,import/tigrfam_info/.*\.tigrfam_to_role \
                 --relationships=MAINROLE_ANN=import/neo4j_headers/tigrfamrole_to_mainrole.header,import/tigrfam_info/.*\.tigrfamrole_to_mainrole \

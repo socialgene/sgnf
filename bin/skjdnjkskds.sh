@@ -6,7 +6,7 @@ database import full \
 --relationships=ANNOTATES=import/neo4j_headers/protein_to_hmm_header.header,import/parsed_domtblout/.*\.parseddomtblout.gz \
 --nodes=nucleotide=import/neo4j_headers/locus.header,import/genomic_info/.*\.loci.gz \
 --relationships=MMSEQS2=import/neo4j_headers/mmseqs2.header,import/mmseqs2_easycluster/.*\.mmseqs2_results_cluster.tsv.gz \
---relationships=CONTAINS=import/neo4j_headers/locus_to_protein.header,import/genomic_info/.*\.locus_to_protein.gz \
+--relationships=ENCODES=import/neo4j_headers/locus_to_protein.header,import/genomic_info/.*\.locus_to_protein.gz \
 --nodes=hmm=import/neo4j_headers/sg_hmm_nodes_out.header,import/hmm_tsv_parse/.*\.sg_hmm_nodes_out.gz \
 --relationships=ASSEMBLES_TO=import/neo4j_headers/assembly_to_locus.header,import/genomic_info/.*\.assembly_to_locus.gz \
 --relationships=SOURCE_DB=import/neo4j_headers/antismash_hmms_out_relationships.header,import/hmm_tsv_parse/.*\.antismash_hmms_out.gz \

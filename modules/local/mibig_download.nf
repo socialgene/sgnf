@@ -12,13 +12,13 @@ process MIBIG_DOWNLOAD {
     script:
     """
 
-    curl -s https://dl.secondarymetabolites.org/mibig/mibig_gbk_3.0.tar.gz > mibig_gbk_3.0.tar.gz
+    curl -s https://dl.secondarymetabolites.org/mibig/mibig_gbk_3.1.tar.gz > mibig_gbk_3.1.tar.gz
     tar -xvf mibig_gbk_3.0.tar.gz
 
     cat <<-END_VERSIONS > mibig_versions.yml
     "${task.process}":
         version: '3.0'
-        url: 'https://dl.secondarymetabolites.org/mibig/mibig_gbk_3.0.tar.gz'
+        url: 'https://dl.secondarymetabolites.org/mibig/mibig_gbk_3.1.tar.gz'
     END_VERSIONS
     """
 }

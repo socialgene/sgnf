@@ -13,7 +13,7 @@ workflow SG_MODULES {
     // start with an empty sg_modules
     sg_modules = []
 
-    if (params.hmmlist){
+    if (hmmlist){
         sg_modules.add("hmms")
         if (hmmlist.contains("tigrfam")){
             sg_modules.add("tigrfam")

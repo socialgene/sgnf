@@ -18,8 +18,11 @@ workflow GATHER_HMMS {
         ch_versions = Channel.empty()
         ch_hmms = Channel.empty()
 
-        if (hmmlist){
-            if (hmmlist.contains("prism")){
+        // separate local hmm file(s) vs those that need to be downloaded
+        not_local_hmmlist = hmmlist.findAll { it != "local" }
+
+        if (not_local_hmmlist){
+            if (not_local_hmmlist.contains("prism")){
                 println '\033[0;34m You have chosen to annotate proteins with Prism. You cannot redistribute these HMM database/models.\033[0m'
             }
 
@@ -35,7 +38,7 @@ workflow GATHER_HMMS {
                 "virus_orthologous_groups": params.vog_version,
             ]
 
-            Channel.fromList(hmmlist).map{ it -> tuple(it, hmm_map[it]) }.set{hmmlist_ch}
+            Channel.fromList(not_local_hmmlist).map{ it -> tuple(it, hmm_map[it]) }.set{hmmlist_ch}
 
             DOWNLOAD_HMM_DATABASE(hmmlist_ch)
 

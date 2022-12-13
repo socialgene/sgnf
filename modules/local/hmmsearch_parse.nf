@@ -21,6 +21,12 @@ process HMMSEARCH_PARSE {
         md5_as_filename_after_gzip.sh "parseddomtblout" "parseddomtblout.gz"
     done
 
+    # TODO: fix in sgpy
+    # remove empty files which hash to -> 7029066c27ac6f5ef18d660d5741979a.parseddomtblout.gz
+
+    [ ! -e '7029066c27ac6f5ef18d660d5741979a.parseddomtblout.gz' ] || rm '7029066c27ac6f5ef18d660d5741979a.parseddomtblout.gz'
+
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         socialgene: \$(sg_version)

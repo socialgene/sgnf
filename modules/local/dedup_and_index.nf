@@ -1,7 +1,7 @@
 process DEDUP_AND_INDEX {
     label 'process_medium'
 
-    conda (params.enable_conda ? 'bioconda::seqkit=2.3.0' : null)
+  //  conda (params.enable_conda ? 'bioconda::seqkit>=2.3.0 bioconda::samtools>=1.16.1 tabix coreutils' : null)
 
     input:
     path 'file??.gz'

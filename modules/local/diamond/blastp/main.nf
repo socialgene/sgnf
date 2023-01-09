@@ -1,10 +1,10 @@
 process DIAMOND_BLASTP {
     label 'process_high'
 
-    conda (params.enable_conda ? "bioconda::diamond==2.0.15" : null)
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/diamond:2.0.15--hb97b32f_0' :
-        'quay.io/biocontainers/diamond:2.0.15--hb97b32f_0' }"
+    // conda (params.enable_conda ? "bioconda::diamond==2.0.15" : null)
+    // container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+    //     'https://depot.galaxyproject.org/singularity/diamond:2.0.15--hb97b32f_0' :
+    //     'quay.io/biocontainers/diamond:2.0.15--hb97b32f_0' }"
 
     input:
     path(fasta)

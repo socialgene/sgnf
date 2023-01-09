@@ -2,7 +2,8 @@ process CUSTOM_DUMPSOFTWAREVERSIONS {
     label 'process_single'
 
     // Requires `pyyaml` which does not have a dedicated container but is in the MultiQC container
-    conda (params.enable_conda ? 'bioconda::multiqc=1.13a' : null)
+    // note: the pinned conda version failed to build on a 2020 macbook air so was removed
+    conda (params.enable_conda ? 'conda-forge::python>=3.10 bioconda::multiqc' : null)
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/multiqc:1.13a--pyhdfd78af_1' :
         'quay.io/biocontainers/multiqc:1.13a--pyhdfd78af_1' }"

@@ -15,7 +15,6 @@ process MMSEQS2_EASYCLUSTER {
     path('*.mmseqs2_results_rep_seq.fasta.gz')    , emit: clusterres_rep_seq
     path "versions.yml" , emit: versions
 
-
     when:
     task.ext.when == null || task.ext.when
 

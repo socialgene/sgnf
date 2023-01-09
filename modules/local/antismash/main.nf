@@ -4,7 +4,7 @@ process ANTISMASH {
     errorStrategy 'ignore'
 
     println '\033[0;34m The first time antismash is run it may take some time to download/build the conda environment or docker image. Keep calm, don\'t panic, it may look like nothing is happening.\033[0m'
-    conda (params.enable_conda ? "bioconda::antismash==6.1.1" : null)
+    conda (params.enable_conda ? "dockerfiles/antismash/environment.yml" : null) 
     container 'chasemc2/antismash_nf:6.1.1'
 
     input:

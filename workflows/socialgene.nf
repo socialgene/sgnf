@@ -278,12 +278,15 @@ println "Manifest's pipeline version: $workflow.profile"
     // collected_version_files ensures everythin was run first
     collected_version_files = ch_versions.collectFile(name: 'temp.yml', newLine: true)
 
-    NEO4J_ADMIN_IMPORT_DRYRUN(
-            sg_modules,
-            hmmlist
-        )
     // all the '.collect()'s were added to ensure a cardinality of 1 for all inputs to database build
+  
+    NEO4J_ADMIN_IMPORT_DRYRUN(
+        sg_modules,
+        hmmlist
+    )
+    
     if (run_build_database) {
+        
         NEO4J_ADMIN_IMPORT(
             sg_modules.collect(),
             hmmlist.collect(),
@@ -301,10 +304,6 @@ println "Manifest's pipeline version: $workflow.profile"
 
         ch_versions = ch_versions.mix(NEO4J_ADMIN_IMPORT.out.versions)
     }
-
-
-
-
 
     /*
     ////////////////////////

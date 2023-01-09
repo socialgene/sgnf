@@ -7,28 +7,29 @@ channels:
 
 dependencies:
   - conda-forge::python>=3.10
-  - bioconda::hmmer>=3.3.2
-  - bioconda::seqkit==2.3.0
+  - conda-forge::pip
+  - conda-forge::biopython>=1.79
+  - conda-forge::numpy
+  - bioconda::seqkit>=2.3.0
   - hcc::aspera-cli
   - bioconda::entrez-direct
-  - bioconda::mmseqs2==13.45111
+  - bioconda::hmmer>=3.3.2
+  - bioconda::mmseqs2>=13.45111
   - bioconda::diamond>=2.0.15
   - conda-forge::ncbi-datasets-cli>=13.28
-  - conda-forge::pigz>=2.6
-  - conda-forge::biopython>=1.79
   - bioconda::ncbi-genome-download>=0.3.1
-  - bioconda::tabix=1.11
-  - bioconda::samtools=1.16.1
-  - conda-forge::sqlite>=3
-  - git
-  - pip
-  - rsync
-  - numpy
-  - wget
-  - grep
-  - conda-forge::pigz==2.6
+  - bioconda::tabix>=1.11
+  - bioconda::samtools>=1.16.1
+  - conda-forge::coreutils
+  - conda-forge::sed
+  - conda-forge::rsync
+  - conda-forge::wget
+  - bioconda::grep
+  - conda-forge::git
+  - conda-forge::pigz>=2.6
   - conda-forge::gzip >=1.12
-  - openjdk
+  - conda-forge::openjdk
   - pip:
-      - git+https://github.com/socialgene/sgpy.git@361f2ff1602c277865bedb9b301cc5b9557e7d39
+      - /Users/chase/Documents/github/socialgene/sgpy
+      #- git+https://github.com/socialgene/sgpy.git@361f2ff1602c277865bedb9b301cc5b9557e7d39
       - git+https://github.com/socialgene/antismash_gbk_to_table.git@e8d8b9f83eae0305550cd3b32e53c2a11f32c69e

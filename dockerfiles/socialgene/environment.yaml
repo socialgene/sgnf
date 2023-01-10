@@ -30,6 +30,6 @@ dependencies:
   - conda-forge::gzip >=1.12
   - conda-forge::openjdk
   - pip:
-      - /Users/chase/Documents/github/socialgene/sgpy
-      #- git+https://github.com/socialgene/sgpy.git@361f2ff1602c277865bedb9b301cc5b9557e7d39
+      #- /Users/chase/Documents/github/socialgene/sgpy
+      - git+https://github.com/socialgene/sgpy.git@cd0b6489405abe3c1b1fefb46c96f1cb29bc0ea1
       - git+https://github.com/socialgene/antismash_gbk_to_table.git@e8d8b9f83eae0305550cd3b32e53c2a11f32c69e

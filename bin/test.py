@@ -13,7 +13,7 @@ def hash(x):
     return file_hash.hexdigest()
 
 
-parser = argparse.ArgumentParser(description="Parse NcbiAssembliessdsd taxonomy")
+parser = argparse.ArgumentParser(description="")
 
 parser.add_argument(
     "--sg_outdir",
@@ -22,182 +22,265 @@ parser.add_argument(
     required=True,
 )
 
+parser.add_argument("--verbose", action=argparse.BooleanOptionalAction)
 
-ground_truth = {
-    "/socialgene_per_run/blastp_cache/versions.yml": "668bc3a407e53beaaffbc15c9938f040",
-    "/socialgene_per_run/blastp_cache/sorted_nr.fa.gz.dmnd": "2b9cfc7a9f33cd973754ecd20fbe79db",
-    "/socialgene_per_run/hmm_cache/socialgene_nr_hmms_file_1_of_1.hmm.gz": "bd72453fd934287d7b152c95b9736eca",
-    "/socialgene_per_run/hmm_cache/all_hmms.tsv": "5167fef6200ecfcb5fa57db02a223c07",
-    "/socialgene_per_run/hmm_cache/versions.yml": "bd1893db49079930bc62bf360e2ea8ee",
-    "/socialgene_per_run/pipeline_info/pipeline_dag_2022-09-07_12-16-02.html": "23a9da3ebf9731db149a9d58523f738e",
-    "/socialgene_per_run/pipeline_info/execution_report_2022-09-07_12-16-02.html": "3ce8f91bd98c7228b06faf4552baa0d3",
-    "/socialgene_per_run/pipeline_info/execution_trace_2022-09-07_12-16-02.txt": "2943ade32c0bd4d405d0aa59f68e84fc",
-    "/socialgene_per_run/pipeline_info/execution_timeline_2022-09-07_12-16-02.html": "13e4a64c3cf9e1f0d585fc129df55f4f",
-    "/socialgene_per_run/pipeline_info/software_versions.yml": "f23fd84ee4f908ef9f6d8105b6bba5fe",
-    "/socialgene_per_run/mmseqs2_cache/942db0d63ec20c9e9794577e3d42b3bb.mmseqs2_results_rep_seq.fasta.gz": "942db0d63ec20c9e9794577e3d42b3bb",
-    "/socialgene_per_run/mmseqs2_cache/versions.yml": "cc97f50936ee0275242b87b3c2996e69",
-    "/socialgene_per_run/mmseqs2_cache/a0274ba90f296bbc7fd6374d56c4c8d9.mmseqs2_results_cluster.tsv.gz": "a0274ba90f296bbc7fd6374d56c4c8d9",
-    "/socialgene_per_run/mmseqs2_cache/822c4ddbc0cabb88561268f10298b04e.mmseqs2_results_all_seqs.fasta.gz": "822c4ddbc0cabb88561268f10298b04e",
-    "/socialgene_neo4j/import.report": "d41d8cd98f00b204e9800998ecf8427e",
-    "/socialgene_neo4j/plugins/neo4j-graph-data-science-2.0.3.jar": "0484195f973eeacb29e3b1c6ab145dc0",
-    "/socialgene_neo4j/data/databases/neo4j/neostore.relationshiptypestore.db.id": "252de48f4236c2c522324a3175393d44",
-    "/socialgene_neo4j/data/databases/neo4j/neostore.nodestore.db.id": "91e29786428dd5b4f184dedb50d255c7",
-    "/socialgene_neo4j/data/databases/neo4j/neostore.propertystore.db": "a2d7c4a72263ae2dea8ba883a118c151",
-    "/socialgene_neo4j/data/databases/neo4j/neostore.propertystore.db.index.id": "37cd4f6cc17fce19fd59228ba52a14dc",
-    "/socialgene_neo4j/data/databases/neo4j/neostore.labeltokenstore.db.names": "46266300bfb3e2d8f55ef473082adbe6",
-    "/socialgene_neo4j/data/databases/neo4j/neostore.propertystore.db.index": "b1591ba0c89294f6c3b9946b7425e260",
-    "/socialgene_neo4j/data/databases/neo4j/neostore.relationshipgroupstore.db": "66602f170912cf196af06d01565cbc4f",
-    "/socialgene_neo4j/data/databases/neo4j/neostore.labeltokenstore.db.id": "92672b9ec37b0f7f96e47dd05a8e1461",
-    "/socialgene_neo4j/data/databases/neo4j/neostore.relationshipstore.db.id": "c9b8678db204dfb9bb1b3ea12ca86ef7",
-    "/socialgene_neo4j/data/databases/neo4j/neostore.labeltokenstore.db": "30302536f00e1f50bb857d670affbbec",
-    "/socialgene_neo4j/data/databases/neo4j/neostore.relationshiptypescanstore.db": "0db4f56dce6ada39ce74a1e0f8a7c9ee",
-    "/socialgene_neo4j/data/databases/neo4j/neostore.schemastore.db.id": "c722168ae97aa4131af8a3735d45e95d",
-    "/socialgene_neo4j/data/databases/neo4j/neostore.labeltokenstore.db.names.id": "252de48f4236c2c522324a3175393d44",
-    "/socialgene_neo4j/data/databases/neo4j/neostore.nodestore.db": "9e0a46b063d9048486a482096758ba87",
-    "/socialgene_neo4j/data/databases/neo4j/neostore.relationshipstore.db": "9f8cc68ddd9d2a40f3eb4e38b5c9b226",
-    "/socialgene_neo4j/data/databases/neo4j/neostore.propertystore.db.arrays": "ac2bd26131f8eef59b9217fe0c3ed400",
-    "/socialgene_neo4j/data/databases/neo4j/neostore.counts.db": "0e1ed008a841afe5363a6bd8cc997b06",
-    "/socialgene_neo4j/data/databases/neo4j/neostore.propertystore.db.strings": "f3dd355097c7bc10d91b3b23887ce58d",
-    "/socialgene_neo4j/data/databases/neo4j/neostore.schemastore.db": "5f4353f575e59a7504875fb597a4e799",
-    "/socialgene_neo4j/data/databases/neo4j/neostore.relationshipgroupstore.degrees.db": "d808839c1bc376fb157ff38f34a01e43",
-    "/socialgene_neo4j/data/databases/neo4j/neostore.relationshiptypestore.db.names.id": "efc2a0c9b2d8d7f40715c08a4a0bd3ad",
-    "/socialgene_neo4j/data/databases/neo4j/neostore.propertystore.db.strings.id": "2b5f19633e7c73dae71eda8fb5c701ed",
-    "/socialgene_neo4j/data/databases/neo4j/neostore.propertystore.db.arrays.id": "5cd891254cfec2af72053a0fcf17251b",
-    "/socialgene_neo4j/data/databases/neo4j/neostore.propertystore.db.index.keys": "ca3e29ee81345a79b7203f40d8e4f48c",
-    "/socialgene_neo4j/data/databases/neo4j/neostore.relationshipgroupstore.db.id": "3ad856bdf5795cd31448147aff5a1fed",
-    "/socialgene_neo4j/data/databases/neo4j/neostore.nodestore.db.labels.id": "5cd891254cfec2af72053a0fcf17251b",
-    "/socialgene_neo4j/data/databases/neo4j/neostore.propertystore.db.index.keys.id": "5c80ebcf76fc1ddaceb5e4fd4218db2a",
-    "/socialgene_neo4j/data/databases/neo4j/neostore.labelscanstore.db": "e01ff2a88ad1e5efdd1569eb66a37e8e",
-    "/socialgene_neo4j/data/databases/neo4j/neostore.nodestore.db.labels": "6e25904141750355bd7859a4f3ea30e6",
-    "/socialgene_neo4j/data/databases/neo4j/neostore.propertystore.db.id": "9bc31a8bb7bbf3edfffadae89f195bb3",
-    "/socialgene_neo4j/data/databases/neo4j/neostore.relationshiptypestore.db.names": "c8e7ec4eccbc57e74c9f9e91196235bc",
-    "/socialgene_neo4j/data/databases/neo4j/neostore": "770294c38091ebdead5fb115e0efb59d",
-    "/socialgene_neo4j/data/databases/neo4j/neostore.relationshiptypestore.db": "7023d82e675da4301f28af9db48ecee7",
-    "/socialgene_neo4j/data/transactions/neo4j/neostore.transaction.db.0": "c1087ed7100a1dc1a2796dbd3246440b",
-    "/socialgene_neo4j/data/transactions/neo4j/checkpoint.0": "c529e12137771dbd006d6ede11e91c38",
-    "/socialgene_neo4j/import/taxdump_process/versions.yml": "c76731df60ac96a6b2cffd90c8c5d03d",
-    "/socialgene_neo4j/import/taxdump_process/3990720bc62727149894967690cb03a3.nodes_taxid.gz": "3990720bc62727149894967690cb03a3",
-    "/socialgene_neo4j/import/taxdump_process/23e296f220b40ff417adb1e7ddb739be.taxid_to_taxid.gz": "23e296f220b40ff417adb1e7ddb739be",
+
+import_files = {
+    "/socialgene_neo4j/import/antismash_gbk_to_table.tsv.gz": "4c33b3fb0cee1eaf750bef99eff4971a",
+    "/socialgene_neo4j/import/versions.yml": "b4f5086f1d21179affe89fbcf71fa72e",
+    "/socialgene_neo4j/import/taxdump_process/61a2de9d60cae6902557ba1c4db02a8b.taxid_to_taxid.gz": "61a2de9d60cae6902557ba1c4db02a8b",
+    "/socialgene_neo4j/import/taxdump_process/versions.yml": "db3e0c4928bb5d7b21573b950beaf929",
+    "/socialgene_neo4j/import/taxdump_process/bd306700c24cec79fd22b1a6f7f8aa86.nodes_taxid.gz": "bd306700c24cec79fd22b1a6f7f8aa86",
     "/socialgene_neo4j/import/protein_info/32ac635db104999b2a7cb37040aa842f.protein_info.gz": "32ac635db104999b2a7cb37040aa842f",
-    "/socialgene_neo4j/import/diamond_blastp/79956f30b34933af2b205f855fbc064e.blast6.gz": "79956f30b34933af2b205f855fbc064e",
-    "/socialgene_neo4j/import/diamond_blastp/versions.yml": "20de3372615bf0495484858c468b2306",
-    "/socialgene_neo4j/import/parsed_domtblout/f6b526bb960cbfcb25eeed45bbf16346.parseddomtblout.gz": "f6b526bb960cbfcb25eeed45bbf16346",
-    "/socialgene_neo4j/import/parsed_domtblout/4876e9288048b9c813e8f0416ca65d8f.parseddomtblout.gz": "4876e9288048b9c813e8f0416ca65d8f",
-    "/socialgene_neo4j/import/parsed_domtblout/a2d4872ffa0059976dadf6f2e38f96a8.parseddomtblout.gz": "a2d4872ffa0059976dadf6f2e38f96a8",
-    "/socialgene_neo4j/import/parsed_domtblout/db4700304a42c9cd70c8d6bf8a615270.parseddomtblout.gz": "db4700304a42c9cd70c8d6bf8a615270",
-    "/socialgene_neo4j/import/parsed_domtblout/ec320d5bfb458d2ad7269ba3aff0be20.parseddomtblout.gz": "ec320d5bfb458d2ad7269ba3aff0be20",
-    "/socialgene_neo4j/import/parsed_domtblout/6afebac1ff9127c07149574b52bc1215.parseddomtblout.gz": "6afebac1ff9127c07149574b52bc1215",
-    "/socialgene_neo4j/import/parsed_domtblout/99a557515748092f70ea22bd339b11e5.parseddomtblout.gz": "99a557515748092f70ea22bd339b11e5",
-    "/socialgene_neo4j/import/parsed_domtblout/8581e9dbd8bb54e4fb7554d09bfe93bf.parseddomtblout.gz": "8581e9dbd8bb54e4fb7554d09bfe93bf",
-    "/socialgene_neo4j/import/parsed_domtblout/5c67e010dd27c8a7f8724b13e43e5586.parseddomtblout.gz": "5c67e010dd27c8a7f8724b13e43e5586",
-    "/socialgene_neo4j/import/parsed_domtblout/versions.yml": "77ff696ea126a3cc9385429029827093",
-    "/socialgene_neo4j/import/parsed_domtblout/6086371eb3d748f62beef03ef2773bcc.parseddomtblout.gz": "6086371eb3d748f62beef03ef2773bcc",
-    "/socialgene_neo4j/import/parsed_domtblout/5b4389b9a360bcde967eb38d054a840a.parseddomtblout.gz": "5b4389b9a360bcde967eb38d054a840a",
-    "/socialgene_neo4j/import/parsed_domtblout/02ab64e30de18732041742881baf937e.parseddomtblout.gz": "02ab64e30de18732041742881baf937e",
-    "/socialgene_neo4j/import/parsed_domtblout/95f2f901b2962ad0006b1da9028f7eb7.parseddomtblout.gz": "95f2f901b2962ad0006b1da9028f7eb7",
-    "/socialgene_neo4j/import/parsed_domtblout/2df84684f8773bca341cadbc8c03e35a.parseddomtblout.gz": "2df84684f8773bca341cadbc8c03e35a",
-    "/socialgene_neo4j/import/parsed_domtblout/955eaf47ba51538175cad9a8223b2912.parseddomtblout.gz": "955eaf47ba51538175cad9a8223b2912",
-    "/socialgene_neo4j/import/parsed_domtblout/4252aabf8bc8f64c114a372986937f08.parseddomtblout.gz": "4252aabf8bc8f64c114a372986937f08",
-    "/socialgene_neo4j/import/parameters/2bdd13c1d6c66b452c1c380c89dac92a.socialgene_parameters.gz": "2bdd13c1d6c66b452c1c380c89dac92a",
-    "/socialgene_neo4j/import/mmseqs2_easycluster/942db0d63ec20c9e9794577e3d42b3bb.mmseqs2_results_rep_seq.fasta.gz": "942db0d63ec20c9e9794577e3d42b3bb",
-    "/socialgene_neo4j/import/mmseqs2_easycluster/versions.yml": "cc97f50936ee0275242b87b3c2996e69",
-    "/socialgene_neo4j/import/mmseqs2_easycluster/a0274ba90f296bbc7fd6374d56c4c8d9.mmseqs2_results_cluster.tsv.gz": "a0274ba90f296bbc7fd6374d56c4c8d9",
-    "/socialgene_neo4j/import/mmseqs2_easycluster/822c4ddbc0cabb88561268f10298b04e.mmseqs2_results_all_seqs.fasta.gz": "822c4ddbc0cabb88561268f10298b04e",
-    "/socialgene_neo4j/import/genomic_info/da341ebeda21d155329917f66eaa1277.assembly_to_taxid.gz": "da341ebeda21d155329917f66eaa1277",
-    "/socialgene_neo4j/import/genomic_info/c5ad0488e87c3c1572865212815d9b39.locus_to_protein.gz": "c5ad0488e87c3c1572865212815d9b39",
-    "/socialgene_neo4j/import/genomic_info/ab274d6163e9f040e9cc1087cd4aa88f.loci.gz": "ab274d6163e9f040e9cc1087cd4aa88f",
-    "/socialgene_neo4j/import/genomic_info/b413516d8e4af22f8bce8103183c0806.assembly_to_locus.gz": "b413516d8e4af22f8bce8103183c0806",
-    "/socialgene_neo4j/import/genomic_info/04e4e70ca818e2464fcce3c993102371.assemblies.gz": "04e4e70ca818e2464fcce3c993102371",
-    "/socialgene_neo4j/import/hmm_tsv_parse/7029066c27ac6f5ef18d660d5741979a.local_hmms_out.gz": "7029066c27ac6f5ef18d660d5741979a",
+    "/socialgene_neo4j/import/tigrfam_info/9b8528263ab8d2c678521f364c02728e.tigrfam_to_role.gz": "9b8528263ab8d2c678521f364c02728e",
+    "/socialgene_neo4j/import/tigrfam_info/e29a730691da87f7dd70a85daa6c2932.tigrfam_to_go.gz": "e29a730691da87f7dd70a85daa6c2932",
+    "/socialgene_neo4j/import/tigrfam_info/2deedec3965b082a1536f2a7612820d7.tigrfamrole_to_mainrole.gz": "2deedec3965b082a1536f2a7612820d7",
+    "/socialgene_neo4j/import/tigrfam_info/fd9346ea8cff415c25d25158b42a0082.goterm.gz": "fd9346ea8cff415c25d25158b42a0082",
+    "/socialgene_neo4j/import/tigrfam_info/2c7d0955644b51186d8fa40e2b71988f.TIGRFAMS_GO_LINK.gz": "2c7d0955644b51186d8fa40e2b71988f",
+    "/socialgene_neo4j/import/tigrfam_info/3a5edc8721c146058e104678b250fff2.tigrfam_subrole.gz": "3a5edc8721c146058e104678b250fff2",
+    "/socialgene_neo4j/import/tigrfam_info/a0d6530f10e4593fd79ba286a407ac90.tigrfamrole_to_subrole.gz": "a0d6530f10e4593fd79ba286a407ac90",
+    "/socialgene_neo4j/import/tigrfam_info/versions.yml": "b858651af9be2475c7cb3a7c587e176a",
+    "/socialgene_neo4j/import/tigrfam_info/5ad847d09afb9716bc3c155cba2f89f3.tigrfam_mainrole.gz": "5ad847d09afb9716bc3c155cba2f89f3",
+    "/socialgene_neo4j/import/tigrfam_info/93ad0a4066afbbf2ceb20a21a73e7178.tigrfam_role.gz": "93ad0a4066afbbf2ceb20a21a73e7178",
+    "/socialgene_neo4j/import/diamond_blastp/versions.yml": "41421128c88b578419b9a5e8a50b91aa",
+    "/socialgene_neo4j/import/diamond_blastp/6d5e92488f0de773f4ee57fe1dbd7d24.blast6.gz": "6d5e92488f0de773f4ee57fe1dbd7d24",
+    "/socialgene_neo4j/import/parsed_domtblout/ca1e01d976cbc1d2d1f7a58b57a97372.parseddomtblout.gz": "ca1e01d976cbc1d2d1f7a58b57a97372",
+    "/socialgene_neo4j/import/parsed_domtblout/versions.yml": "0769eda2b8bbe7d1c6e3c8a8cefac5a5",
+    "/socialgene_neo4j/import/parsed_domtblout/a96c087b1a97ce9c51542ff95d786df7.parseddomtblout.gz": "a96c087b1a97ce9c51542ff95d786df7",
+    "/socialgene_neo4j/import/parameters/374111c1af5d330860b6076094112d0e.socialgene_parameters.gz": "374111c1af5d330860b6076094112d0e",
+    "/socialgene_neo4j/import/mmseqs2_easycluster/45eccedb84d932a0eb8b9cf5a097c572.mmseqs2_results_rep_seq.fasta.gz": "45eccedb84d932a0eb8b9cf5a097c572",
+    "/socialgene_neo4j/import/mmseqs2_easycluster/versions.yml": "8a47d60909ff06a8d06c22f4d83f2217",
+    "/socialgene_neo4j/import/mmseqs2_easycluster/34cb7fd3a02e43ffc09efccfea398634.mmseqs2_results_cluster.tsv.gz": "34cb7fd3a02e43ffc09efccfea398634",
+    "/socialgene_neo4j/import/mmseqs2_easycluster/1f001c6a8f7df0abb5069ae04af2b531.mmseqs2_results_all_seqs.fasta.gz": "1f001c6a8f7df0abb5069ae04af2b531",
+    "/socialgene_neo4j/import/genomic_info/ea72312fd1f1e5d4aeeac1fb17d300d8.locus_to_protein.gz": "ea72312fd1f1e5d4aeeac1fb17d300d8",
+    "/socialgene_neo4j/import/genomic_info/f8d0ecbfdd6f1c40f1fdad282f54607e.assemblies.gz": "f8d0ecbfdd6f1c40f1fdad282f54607e",
+    "/socialgene_neo4j/import/genomic_info/0ceea3c94abfab1aae1c0bff5e8609e7.loci.gz": "0ceea3c94abfab1aae1c0bff5e8609e7",
+    "/socialgene_neo4j/import/genomic_info/6458341c6a64e5b493e3e00d4a01d09d.assembly_to_taxid.gz": "6458341c6a64e5b493e3e00d4a01d09d",
+    "/socialgene_neo4j/import/genomic_info/a7c7a6021675a9a2ed22b4fe0a04d06c.assembly_to_locus.gz": "a7c7a6021675a9a2ed22b4fe0a04d06c",
+    "/socialgene_neo4j/import/hmm_tsv_parse/863cfbdd83eb6ccf9529393ce39275fb.resfams_hmms_out.gz": "863cfbdd83eb6ccf9529393ce39275fb",
     "/socialgene_neo4j/import/hmm_tsv_parse/7029066c27ac6f5ef18d660d5741979a.bigslice_hmms_out.gz": "7029066c27ac6f5ef18d660d5741979a",
     "/socialgene_neo4j/import/hmm_tsv_parse/7029066c27ac6f5ef18d660d5741979a.virus_orthologous_groups_hmms_out.gz": "7029066c27ac6f5ef18d660d5741979a",
-    "/socialgene_neo4j/import/hmm_tsv_parse/7029066c27ac6f5ef18d660d5741979a.amrfinder_hmms_out.gz": "7029066c27ac6f5ef18d660d5741979a",
+    "/socialgene_neo4j/import/hmm_tsv_parse/1190015eb8ad44910366df364dbbfb1d.amrfinder_hmms_out.gz": "1190015eb8ad44910366df364dbbfb1d",
+    "/socialgene_neo4j/import/hmm_tsv_parse/db7139dc11a9d02ab640ad5d6f0ebac0.pfam_hmms_out.gz": "db7139dc11a9d02ab640ad5d6f0ebac0",
+    "/socialgene_neo4j/import/hmm_tsv_parse/8fa64bbf9a51af7320f644fced5b79cb.local_hmms_out.gz": "8fa64bbf9a51af7320f644fced5b79cb",
     "/socialgene_neo4j/import/hmm_tsv_parse/7029066c27ac6f5ef18d660d5741979a.prism_hmms_out.gz": "7029066c27ac6f5ef18d660d5741979a",
-    "/socialgene_neo4j/import/hmm_tsv_parse/versions.yml": "3024138158a35aeb328df3de5ba794d6",
-    "/socialgene_neo4j/import/hmm_tsv_parse/7029066c27ac6f5ef18d660d5741979a.pfam_hmms_out.gz": "7029066c27ac6f5ef18d660d5741979a",
-    "/socialgene_neo4j/import/hmm_tsv_parse/7029066c27ac6f5ef18d660d5741979a.resfams_hmms_out.gz": "7029066c27ac6f5ef18d660d5741979a",
-    "/socialgene_neo4j/import/hmm_tsv_parse/7029066c27ac6f5ef18d660d5741979a.tigrfam_hmms_out.gz": "7029066c27ac6f5ef18d660d5741979a",
-    "/socialgene_neo4j/import/hmm_tsv_parse/95b4ad323008bb2728cb0bfc50f005d3.antismash_hmms_out.gz": "95b4ad323008bb2728cb0bfc50f005d3",
+    "/socialgene_neo4j/import/hmm_tsv_parse/versions.yml": "0739f5473209ed2ee53247da8f3cd026",
+    "/socialgene_neo4j/import/hmm_tsv_parse/6c1d15bb86d9d7f40bffd93664269a37.sg_hmm_nodes_out.gz": "6c1d15bb86d9d7f40bffd93664269a37",
+    "/socialgene_neo4j/import/hmm_tsv_parse/13b4f64ca5ddf403bc38c9d9966e36e3.antismash_hmms_out.gz": "13b4f64ca5ddf403bc38c9d9966e36e3",
+    "/socialgene_neo4j/import/hmm_tsv_parse/51df52ec0890b36ae024541503e9225c.tigrfam_hmms_out.gz": "51df52ec0890b36ae024541503e9225c",
     "/socialgene_neo4j/import/hmm_tsv_parse/7029066c27ac6f5ef18d660d5741979a.classiphage_hmms_out.gz": "7029066c27ac6f5ef18d660d5741979a",
-    "/socialgene_neo4j/import/hmm_tsv_parse/87811de58177e6872d5cf6c45ebe346b.sg_hmm_nodes_out.gz": "87811de58177e6872d5cf6c45ebe346b",
     "/socialgene_neo4j/import/neo4j_headers/protein_info.header": "bf0197bca389043bd7f5be0bbddab134",
+    "/socialgene_neo4j/import/neo4j_headers/amrfinder_hmms_out.header": "20091e9857d77d8fa7138da87dcf9307",
+    "/socialgene_neo4j/import/neo4j_headers/local_hmms_out.header": "d7c11fe2ebcb92c1e4a198b1c844e8e9",
+    "/socialgene_neo4j/import/neo4j_headers/tigrfam_subrole.header": "2365fdb76ebf95329c541db265201c63",
+    "/socialgene_neo4j/import/neo4j_headers/tigrfam_mainrole.header": "128bdbf7acdff546dc046da3da3c3745",
     "/socialgene_neo4j/import/neo4j_headers/protein_to_hmm_header.header": "6a600653c416e901a9f5f57850a7df57",
-    "/socialgene_neo4j/import/neo4j_headers/antismash_hmms_out.header": "d7277102a630fdc5ccec56d2f4f6ec65",
+    "/socialgene_neo4j/import/neo4j_headers/antismash_hmms_out.header": "3188e5f649991d30aa7ad935938f9b61",
+    "/socialgene_neo4j/import/neo4j_headers/amrfinder_hmms_out_relationships.header": "1d0d9db15df12374a7c3fe1030742bad",
+    "/socialgene_neo4j/import/neo4j_headers/pfam_hmms_out_relationships.header": "b77127f994d20764a839a8263c0ad007",
     "/socialgene_neo4j/import/neo4j_headers/sg_hmm_nodes_out.header": "484071a40dcc110a1e7698ea4dbb12b6",
     "/socialgene_neo4j/import/neo4j_headers/mmseqs2.header": "5b191c60314719d8f501c35eee7950c6",
     "/socialgene_neo4j/import/neo4j_headers/blastp.header": "73dcdcb237ea88ed5ccff662110e9b96",
     "/socialgene_neo4j/import/neo4j_headers/parameters.header": "bfccc8ca760cdd40b8c6faed661e0d1a",
-    "/socialgene_neo4j/import/neo4j_headers/locus.header": "6a58a48ab2c8d8f641280aac68d09dfd",
+    "/socialgene_neo4j/import/neo4j_headers/locus.header": "822db8fefbe22c65eade31c5d81707dd",
     "/socialgene_neo4j/import/neo4j_headers/taxid.header": "c7e0c717b4cf917544017da85f37c7eb",
+    "/socialgene_neo4j/import/neo4j_headers/resfams_hmms_out.header": "33fea41b1d6d13f5c93ddfc0a019633a",
+    "/socialgene_neo4j/import/neo4j_headers/tigrfam_hmms_out.header": "cb426f64bc946545e1cb373151df8c2c",
     "/socialgene_neo4j/import/neo4j_headers/assembly_to_taxid.header": "3f9af852094b60745dc22f1a36c876c8",
-    "/socialgene_neo4j/import/neo4j_headers/versions.yml": "2de0475529d91f7dd659eddbac6d3e00",
+    "/socialgene_neo4j/import/neo4j_headers/versions.yml": "a8dca11096b72fca0c4d50ac589b515d",
+    "/socialgene_neo4j/import/neo4j_headers/tigrfamrole_to_mainrole.header": "d9c3660b2ace6b35ac9f24db5cd92559",
     "/socialgene_neo4j/import/neo4j_headers/assembly_to_locus.header": "14f9e0e8ffbd25b240dce27e49d9c0ae",
+    "/socialgene_neo4j/import/neo4j_headers/resfams_hmms_out_relationships.header": "7ecdebdb9876e2b9fd85bb7196865300",
     "/socialgene_neo4j/import/neo4j_headers/locus_to_protein.header": "44e1aae080b0b65a9081d77511efe2c0",
-    "/socialgene_neo4j/import/neo4j_headers/assembly.header": "c9da874fb88e75c70dcd18b3ada3a813",
+    "/socialgene_neo4j/import/neo4j_headers/assembly.header": "5f1accf82f727080b9995b5646b5369b",
+    "/socialgene_neo4j/import/neo4j_headers/tigrfam_to_role.header": "bfeb5ce147a7417be63e2adb943474ed",
+    "/socialgene_neo4j/import/neo4j_headers/local_hmms_out_relationships.header": "5d8c17766c352fa3cd9f2ac8e07ea20c",
     "/socialgene_neo4j/import/neo4j_headers/antismash_hmms_out_relationships.header": "5d3e5fd06930d3c0966bacfebd9140e2",
+    "/socialgene_neo4j/import/neo4j_headers/pfam_hmms_out.header": "07bdf873431842910c59f84a37046740",
+    "/socialgene_neo4j/import/neo4j_headers/tigrfam_to_go.header": "fdd5d3e0a4dd4a5e5b2ec1bc3ebdcb27",
+    "/socialgene_neo4j/import/neo4j_headers/goterm.header": "5871ec6e85b2a8947e14f6f1a1b203c7",
+    "/socialgene_neo4j/import/neo4j_headers/tigrfam_role.header": "860575661f5dc766d7bd84709acf4327",
+    "/socialgene_neo4j/import/neo4j_headers/tigrfamrole_to_subrole.header": "597e590650456e37383dd9d061ad2666",
+    "/socialgene_neo4j/import/neo4j_headers/tigrfam_hmms_out_relationships.header": "0f6475cc65b2d3f0fd87fee3f32ab728",
     "/socialgene_neo4j/import/neo4j_headers/taxid_to_taxid.header": "cc049bd566ccc90ca64a6cf5ccbd7f5c",
+}
+expected_files = {
+    "plugins": {"socialgene_neo4j/plugins/emptyfile"},
+    "logs": {
+        "socialgene_neo4j/logs/debug.log",
+        "socialgene_neo4j/logs/http.log",
+        "socialgene_neo4j/logs/security.log",
+        "socialgene_neo4j/logs/query.log",
+    },
+    "data": {
+        "socialgene_neo4j/data/databases/neo4j/neostore.labeltokenstore.db.id",
+        "socialgene_neo4j/data/databases/neo4j/neostore.labeltokenstore.db",
+        "socialgene_neo4j/data/databases/neo4j/neostore.labeltokenstore.db.names.id",
+        "socialgene_neo4j/data/databases/neo4j/neostore.propertystore.db.index.id",
+        "socialgene_neo4j/data/databases/neo4j/neostore.nodestore.db.id",
+        "socialgene_neo4j/data/databases/neo4j/neostore.relationshipgroupstore.db",
+        "socialgene_neo4j/data/transactions/neo4j",
+        "socialgene_neo4j/data/databases/neo4j/neostore.relationshiptypestore.db.id",
+        "socialgene_neo4j/data/databases/neo4j/neostore.relationshipstore.db.id",
+        "socialgene_neo4j/data/databases/neo4j/neostore.propertystore.db.id",
+        "socialgene_neo4j/data/transactions/neo4j/neostore.transaction.db.0",
+        "socialgene_neo4j/data/databases/neo4j/neostore.nodestore.db.labels",
+        "socialgene_neo4j/data/databases/neo4j/neostore.relationshiptypestore.db",
+        "socialgene_neo4j/data/databases/neo4j/neostore.propertystore.db.arrays.id",
+        "socialgene_neo4j/data/databases/neo4j/neostore.propertystore.db.index.keys",
+        "socialgene_neo4j/data/databases/neo4j",
+        "socialgene_neo4j/data/databases/neo4j/neostore.relationshiptypestore.db.names",
+        "socialgene_neo4j/data/databases/neo4j/neostore",
+        "socialgene_neo4j/data/databases",
+        "socialgene_neo4j/data/databases/neo4j/neostore.nodestore.db",
+        "socialgene_neo4j/data/databases/neo4j/neostore.propertystore.db.arrays",
+        "socialgene_neo4j/data/databases/neo4j/neostore.nodestore.db.labels.id",
+        "socialgene_neo4j/data/databases/neo4j/schema/index/token-lookup-1.0/1/index-1",
+        "socialgene_neo4j/data/databases/neo4j/neostore.propertystore.db.index",
+        "socialgene_neo4j/data/transactions",
+        "socialgene_neo4j/data/databases/neo4j/neostore.relationshipgroupstore.degrees.db",
+        "socialgene_neo4j/data/databases/neo4j/schema/index/token-lookup-1.0/1",
+        "socialgene_neo4j/data/databases/neo4j/neostore.propertystore.db.strings",
+        "socialgene_neo4j/data/databases/neo4j/neostore.relationshiptypestore.db.names.id",
+        "socialgene_neo4j/data/databases/neo4j/neostore.propertystore.db.strings.id",
+        "socialgene_neo4j/data/databases/neo4j/schema/index/token-lookup-1.0/2/index-2",
+        "socialgene_neo4j/data/databases/neo4j/schema/index/token-lookup-1.0/2",
+        "socialgene_neo4j/data/transactions/neo4j/checkpoint.0",
+        "socialgene_neo4j/data/databases/neo4j/neostore.relationshipstore.db",
+        "socialgene_neo4j/data/databases/neo4j/neostore.labeltokenstore.db.names",
+        "socialgene_neo4j/data/databases/neo4j/neostore.propertystore.db.index.keys.id",
+        "socialgene_neo4j/data/databases/neo4j/neostore.schemastore.db.id",
+        "socialgene_neo4j/data/databases/neo4j/schema/index",
+        "socialgene_neo4j/data/databases/neo4j/neostore.relationshipgroupstore.db.id",
+        "socialgene_neo4j/data/databases/neo4j/neostore.propertystore.db",
+        "socialgene_neo4j/data/databases/neo4j/neostore.schemastore.db",
+        "socialgene_neo4j/data/databases/neo4j/schema",
+        "socialgene_neo4j/data/databases/neo4j/schema/index/token-lookup-1.0",
+        "socialgene_neo4j/data/databases/neo4j/neostore.counts.db",
+    },
 }
 
 
-def run_tests(sg_outdir):
+def check_files_exist(x, sg_outdir, dir_name, expected_files, messenger):
+    print(f"Checking Neo4j {dir_name} files...")
+    temp = {str(i.relative_to(sg_outdir)) for i in x}
+    messenger[dir_name] = {
+        "found": [i for i in temp if i in expected_files],
+        "not_found": [i for i in expected_files if i not in temp],
+        "unexpected": [i for i in temp if i not in expected_files],
+    }
+    print("Done")
+
+
+def check_versions_exist(x, messenger):
+    print(f"Checking version files")
+    expected_files = {
+        "socialgene_neo4j/import/parsed_domtblout/versions.yml",
+        "socialgene_neo4j/import/tigrfam_info/versions.yml",
+        "socialgene_neo4j/import/hmm_tsv_parse/versions.yml",
+        "socialgene_neo4j/import/taxdump_process/versions.yml",
+        "socialgene_neo4j/import/versions.yml",
+        "socialgene_neo4j/import/diamond_blastp/versions.yml",
+        "socialgene_neo4j/import/neo4j_headers/versions.yml",
+        "socialgene_neo4j/import/mmseqs2_easycluster/versions.yml",
+        "socialgene_neo4j/versions.yml",
+    }
+    messenger["versions"] = {
+        "found": [i for i in x if i in expected_files],
+        "not_found": [i for i in expected_files if i not in x],
+        "unexpected": [i for i in x if i not in expected_files],
+    }
+    print("Done")
+
+
+def check_import_files(base_path, sg_outdir, messenger):
+    print(f"Checking import files for Neo4j")
+    neo4j_import = Path(base_path).glob("import/**/*")
+    files = {
+        str(i).removeprefix(sg_outdir): hash(i) for i in neo4j_import if i.is_file()
+    }
+    filenames = set(files.keys())
+    expected_filenames = set(import_files.keys())
+    messenger["import"] = {
+        "found": [i for i in filenames if i in expected_filenames],
+        "not_found": [i for i in expected_filenames if i not in filenames],
+        "unexpected": [i for i in filenames if i not in expected_filenames],
+        "bad_hash": [
+            {"file": k, "found_hash": v, "expected_hash": import_files[k]}
+            for k, v in files.items()
+            if v != import_files[k]
+        ],
+        "good_hash": [k for k, v in files.items() if v == import_files[k]],
+    }
+    print("Done")
+
+
+def run_tests(sg_outdir, verbose=False):
     print("Running tests")
-    p = Path(sg_outdir).glob("**/*")
-    files = {str(x).removeprefix(sg_outdir): hash(x) for x in p if x.is_file()}
-    # Check for missing and extra files:
-    missing_files = [x for x in ground_truth.keys() if x not in set(files.keys())]
-    extra_files = [x for x in files.keys() if x not in set(ground_truth.keys())]
-    for ok in [
-        "execution_timeline",
-        "execution_trace",
-        "execution_report",
-        "pipeline_dag",
-    ]:
-        missing_files = [i for i in missing_files if not Path(i).stem.startswith(ok)]
-        extra_files = [i for i in extra_files if not Path(i).stem.startswith(ok)]
-    if missing_files != []:
-        raise ValueError(f"Missing files: {missing_files}")
-        raise
-    if extra_files != []:
-        raise ValueError(f"Extra files: {extra_files}")
-    # check the hashes for files that aren't expected to change
-    for ignore in [
-        "execution_timeline",
-        "execution_trace",
-        "execution_report",
-        "pipeline_dag",
-    ]:
-        for i in [i for i in ground_truth.keys() if Path(i).stem.startswith(ignore)]:
-            _ = ground_truth.pop(i)
-    # ignore neo4j output (can't check via md5)
-    for i in [
-        i
-        for i in ground_truth.keys()
-        if str(Path(i).parent) == "/socialgene_neo4j/data/databases/neo4j"
-    ]:
-        _ = ground_truth.pop(i)
-    # ignore neo4j output (can't check via md5)
-    for i in [
-        i
-        for i in ground_truth.keys()
-        if str(Path(i).parent) == "/socialgene_neo4j/data/transactions/neo4j"
-    ]:
-        _ = ground_truth.pop(i)
-    # check file hashes
-    good = []
-    bad = []
-    for k, v in ground_truth.items():
-        if files[k] == v:
-            good.append(k)
-        else:
-            bad.append(k)
-    if bad != []:
-        raise ValueError(f"File hash incorrect: {[i for i in bad]}")
-    print("Passed")
+    messenger = dict()
+
+    base_path = Path(sg_outdir, "socialgene_neo4j")
+
+    for i in ["logs", "plugins", "data"]:
+        check_files_exist(
+            x=Path(base_path).glob(f"{i}/**/*"),
+            sg_outdir=sg_outdir,
+            dir_name=i,
+            expected_files=expected_files[i],
+            messenger=messenger,
+        )
+
+    check_versions_exist(
+        x={
+            str(i.relative_to(sg_outdir))
+            for i in Path(base_path).glob("**/versions.yml")
+        },
+        messenger=messenger,
+    )
+
+    check_import_files(base_path=base_path, sg_outdir=sg_outdir, messenger=messenger)
+    errors = False
+    print("...........................")
+    for k, v in messenger.items():
+        print(k)
+        if "found" in v:
+            print(f"\tExpected files found: {len(v['found'])}")
+        if "not_found" in v:
+            print(f"\tExpected files not found: {len(v['not_found'])}")
+            if v["not_found"]:
+                errors = True
+                if verbose:
+                    print(f'\t\t {v["not_found"]}')
+        if "unexpected" in v:
+            print(f"\tUnexpected files: {len(v['unexpected'])}")
+            if v["unexpected"]:
+                errors = True
+                if verbose:
+                    print(f'\t\t {v["unexpected"]}')
+        if "good_hash" in v:
+            print(f"\tFiles with expected hash: {len(v['good_hash'])}")
+
+        if "bad_hash" in v:
+            print(f"\tFiles with incorrect hash: {len(v['bad_hash'])}")
+            if v["bad_hash"]:
+                errors = True
+                if verbose:
+                    print(f'\t\t{v["bad_hash"]}')
+
+    if errors:
+        # Here to raise error for CI
+        raise Exception("Look at output above to see what failed")
+
+
+# TODO: CHECK
+# command_to_build_neo4j_database.sh
+# command_to_build_neo4j_database_with_docker.sh
+# /socialgene_per_run/
 
 
 def main():
     args = parser.parse_args()
-    run_tests(args.sg_outdir)
+    run_tests(sg_outdir=args.sg_outdir, verbose=args.verbose)
 
 
 if __name__ == "__main__":

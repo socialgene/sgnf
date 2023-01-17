@@ -204,9 +204,11 @@ def check_import_files(base_path, sg_outdir, messenger):
         "bad_hash": [
             {"file": k, "found_hash": v, "expected_hash": import_files[k]}
             for k, v in files.items()
-            if v != import_files[k]
+            if k in import_files and v != import_files[k]
         ],
-        "good_hash": [k for k, v in files.items() if v == import_files[k]],
+        "good_hash": [
+            k for k, v in files.items() if k in import_files and v == import_files[k]
+        ],
     }
     print("Done")
 

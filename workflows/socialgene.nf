@@ -255,7 +255,7 @@ println "Manifest's pipeline version: $workflow.profile"
         NCBI_TAXONOMY()
         taxdump_ch = NCBI_TAXONOMY.out.taxid_to_taxid.concat(
                         NCBI_TAXONOMY.out.nodes_taxid
-                        )
+                        ).collect()
         ch_versions = ch_versions.mix(NCBI_TAXONOMY.out.versions)
     } else {
         taxdump_ch = file("${baseDir}/assets/EMPTY_FILE")
@@ -291,7 +291,7 @@ println "Manifest's pipeline version: $workflow.profile"
             sg_modules.collect(),
             hmmlist.collect(),
             neo4j_header_ch.collect(),
-            taxdump_ch.collect(),
+            taxdump_ch,
             hmm_tsv_parse_ch.collect(),
             blast_ch.collect(),
             mmseqs2_ch.collect(),

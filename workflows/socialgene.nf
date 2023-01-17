@@ -255,7 +255,7 @@ println "Manifest's pipeline version: $workflow.profile"
         NCBI_TAXONOMY()
         taxdump_ch = NCBI_TAXONOMY.out.taxid_to_taxid.concat(
                         NCBI_TAXONOMY.out.nodes_taxid
-                        ).collect()
+                        )
         ch_versions = ch_versions.mix(NCBI_TAXONOMY.out.versions)
     } else {
         taxdump_ch = file("${baseDir}/assets/EMPTY_FILE")
@@ -279,14 +279,14 @@ println "Manifest's pipeline version: $workflow.profile"
     collected_version_files = ch_versions.collectFile(name: 'temp.yml', newLine: true)
 
     // all the '.collect()'s were added to ensure a cardinality of 1 for all inputs to database build
-  
+
     NEO4J_ADMIN_IMPORT_DRYRUN(
         sg_modules,
         hmmlist
     )
-    
+
     if (run_build_database) {
-        
+
         NEO4J_ADMIN_IMPORT(
             sg_modules.collect(),
             hmmlist.collect(),

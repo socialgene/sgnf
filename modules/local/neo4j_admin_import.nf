@@ -2,6 +2,11 @@ process NEO4J_ADMIN_IMPORT {
     tag 'Building Neo4j database'
     label 'process_high'
 
+    stageInMode 'copy'
+
+    containerOptions "-v /data/opt/conda/bin/neo4j/neo4j-community-5.1.0/data"
+    containerOptions "-v /import:/opt/conda/bin/neo4j/neo4j-community-5.1.0/import"
+
     input:
     val sg_modules
     val hmmlist
@@ -33,14 +38,15 @@ process NEO4J_ADMIN_IMPORT {
     """
     hey=\$PWD
 
-    mv ./import/*  /home/neo4j/import/
-    cd /home/neo4j
+    # This is based on the Dockerfile (neo4j-admin writes into this directory)
+    NEO4J_BASE_DIR='/opt/conda/bin/neo4j/neo4j-community-5.1.0'
 
     sg_create_neo4j_db \\
     --neo4j_top_dir . \\
     --cpus ${task.cpus} \\
     --additional_args "" \\
     --uid None \\
+    --docker true \\
     --gid None \\
     --sg_modules ${sg_modules_delim} \\
     --hmmlist ${hmm_s_delim} \\
@@ -56,15 +62,13 @@ process NEO4J_ADMIN_IMPORT {
     --sg_modules ${sg_modules_delim} \\
     --hmmlist ${hmm_s_delim}
 
+    mkdir -p plugins data logs
 
-    cd \$hey
-    mkdir data logs
-    mv /home/neo4j/import/* ./import/
-    mv /home/neo4j/data/* ./data/
-    mv /home/neo4j/logs/* ./logs/
-    cp /home/neo4j/import.report ./import.report
-    mkdir plugins
+    mv \${NEO4J_BASE_DIR}/data/* ./data/
+    mv \${NEO4J_BASE_DIR}/logs/* ./logs/
+
     touch ./plugins/emptyfile
+
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

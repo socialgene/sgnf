@@ -1,6 +1,6 @@
 
 process DOWNLOAD_NCBI {
-    label 'process_single'
+    label 'process_really_low'
 
     conda (params.enable_conda ? "hcc::aspera-cli bioconda::entrez-direct" : null)
 

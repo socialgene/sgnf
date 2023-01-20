@@ -1,6 +1,6 @@
 process INDEX_FASTA {
     tag "$fasta"
-    label 'process_single'
+    label 'process_really_low'
 
     conda (params.enable_conda ? "bioconda::samtools=1.16.1 bioconda::tabix=1.11" : null)
 

@@ -1,6 +1,6 @@
 
 process PARSE_REFSEQ_ID_DESCRIPTIONS {
-    label 'process_single'
+    label 'process_really_low'
 
     input:
     path fasta

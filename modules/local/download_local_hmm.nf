@@ -1,6 +1,6 @@
 // Not actually a download, but named to be consistent with the other hmm getters
 process DOWNLOAD_LOCAL_HMM {
-    label 'process_single'
+    label 'process_really_low'
 
     input:
     path x

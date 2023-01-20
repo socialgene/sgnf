@@ -1,6 +1,6 @@
 
 process PFAM_TO_PFAMCLAN {
-    label 'process_single'
+    label 'process_really_low'
 
     input:
     path x

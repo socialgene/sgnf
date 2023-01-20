@@ -1,5 +1,5 @@
 process NEO4J_HEADERS {
-    label 'process_single'
+    label 'process_really_low'
 
     input:
         val sg_modules

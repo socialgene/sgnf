@@ -1,5 +1,5 @@
 process ASSEMBLY_TO_LOCUS {
-    label 'process_single'
+    label 'process_really_low'
 
 
     input:

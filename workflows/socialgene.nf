@@ -99,7 +99,7 @@ println "Manifest's pipeline version: $workflow.profile"
     sg_modules = SG_MODULES.out.sg_modules
 
     PARAMETER_EXPORT_FOR_NEO4J()
-    parameters_ch = PARAMETER_EXPORT_FOR_NEO4J.out.parameters
+    parameters_ch = PARAMETER_EXPORT_FOR_NEO4J.out.parameters.collect()
 
     /*
     ////////////////////////
@@ -196,7 +196,7 @@ println "Manifest's pipeline version: $workflow.profile"
             HMM_PREP.out.hmm_tsv_out
         ).collect()
 
-        tigrfam_ch = HMM_PREP.out.tigr_ch
+        tigrfam_ch = HMM_PREP.out.tigr_ch.collect()
 
     } else {
 
@@ -240,6 +240,7 @@ println "Manifest's pipeline version: $workflow.profile"
     if (run_mmseqs2){
         MMSEQS2_EASYCLUSTER(single_ch_fasta)
         MMSEQS2_EASYCLUSTER.out.clusterres_cluster
+            .collect()
             .set{mmseqs2_ch}
         ch_versions = ch_versions.mix(MMSEQS2_EASYCLUSTER.out.versions)
     } else {
@@ -290,14 +291,14 @@ println "Manifest's pipeline version: $workflow.profile"
         NEO4J_ADMIN_IMPORT(
             sg_modules.collect(),
             hmmlist.collect(),
-            neo4j_header_ch.collect(),
+            neo4j_header_ch,
             taxdump_ch,
-            hmm_tsv_parse_ch.collect(),
-            blast_ch.collect(),
-            mmseqs2_ch.collect(),
-            hmmer_result_ch.collect(),
-            tigrfam_ch.collect(),
-            parameters_ch.collect(),
+            hmm_tsv_parse_ch,
+            blast_ch,
+            mmseqs2_ch,
+            hmmer_result_ch,
+            tigrfam_ch,
+            parameters_ch,
             GENOME_HANDLING.out.ch_genome_info.collect(),
             GENOME_HANDLING.out.ch_protein_info.collect()
         )

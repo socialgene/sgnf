@@ -1,6 +1,6 @@
 
 process LOCUS {
-    label 'process_single'
+    label 'process_really_low'
 
 //    publishDir "${params.neo4j_top_dir}/import/protein_info/locus", mode: 'move', overwrite: true
 

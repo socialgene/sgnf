@@ -36,7 +36,6 @@ process NEO4J_ADMIN_IMPORT {
     def sg_modules_delim = sg_modules ? sg_modules.join(' ') : '""'
     def hmm_s_delim = hmmlist ? hmmlist.join(' ') : '""'
     """
-    hey=\$PWD
 
     # This is based on the Dockerfile (neo4j-admin writes into this directory)
     NEO4J_BASE_DIR='/opt/conda/bin/neo4j/neo4j-community-5.1.0'
@@ -51,7 +50,7 @@ process NEO4J_ADMIN_IMPORT {
     --sg_modules ${sg_modules_delim} \\
     --hmmlist ${hmm_s_delim} \\
     --dryrun true \\
-    --dryrun_filepath "\${hey}/command_to_build_neo4j_database.sh"
+    --dryrun_filepath "command_to_build_neo4j_database.sh"
 
     sg_create_neo4j_db \\
     --neo4j_top_dir . \\

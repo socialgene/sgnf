@@ -1,6 +1,6 @@
 process HMMER_HMMSEARCH {
     cpus 1
-    label 'process_single'
+    label 'process_really_low'
     label 'process_long'
 
     input:

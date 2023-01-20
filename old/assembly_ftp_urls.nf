@@ -1,5 +1,5 @@
 process ASSEMBLY_FTP_URLS {
-    label 'process_single'
+    label 'process_really_low'
 
     output:
     path "ftpfilepaths", emit: ftpfilepaths

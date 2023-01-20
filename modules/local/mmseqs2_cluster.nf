@@ -1,4 +1,4 @@
-process MMSEQS2_EASYCLUSTER {
+process MMSEQS2_CLUSTER {
     label 'process_high'
 
     conda "bioconda::mmseqs2=14.7e284"
@@ -24,7 +24,7 @@ process MMSEQS2_EASYCLUSTER {
     # have to modify fasta until mmseqs is fixed:
     # https://github.com/soedinglab/MMseqs2/issues/557
 
-    zcat ${fasta} | sed 's/>/>mmseqsmmseqs/g' | gzip > modified_fasta.faa.gz
+    mmseqs createdb ${fasta} DB
 
     mmseqs \\
         easy-cluster \\

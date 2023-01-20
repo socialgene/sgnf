@@ -24,6 +24,8 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 include { ANTISMASH                         } from '../modules/local/antismash/main'
 include { ANTISMASH_GBK_TO_TABLE            } from '../modules/local/antismash/antismash_gbk_to_table'
 include { MMSEQS2_EASYCLUSTER               } from '../modules/local/mmseqs2_easycluster'
+include { MMSEQS2_CREATEDB                  } from '../modules/local/mmseqs2_createdb'
+include { MMSEQS_CREATEINDEX                } from '../modules/nf-core/mmseqs/createindex/main'
 include { NEO4J_ADMIN_IMPORT                } from '../modules/local/neo4j_admin_import'
 include { NEO4J_ADMIN_IMPORT_DRYRUN         } from '../modules/local/neo4j_admin_import_dryrun'
 include { NEO4J_HEADERS                     } from '../modules/local/neo4j_headers'
@@ -75,8 +77,7 @@ println "Manifest's pipeline version: $workflow.profile"
     // if not `null`, hmmlist needs to be a list
     if( params.hmmlist instanceof String ) {
         hmmlist.addAll([params.hmmlist])
-    }
-    else {
+    } else {
         hmmlist.addAll(params.hmmlist)
     }
 
@@ -238,6 +239,8 @@ println "Manifest's pipeline version: $workflow.profile"
     ////////////////////////
     */
     if (run_mmseqs2){
+        MMSEQS2_CREATEDB(single_ch_fasta)
+        MMSEQS_CREATEINDEX(MMSEQS2_CREATEDB.out.mmseqs_database)
         MMSEQS2_EASYCLUSTER(single_ch_fasta)
         MMSEQS2_EASYCLUSTER.out.clusterres_cluster
             .collect()

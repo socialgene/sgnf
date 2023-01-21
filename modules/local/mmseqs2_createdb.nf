@@ -10,8 +10,8 @@ process MMSEQS2_CREATEDB {
     path(fasta)
 
     output:
-    path('mmseqs2_database*')   , emit: mmseqs_database
-    path versions.yml
+    path('mmseqs2_database*') , emit: mmseqs_database
+    path "versions.yml"       , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -21,6 +21,7 @@ process MMSEQS2_CREATEDB {
     def args2 = task.ext.args2 ?: ''
     """
 
+    # mmseqs doesn't expect bgz
     ln -s ${fasta} myfasta.gz
 
     mmseqs createdb \\

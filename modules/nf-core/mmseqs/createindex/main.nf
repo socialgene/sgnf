@@ -1,5 +1,4 @@
 process MMSEQS_CREATEINDEX {
-    tag "$db"
     label 'process_high'
 
     conda "bioconda::mmseqs2=14.7e284"
@@ -19,10 +18,9 @@ process MMSEQS_CREATEINDEX {
     script:
     def args = task.ext.args ?: ''
     """
-    DB_PATH_NAME=\$(find -L "$db/" -name "*_seq.tsv" | sed 's/_seq\\.tsv\$//')
 
     mmseqs createindex \\
-        \${DB_PATH_NAME} \\
+        mmseqs2_database \\
         tmp1 \\
         $args
 
@@ -36,7 +34,7 @@ process MMSEQS_CREATEINDEX {
     """
     DB_PATH_NAME=\$(find -L "$db/" -name "*_seq.tsv" | sed 's/_seq\\.tsv\$//')
 
-    touch "\${DB_PATH_NAME}.idx"
+    touch "mmseqs2_database.idx"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

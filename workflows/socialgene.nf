@@ -241,6 +241,7 @@ println "Manifest's pipeline version: $workflow.profile"
     if (run_mmseqs2){
         MMSEQS2_CREATEDB(single_ch_fasta)
         MMSEQS_CREATEINDEX(MMSEQS2_CREATEDB.out.mmseqs_database)
+
         MMSEQS2_EASYCLUSTER(single_ch_fasta)
         MMSEQS2_EASYCLUSTER.out.clusterres_cluster
             .collect()

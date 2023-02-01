@@ -38,6 +38,12 @@ include { HMMER_HMMSEARCH                   } from '../modules/local/hmmsearch'
 include { HMMSEARCH_PARSE                   } from '../modules/local/hmmsearch_parse'
 include { INDEX_FASTA                       } from '../modules/local/index_fasta'
 
+
+include { DOWNLOAD_CHEMBL_SQLITE                       } from '../modules/local/download_chembl_sqlite'
+include { DOWNLOAD_CHEMBL_DATA                       } from '../modules/local/download_chembl_data'
+
+
+
 /*
 ========================================================================================
     IMPORT LOCAL SUBWORKFLOWS
@@ -101,6 +107,16 @@ println "Manifest's pipeline version: $workflow.profile"
 
     PARAMETER_EXPORT_FOR_NEO4J()
     parameters_ch = PARAMETER_EXPORT_FOR_NEO4J.out.parameters.collect()
+
+
+
+
+
+    if (params.chembl) {
+        DOWNLOAD_CHEMBL_SQLITE()
+        DOWNLOAD_CHEMBL_DATA()
+    }
+
 
     /*
     ////////////////////////

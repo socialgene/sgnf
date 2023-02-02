@@ -306,26 +306,30 @@ println "Manifest's pipeline version: $workflow.profile"
         hmmlist
     )
 
-    if (run_build_database) {
+if (run_build_database) {
 
-        NEO4J_ADMIN_IMPORT(
-            sg_modules.collect(),
-            hmmlist.collect(),
-            neo4j_header_ch,
-            taxdump_ch,
-            hmm_tsv_parse_ch,
-            blast_ch,
-            mmseqs2_ch,
-            hmmer_result_ch,
-            tigrfam_ch,
-            parameters_ch,
-            GENOME_HANDLING.out.ch_genome_info.collect(),
-            GENOME_HANDLING.out.ch_protein_info.collect()
-        )
+    // Neo4j isn't available with Conda so check that Docker is being used
+    if (workflow.profile.contains("conda")){
+        println '\033[0;34m The Neo4j database can only be built using the docker Nextflow profile, but you have used Conda. The Docker/Neo4j command to do build the database can be found at \n "$outdir/socialgene_neo4j/command_to_build_neo4j_database_with_docker.sh" \033[0m'
+    } else if (workflow.profile.contains("docker")){
+            NEO4J_ADMIN_IMPORT(
+                sg_modules.collect(),
+                hmmlist.collect(),
+                neo4j_header_ch,
+                taxdump_ch,
+                hmm_tsv_parse_ch,
+                blast_ch,
+                mmseqs2_ch,
+                hmmer_result_ch,
+                tigrfam_ch,
+                parameters_ch,
+                GENOME_HANDLING.out.ch_genome_info.collect(),
+                GENOME_HANDLING.out.ch_protein_info.collect()
+            )
 
-        ch_versions = ch_versions.mix(NEO4J_ADMIN_IMPORT.out.versions)
+            ch_versions = ch_versions.mix(NEO4J_ADMIN_IMPORT.out.versions)
+        }
     }
-
     /*
     ////////////////////////
     OUTPUT SOFTWARE VERSIONS

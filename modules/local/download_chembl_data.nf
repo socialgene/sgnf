@@ -2,6 +2,7 @@ process DOWNLOAD_CHEMBL_DATA {
     label 'process_really_low'
 
     container 'chasemc2/socialgene-small:0.0.1'
+    conda 'conda-forge::sha256 conda-forge::sha256'
 
     output:
     path 'chembl_31_chemreps.txt.gz'  , emit: chembl_31_chemreps

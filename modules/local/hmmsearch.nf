@@ -1,11 +1,10 @@
 process HMMER_HMMSEARCH {
-    cpus 1
-    label 'process_really_low'
-    label 'process_long'
+
+    container 'chasemc2/socialgene-hmmer:0.0.1'
+    conda 'conda-forge::sha256 conda-forge::sha256'
 
     input:
     tuple path(hmm), path(fasta)
-
 
     output:
     path "*.domtblout.gz", emit: domtblout, optional:true //optional in case no domains found

@@ -7,3 +7,4 @@ channels:
 
 dependencies:
   - antismash==6.1.1
+  - procps-ng

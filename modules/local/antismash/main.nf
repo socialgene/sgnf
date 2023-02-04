@@ -1,11 +1,13 @@
 process ANTISMASH {
     cpus 1
-    memory 2.3.GB
-    errorStrategy 'ignore'
+    memory { 5.GB * task.attempt }
+    errorStrategy { task.exitStatus == 137 ? 'retry' : 'ignore' }
+    maxRetries 1
 
     println '\033[0;34m The first time antismash is run it may take some time to download/build the conda environment or docker image. Keep calm, don\'t panic, it may look like nothing is happening.\033[0m'
-    conda (params.enable_conda ? "dockerfiles/antismash/environment.yml" : null) 
-    container 'chasemc2/antismash_nf:6.1.1'
+
+    container 'chasemc2/socialgene-antismash:6.1.1'
+    conda "$projectDir/dockerfiles/antismash/environment.yml"
 
     input:
     path(sequence_input)

@@ -2,8 +2,7 @@
 process HTCONDOR_PREP {
     label 'process_really_low'
 
-    container 'chasemc2/socialgene-small:0.0.1'
-    conda 'conda-forge::tar'
+
 
     input:
     path "??.hmm.gz"

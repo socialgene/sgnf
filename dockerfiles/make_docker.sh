@@ -25,6 +25,3 @@ docker build . -t chasemc2/socialgene-hmmer_plus:3.3.2
 docker push chasemc2/socialgene-hmmer_plus:3.3.2
 popd
 
-
-rm -r /opt/conda/lib/python3.8/site-packages/antismash/databases/clusterblast
-rm -r /opt/conda/lib/python3.8/site-packages/antismash/databases/pfam

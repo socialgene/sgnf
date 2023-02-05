@@ -4,13 +4,16 @@ This is the subworkflow that controls downloading and processing input genomes
 ========================================================================================
 */
 
+include { CRABHASH                  } from '../../modules/local/crabhash.nf'
 include { PROCESS_GENBANK           } from './process_genbank_input'
-include { PROCESS_FASTA_INPUT       } from './process_fasta_input'
 
+include { PROCESS_GENBANK_FILES                  } from '../../modules/local/process_genbank_files.nf'
 workflow GENOME_HANDLING {
+    take:
+        fasta_ch
+
     main:
         ch_versions     = Channel.empty()
-        fasta_ch        = Channel.empty()
         gbk_file_ch     = Channel.empty()
         info_ch         = Channel.empty()
 
@@ -33,11 +36,10 @@ workflow GENOME_HANDLING {
         }
 
         // Parse local fasta file(s)
-        if (params.local_fasta){
-            input_fasta_ch = Channel.fromPath(params.local_fasta)
-            PROCESS_FASTA_INPUT(input_fasta_ch)
-            fasta_fasta_ch = PROCESS_FASTA_INPUT.out.fasta.collect()
-            fasta_protein_info_ch = PROCESS_FASTA_INPUT.out.protein_info.collect()
+        if (fasta_ch){
+            PROCESS_GENBANK_FILES(fasta_ch)
+            fasta_fasta_ch = CRABHASH.out.fasta.collect()
+            fasta_protein_info_ch = CRABHASH.out.protein_info.collect()
 
         } else {
             fasta_fasta_ch = Channel.empty()

@@ -110,22 +110,31 @@ println "Manifest's pipeline version: $workflow.profile"
 
 
 
-
-
-    if (params.chembl) {
-        DOWNLOAD_CHEMBL_SQLITE()
-        DOWNLOAD_CHEMBL_DATA()
-    }
-
-
     /*
     ////////////////////////
     READ AND PROCESS INPUTS
     ////////////////////////
     */
 
+        if (params.chembl) {
+            // chembl has fasta we need to process, so download here and pass fasta along
+            DOWNLOAD_CHEMBL_DATA()
+            chembl_fasta_ch = DOWNLOAD_CHEMBL_DATA.out.chembl_31_fa
+        } else {
+            chembl_fasta_ch = Channel.empty()
+        }
 
-        GENOME_HANDLING()
+        if (params.local_fasta){
+            local_fasta_ch = Channel.fromPath(params.local_fasta)
+        } else {
+            local_fasta_ch = Channel.empty()
+
+        }
+        chembl_fasta_ch
+            .mix(chembl_fasta_ch)
+            .set{input_fasta_ch}
+
+        GENOME_HANDLING(input_fasta_ch)
         GENOME_HANDLING.out.ch_fasta.set{ch_fasta}
         ch_versions = ch_versions.mix(GENOME_HANDLING.out.ch_versions)
 

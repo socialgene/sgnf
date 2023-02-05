@@ -17,6 +17,6 @@ process DOWNLOAD_CHEMBL_SQLITE {
 
     wget https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/latest/chembl_31_sqlite.tar.gz
     wget https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/latest/checksums.txt
-    sha256sum -checksums.txt
+    sha256sum -c.txt
     """
 }

@@ -20,7 +20,7 @@ process CRABHASH {
     def args = task.ext.args ?: ''
     """
     RUST_BACKTRACE=1
-    mkdir out
+    mkdir -p out
     crabhash \\
         '*.fasta.gz' \\
         'out' \\

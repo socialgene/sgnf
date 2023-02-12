@@ -5,9 +5,12 @@ This is the subworkflow that controls downloading and processing input genomes
 */
 
 include { CRABHASH                  } from '../../modules/local/crabhash.nf'
-include { PROCESS_GENBANK           } from './process_genbank_input'
+include { MIBIG_DOWNLOAD                    } from '../../modules/local/mibig_download'
+include { NCBI_DATASETS_DOWNLOAD            } from '../../modules/local/ncbi_datasets_download'
+include { NCBI_GENOME_DOWNLOAD              } from '../../modules/local/ncbi_genome_download'
+include { PROCESS_GENBANK_FILES             } from '../../modules/local/process_genbank_files'
 
-include { PROCESS_GENBANK_FILES                  } from '../../modules/local/process_genbank_files.nf'
+
 workflow GENOME_HANDLING {
     take:
         fasta_ch
@@ -20,42 +23,64 @@ workflow GENOME_HANDLING {
         // Create a channel to mix inputs from different sources
         ch_read = Channel.empty()
 
-        // Parse genbank files from various sources
-        if (params.ncbi_genome_download_command || params.local_genbank || params.ncbi_datasets_command || params.mibig){
-            PROCESS_GENBANK()
-            ch_versions = ch_versions.mix(PROCESS_GENBANK.out.versions)
-            gbk_fasta_ch = PROCESS_GENBANK.out.fasta
-            gbk_file_ch = PROCESS_GENBANK.out.gbk
-            gbk_genome_info_ch = PROCESS_GENBANK.out.genome_info
-            gbk_protein_info_ch = PROCESS_GENBANK.out.protein_info
 
-        } else {
-            gbk_fasta_ch = Channel.empty()
-            gbk_genome_info_ch = Channel.empty()
-            gbk_protein_info_ch = Channel.empty()
+
+        if (params.mibig){
+            MIBIG_DOWNLOAD()
+            gbk_file_ch = gbk_file_ch.mix(MIBIG_DOWNLOAD.out.genbank)
+            ch_versions = ch_versions.mix(MIBIG_DOWNLOAD.out.versions)
         }
 
-        // Parse local fasta file(s)
-        if (fasta_ch){
-            PROCESS_GENBANK_FILES(fasta_ch)
-            fasta_fasta_ch = CRABHASH.out.fasta.collect()
-            fasta_protein_info_ch = CRABHASH.out.protein_info.collect()
-
-        } else {
-            fasta_fasta_ch = Channel.empty()
-            fasta_protein_info_ch = Channel.empty()
+        if (params.ncbi_genome_download_command){
+            NCBI_GENOME_DOWNLOAD(params.ncbi_genome_download_command)
+            gbk_file_ch = gbk_file_ch.mix(NCBI_GENOME_DOWNLOAD.out.gbff_files)
+            ch_versions = ch_versions.mix(NCBI_GENOME_DOWNLOAD.out.versions)
         }
 
+        if (params.local_genbank) {
+            temp_file_ch = Channel.fromPath( params.local_genbank )
+            gbk_file_ch= gbk_file_ch.mix(temp_file_ch)
 
-        fasta_ch = gbk_fasta_ch.mix(fasta_fasta_ch)
-        ch_genome_info = gbk_genome_info_ch
-        ch_protein_info = gbk_protein_info_ch.mix(fasta_protein_info_ch)
+        }
+
+        if (params.ncbi_datasets_command){
+
+            if (!params.ncbi_datasets_file){
+                ch_opt_input_file = file("NO_FILE")
+            } else {
+                opt_input_file = file(params.ncbi_datasets_file)
+                ch_opt_input_file = Channel.fromList(opt_input_file.splitText( by: 5000 , compress:false, file:true))
+            }
+
+            NCBI_DATASETS_DOWNLOAD(params.ncbi_datasets_command, ch_opt_input_file)
+            gbk_file_ch= gbk_file_ch.mix(NCBI_DATASETS_DOWNLOAD.out.gbff_files)
+            ch_versions = ch_versions.mix(NCBI_DATASETS_DOWNLOAD.out.versions)
+        }
+
+        if (fasta_ch) {
+            gbk_and_fasta_ch = gbk_file_ch.mix(fasta_ch)
+        }
+
+        PROCESS_GENBANK_FILES(
+                gbk_and_fasta_ch.flatten().toSortedList().flatten().buffer( size: 50, remainder: true ),
+                )
+
+        PROCESS_GENBANK_FILES.out.fasta.set{ch_fasta_out}
+
+        ch_versions = ch_versions.mix(PROCESS_GENBANK_FILES.out.versions)
+
+
+        PROCESS_GENBANK_FILES.out.genomic_info.set{genome_info}
+        PROCESS_GENBANK_FILES.out.protein_info.set{protein_info}
+
+
+
 
     emit:
-        ch_genome_info  = ch_genome_info
-        ch_protein_info = ch_protein_info
-        ch_gbk          = gbk_file_ch
-        ch_fasta        = fasta_ch
+        ch_genome_info  = genome_info
+        ch_protein_info = protein_info
+        ch_gbk          = gbk_file_ch.flatten().toSortedList().flatten()
+        ch_fasta        = ch_fasta_out
         ch_versions     = ch_versions
 
 

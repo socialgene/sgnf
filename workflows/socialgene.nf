@@ -38,8 +38,6 @@ include { HMMER_HMMSEARCH                   } from '../modules/local/hmmsearch'
 include { HMMSEARCH_PARSE                   } from '../modules/local/hmmsearch_parse'
 include { INDEX_FASTA                       } from '../modules/local/index_fasta'
 
-
-include { DOWNLOAD_CHEMBL_SQLITE                       } from '../modules/local/download_chembl_sqlite'
 include { DOWNLOAD_CHEMBL_DATA                       } from '../modules/local/download_chembl_data'
 
 
@@ -88,6 +86,7 @@ println "Manifest's pipeline version: $workflow.profile"
     }
 
     if (hmmlist.contains("all")) {
+        // TODO: Move available_hmms logic into socialgene python step to consolidate code
         hmmlist = available_hmms
     }
 
@@ -120,7 +119,7 @@ println "Manifest's pipeline version: $workflow.profile"
             // chembl has fasta we need to process, so download here and pass fasta along
             DOWNLOAD_CHEMBL_DATA()
             chembl_fasta_ch = DOWNLOAD_CHEMBL_DATA.out.chembl_31_fa
-        } else {
+        } else {SG_MODULES
             chembl_fasta_ch = Channel.empty()
         }
 
@@ -130,9 +129,7 @@ println "Manifest's pipeline version: $workflow.profile"
             local_fasta_ch = Channel.empty()
 
         }
-        chembl_fasta_ch
-            .mix(chembl_fasta_ch)
-            .set{input_fasta_ch}
+        input_fasta_ch = chembl_fasta_ch.mix(local_fasta_ch)
 
         GENOME_HANDLING(input_fasta_ch)
         GENOME_HANDLING.out.ch_fasta.set{ch_fasta}

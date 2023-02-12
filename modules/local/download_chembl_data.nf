@@ -30,6 +30,12 @@ wget -i - << EOF
     https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/latest/chembl_31.fps.gz
     https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/latest/checksums.txt
 EOF
+
+    # remove header
+    zcat '/home/chase/Documents/socialgene_data/cache/download_chembl_data/chembl_31_chemreps.txt.gz' |\
+        tail -n +2 |\
+        gzip > chembl_31_chemreps.txt.gz
+
     # grep to remove sha256sum warnings about improper lines in the checksum file
    # grep ".gz" checksums.txt | sha256sum --ignore-missing -c
     """

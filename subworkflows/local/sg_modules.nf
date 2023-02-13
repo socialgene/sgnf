@@ -29,7 +29,7 @@ workflow SG_MODULES {
         sg_modules.add("blastp")
     }
     if (params.mmseqs2){
-        sg_modules.add("mmseqs2")
+        sg_modules.add("mmseqs")
     }
     if (params.ncbi_taxonomy){
         sg_modules.add("ncbi_taxonomy")

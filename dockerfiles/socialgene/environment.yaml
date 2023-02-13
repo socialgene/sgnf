@@ -32,5 +32,5 @@ dependencies:
   - procps-ng # required by nextflow
 
   - pip:
-      - git+https://github.com/socialgene/sgpy.git@c65af03168168065ccab81333cdc0f0d95e53011
+      - git+https://github.com/socialgene/sgpy.git@750cec453170b2d18128415d3bcad5cb9e840078
       - git+https://github.com/socialgene/antismash_gbk_to_table.git@e8d8b9f83eae0305550cd3b32e53c2a11f32c69e

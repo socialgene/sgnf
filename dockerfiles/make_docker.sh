@@ -6,7 +6,7 @@ function usage() {
     Usage: [--upload]
 
     Options:
-        --upload:  ignore/don't use, this for uploading to DockerHub
+        --upload:  ignore/don't use, this is for uploading to DockerHub
 USAGE
     exit 1
 }

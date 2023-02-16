@@ -71,7 +71,7 @@ include { DIAMOND_MAKEDB                } from '../modules/local/diamond/makedb/
 ========================================================================================
 */
 
-available_hmms=["antismash","amrfinder","bigslice","classiphage","pfam","prism","resfams","tigrfam","virus_orthologous_groups"]
+available_hmms=["antismash","amrfinder","bigslice","classiphage", "ipresto","pfam","prism","resfams","tigrfam","virus_orthologous_groups"]
 
 workflow SOCIALGENE {
 println "Manifest's pipeline version: $workflow.profile"

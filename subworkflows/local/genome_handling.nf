@@ -62,7 +62,7 @@ workflow GENOME_HANDLING {
         }
 
         PROCESS_GENBANK_FILES(
-                gbk_and_fasta_ch.flatten().toSortedList().flatten().buffer( size: 50, remainder: true ),
+                gbk_and_fasta_ch.flatten().toSortedList().flatten().buffer( size: params.genbank_input_buffer, remainder: true ),
                 )
 
         PROCESS_GENBANK_FILES.out.fasta.set{ch_fasta_out}

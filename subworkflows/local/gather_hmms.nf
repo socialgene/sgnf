@@ -31,6 +31,7 @@ workflow GATHER_HMMS {
                 "amrfinder": params.amrfinder_version,
                 "bigslice": params.bigslice_versions,
                 "classiphage": '',
+                "ipresto": '',
                 "pfam": params.pfam_version,
                 "prism": '',
                 "resfams": '',

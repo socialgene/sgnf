@@ -10,8 +10,8 @@ workflow SG_MODULES {
 
     main:
 
-    // start with an empty sg_modules
-    sg_modules = []
+    // start with an empty sg_modules + parameters
+    sg_modules = ["parameters"]
 
     if (hmmlist){
         if (hmmlist.contains("tigrfam")){

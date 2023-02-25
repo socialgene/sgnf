@@ -5,7 +5,6 @@ process SEQKIT_SPLIT {
 
     input:
     path fasta
-    val nsplits
 
     output:
     path("outfolder/*")    , emit: fasta
@@ -19,11 +18,10 @@ process SEQKIT_SPLIT {
     def args = task.ext.args ?: ''
     """
     seqkit \\
-        split \\
+        split2 \\
         $args \\
         -j ${task.cpus} \\
         ${fasta} \\
-        -p ${nsplits} \\
         --extension '.gz' \\
         -O outfolder
 

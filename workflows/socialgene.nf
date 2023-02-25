@@ -163,8 +163,7 @@ println "Manifest's pipeline version: $workflow.profile"
 
             if (params.fasta_splits > 1){
                  SEQKIT_SPLIT(
-                     single_ch_fasta,
-                     params.fasta_splits
+                     single_ch_fasta
                      )
                  SEQKIT_SPLIT
                      .out

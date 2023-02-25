@@ -9,8 +9,8 @@ process DOWNLOAD_NCBI {
 
     output:
     // The directories are emitted because nf will crash with lots and lots of input files
-    path "fasta"        , emit: fasta
-    path "features"     , emit: feature_table
+    path "fasta"             , emit: fasta
+    path "features"          , emit: feature_table
     path "ncbi_versions.yml" , emit: versions
 
 

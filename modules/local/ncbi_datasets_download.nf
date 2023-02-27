@@ -27,15 +27,15 @@ process NCBI_DATASETS_DOWNLOAD {
     datasets download \\
         $input_taxon \\
         --dehydrated \\
-        $args \\
-        $opt_input_file
+        $args
 
     # unzip files
     unzip ncbi_dataset.zip
     datasets rehydrate --gzip --directory .
     rm ncbi_dataset.zip
 
-    # These GBFF don't contain the assembly accession, so socialgene uses the filename, change that here:
+    # These GBFF don't contain the assembly accession, so socialgene will use the filename
+    # change the filename here:
     rename_ncbi_datasets_download_taxon.py
 
     cat <<-END_VERSIONS > versions.yml

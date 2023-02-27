@@ -16,7 +16,7 @@ dependencies:
   - bioconda::hmmer>=3.3.2
   - bioconda::mmseqs2>=13.45111
   - bioconda::diamond>=2.0.15
-  - conda-forge::ncbi-datasets-cli>=13.28
+  - conda-forge::ncbi-datasets-cli>=14.13.2
   - bioconda::ncbi-genome-download>=0.3.1
   - bioconda::tabix>=1.11
   - bioconda::samtools>=1.16.1
@@ -30,6 +30,7 @@ dependencies:
   - conda-forge::gzip >=1.12
   - conda-forge::openjdk # required by neo4j
   - procps-ng # required by nextflow
+  - zip
 
   - pip:
       - git+https://github.com/socialgene/sgpy.git@04ef5d6b491a6e958526679d6807380f3bae373c

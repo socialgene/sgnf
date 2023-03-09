@@ -135,9 +135,9 @@ println "Manifest's pipeline version: $workflow.profile"
         GENOME_HANDLING.out.ch_fasta.set{ch_fasta}
         ch_versions = ch_versions.mix(GENOME_HANDLING.out.ch_versions)
 
-
-        GENOME_HANDLING.out.ch_fasta.flatten().collectFile(name:'collected_fasta.faa.gz').set{ collected_fasta}
-        DEDUP_AND_INDEX(collected_fasta)
+        // TODO: just pass this straight to DEDUP_AND_INDEX, dont' create a collected_fasta.faa.gz
+        GENOME_HANDLING.out.ch_fasta.collect().set{ fasta_to_dedup}
+        DEDUP_AND_INDEX(fasta_to_dedup)
         DEDUP_AND_INDEX.out
             .fasta
             .set{ch_nr_fasta}
@@ -216,7 +216,7 @@ println "Manifest's pipeline version: $workflow.profile"
 
         hmm_tsv_parse_ch = HMM_PREP.out.hmm_tsv_nodes.concat(
             HMM_PREP.out.hmm_tsv_out
-        ).collect()
+        ).collect().collectFile(name: '0_parsed_domtblout.gz', newLine: true)
 
         tigrfam_ch = HMM_PREP.out.tigr_ch.collect()
 

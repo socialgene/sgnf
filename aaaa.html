@@ -1,0 +1,383 @@
+<!--
+  ~ Copyright 2013-2019, Centre for Genomic Regulation (CRG)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<html>
+
+    <head>
+        <title>Nextflow Cytoscape.js with Dagre</title>
+
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+
+        <script type="text/javascript">
+        var prot = (("https:" == document.location.protocol) ? "https://" : "http://");
+        document.write(unescape("%3Cscript src='" + prot + "code.jquery.com/jquery-2.0.3.min.js' type='text/javascript' %3E%3C/script%3E"));
+        document.write(unescape("%3Cscript src='" + prot + "cdnjs.cloudflare.com/ajax/libs/cytoscape/2.6.12/cytoscape.min.js' type='text/javascript' %3E%3C/script%3E"));
+        document.write(unescape("%3Cscript src='" + prot + "cdn.rawgit.com/cpettitt/dagre/v0.7.4/dist/dagre.min.js' type='text/javascript' %3E%3C/script%3E"));
+        document.write(unescape("%3Cscript src='" + prot + "cdn.rawgit.com/cytoscape/cytoscape.js-dagre/1.1.2/cytoscape-dagre.js' type='text/javascript' %3E%3C/script%3E"));
+        </script>
+
+        <style>
+            body {
+                font-family: helvetica;
+                font-size: 14px;
+            }
+
+            #cy {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                left: 0;
+                top: 0;
+                z-index: 999;
+            }
+
+            h1 {
+                opacity: 0.5;
+                font-size: 1em;
+            }
+        </style>
+
+        <script>
+            $(function(){
+                var cy = window.cy = cytoscape({
+                    container: document.getElementById('cy'),
+                    boxSelectionEnabled: false,
+                    autounselectify: true,
+
+                    layout: {
+                        name: 'dagre'
+                    },
+
+                    style: cytoscape.stylesheet()
+                        .selector( 'node')
+                            .css({
+                                'width': 10,
+                                'height': 10,
+                                'content': 'data(label)',
+                                'text-valign': 'center',
+                                'text-halign': 'center',
+                                'text-opacity': 0.5,
+                            })
+                        .selector('node.PROCESS')
+                            .css({
+                                'width': 100,
+                                'height': 50,
+                                'text-opacity': 0.9,
+                                'background-color': '#009911'
+                            })
+                        .selector('node.OPERATOR')
+                            .css({
+                                'background-color': '#11479e',
+                                'text-halign': 'right',
+                            })
+                        .selector('node.ORIGIN')
+                            .css({
+                                'background-color': '#999999',
+                                'text-halign': 'right',
+                            })
+                        .selector('node.TERMINATION')
+                            .css({
+                                'background-color': '#999999',
+                                'text-halign': 'right',
+                            })
+                        .selector('edge')
+                            .css({
+                                'content': 'data(label)',
+                                'text-opacity': 0.5,
+                                'width': 4,
+                                'target-arrow-shape': 'triangle',
+                                'line-color': '#9dbaea',
+                                'target-arrow-color': '#9dbaea'
+                            }),
+
+elements: {
+nodes: [
+{ data: { id: 'p0', label: 'Channel.empty'}, classes: 'ORIGIN' },
+{ data: { id: 'p1', label: 'SOCIALGENE:PARAMETER_EXPORT_FOR_NEO4J'}, classes: 'PROCESS' },
+{ data: { id: 'p2', label: 'collect'}, classes: 'OPERATOR' },
+{ data: { id: 'p3', label: 'Channel.empty'}, classes: 'ORIGIN' },
+{ data: { id: 'p4', label: 'Channel.empty'}, classes: 'ORIGIN' },
+{ data: { id: 'p5', label: 'mix'}, classes: 'OPERATOR' },
+{ data: { id: 'p6', label: 'Channel.empty'}, classes: 'ORIGIN' },
+{ data: { id: 'p7', label: 'Channel.empty'}, classes: 'ORIGIN' },
+{ data: { id: 'p8', label: 'Channel.empty'}, classes: 'ORIGIN' },
+{ data: { id: 'p9'}, classes: 'NODE' },
+{ data: { id: 'p10', label: 'Channel.empty'}, classes: 'ORIGIN' },
+{ data: { id: 'p11'}, classes: 'NODE' },
+{ data: { id: 'p12'}, classes: 'ORIGIN' },
+{ data: { id: 'p13', label: 'SOCIALGENE:GENOME_HANDLING:NCBI_GENOME_DOWNLOAD'}, classes: 'PROCESS' },
+{ data: { id: 'p14', label: 'mix'}, classes: 'OPERATOR' },
+{ data: { id: 'p15', label: 'mix'}, classes: 'OPERATOR' },
+{ data: { id: 'p16', label: 'mix'}, classes: 'OPERATOR' },
+{ data: { id: 'p17', label: 'flatten'}, classes: 'OPERATOR' },
+{ data: { id: 'p18', label: 'toSortedList'}, classes: 'OPERATOR' },
+{ data: { id: 'p19', label: 'flatten'}, classes: 'OPERATOR' },
+{ data: { id: 'p20', label: 'buffer'}, classes: 'OPERATOR' },
+{ data: { id: 'p21', label: 'SOCIALGENE:GENOME_HANDLING:PROCESS_GENBANK_FILES'}, classes: 'PROCESS' },
+{ data: { id: 'p22'}, classes: 'NODE' },
+{ data: { id: 'p23'}, classes: 'NODE' },
+{ data: { id: 'p24'}, classes: 'NODE' },
+{ data: { id: 'p25'}, classes: 'NODE' },
+{ data: { id: 'p26'}, classes: 'NODE' },
+{ data: { id: 'p27', label: 'mix'}, classes: 'OPERATOR' },
+{ data: { id: 'p28', label: 'flatten'}, classes: 'OPERATOR' },
+{ data: { id: 'p29', label: 'toSortedList'}, classes: 'OPERATOR' },
+{ data: { id: 'p30', label: 'flatten'}, classes: 'OPERATOR' },
+{ data: { id: 'p31'}, classes: 'NODE' },
+{ data: { id: 'p32', label: 'mix'}, classes: 'OPERATOR' },
+{ data: { id: 'p33', label: 'flatten'}, classes: 'OPERATOR' },
+{ data: { id: 'p34', label: 'collectFile'}, classes: 'OPERATOR' },
+{ data: { id: 'p35', label: 'SOCIALGENE:DEDUP_AND_INDEX'}, classes: 'PROCESS' },
+{ data: { id: 'p36'}, classes: 'NODE' },
+{ data: { id: 'p37'}, classes: 'NODE' },
+{ data: { id: 'p38'}, classes: 'NODE' },
+{ data: { id: 'p39', label: 'SOCIALGENE:SEQKIT_SPLIT'}, classes: 'PROCESS' },
+{ data: { id: 'p40'}, classes: 'NODE' },
+{ data: { id: 'p41', label: 'flatten'}, classes: 'OPERATOR' },
+{ data: { id: 'p42', label: 'Channel.empty'}, classes: 'ORIGIN' },
+{ data: { id: 'p43'}, classes: 'NODE' },
+{ data: { id: 'p44', label: 'Channel.empty'}, classes: 'ORIGIN' },
+{ data: { id: 'p45', label: 'Channel.empty'}, classes: 'ORIGIN' },
+{ data: { id: 'p46', label: 'Channel.fromList'}, classes: 'ORIGIN' },
+{ data: { id: 'p47', label: 'map'}, classes: 'OPERATOR' },
+{ data: { id: 'p48', label: 'SOCIALGENE:HMM_PREP:GATHER_HMMS:DOWNLOAD_HMM_DATABASE'}, classes: 'PROCESS' },
+{ data: { id: 'p49', label: 'mix'}, classes: 'OPERATOR' },
+{ data: { id: 'p50', label: 'mix'}, classes: 'OPERATOR' },
+{ data: { id: 'p51'}, classes: 'NODE' },
+{ data: { id: 'p52', label: 'toList'}, classes: 'OPERATOR' },
+{ data: { id: 'p53'}, classes: 'ORIGIN' },
+{ data: { id: 'p54', label: 'SOCIALGENE:HMM_PREP:HMM_HASH'}, classes: 'PROCESS' },
+{ data: { id: 'p55'}, classes: 'NODE' },
+{ data: { id: 'p56', label: 'SOCIALGENE:HMM_PREP:HMM_TSV_PARSE'}, classes: 'PROCESS' },
+{ data: { id: 'p57'}, classes: 'NODE' },
+{ data: { id: 'p58', label: 'flatten'}, classes: 'OPERATOR' },
+{ data: { id: 'p59', label: 'flatten'}, classes: 'OPERATOR' },
+{ data: { id: 'p60', label: 'combine'}, classes: 'OPERATOR' },
+{ data: { id: 'p61', label: 'SOCIALGENE:HMMER_HMMSEARCH'}, classes: 'PROCESS' },
+{ data: { id: 'p62', label: 'last'}, classes: 'OPERATOR' },
+{ data: { id: 'p63', label: 'mix'}, classes: 'OPERATOR' },
+{ data: { id: 'p64', label: 'buffer'}, classes: 'OPERATOR' },
+{ data: { id: 'p65', label: 'SOCIALGENE:HMMSEARCH_PARSE'}, classes: 'PROCESS' },
+{ data: { id: 'p66', label: 'collect'}, classes: 'OPERATOR' },
+{ data: { id: 'p67', label: 'last'}, classes: 'OPERATOR' },
+{ data: { id: 'p68', label: 'mix'}, classes: 'OPERATOR' },
+{ data: { id: 'p69', label: 'concat'}, classes: 'OPERATOR' },
+{ data: { id: 'p70', label: 'collect'}, classes: 'OPERATOR' },
+{ data: { id: 'p71'}, classes: 'ORIGIN' },
+{ data: { id: 'p72', label: 'collect'}, classes: 'OPERATOR' },
+{ data: { id: 'p73', label: 'SOCIALGENE:DIAMOND_MAKEDB'}, classes: 'PROCESS' },
+{ data: { id: 'p74', label: 'SOCIALGENE:DIAMOND_BLASTP'}, classes: 'PROCESS' },
+{ data: { id: 'p75', label: 'collect'}, classes: 'OPERATOR' },
+{ data: { id: 'p76', label: 'mix'}, classes: 'OPERATOR' },
+{ data: { id: 'p77', label: 'mix'}, classes: 'OPERATOR' },
+{ data: { id: 'p78', label: 'SOCIALGENE:MMSEQS2_CREATEDB'}, classes: 'PROCESS' },
+{ data: { id: 'p79'}, classes: 'NODE' },
+{ data: { id: 'p80', label: 'SOCIALGENE:MMSEQS_CREATEINDEX'}, classes: 'PROCESS' },
+{ data: { id: 'p81'}, classes: 'NODE' },
+{ data: { id: 'p82', label: 'SOCIALGENE:MMSEQS2_EASYCLUSTER'}, classes: 'PROCESS' },
+{ data: { id: 'p83'}, classes: 'NODE' },
+{ data: { id: 'p84'}, classes: 'NODE' },
+{ data: { id: 'p85', label: 'collect'}, classes: 'OPERATOR' },
+{ data: { id: 'p86', label: 'mix'}, classes: 'OPERATOR' },
+{ data: { id: 'p87', label: 'Channel.empty'}, classes: 'ORIGIN' },
+{ data: { id: 'p88', label: 'SOCIALGENE:NCBI_TAXONOMY:TAXDUMP_DOWNLOAD'}, classes: 'PROCESS' },
+{ data: { id: 'p89', label: 'SOCIALGENE:NCBI_TAXONOMY:TAXDUMP_PROCESS'}, classes: 'PROCESS' },
+{ data: { id: 'p90', label: 'mix'}, classes: 'OPERATOR' },
+{ data: { id: 'p91', label: 'mix'}, classes: 'OPERATOR' },
+{ data: { id: 'p92', label: 'concat'}, classes: 'OPERATOR' },
+{ data: { id: 'p93', label: 'collect'}, classes: 'OPERATOR' },
+{ data: { id: 'p94', label: 'mix'}, classes: 'OPERATOR' },
+{ data: { id: 'p95'}, classes: 'ORIGIN' },
+{ data: { id: 'p96'}, classes: 'ORIGIN' },
+{ data: { id: 'p97', label: 'SOCIALGENE:NEO4J_HEADERS'}, classes: 'PROCESS' },
+{ data: { id: 'p98', label: 'collect'}, classes: 'OPERATOR' },
+{ data: { id: 'p99', label: 'mix'}, classes: 'OPERATOR' },
+{ data: { id: 'p100', label: 'collectFile'}, classes: 'OPERATOR' },
+{ data: { id: 'p101'}, classes: 'ORIGIN' },
+{ data: { id: 'p102', label: 'SOCIALGENE:NEO4J_ADMIN_IMPORT_DRYRUN'}, classes: 'PROCESS' },
+{ data: { id: 'p103'}, classes: 'NODE' },
+{ data: { id: 'p104'}, classes: 'NODE' },
+{ data: { id: 'p105'}, classes: 'NODE' },
+{ data: { id: 'p106', label: 'collect'}, classes: 'OPERATOR' },
+{ data: { id: 'p107', label: 'collect'}, classes: 'OPERATOR' },
+{ data: { id: 'p108', label: 'collect'}, classes: 'OPERATOR' },
+{ data: { id: 'p109'}, classes: 'ORIGIN' },
+{ data: { id: 'p110', label: 'SOCIALGENE:NEO4J_ADMIN_IMPORT'}, classes: 'PROCESS' },
+{ data: { id: 'p111'}, classes: 'NODE' },
+{ data: { id: 'p112'}, classes: 'NODE' },
+{ data: { id: 'p113'}, classes: 'NODE' },
+{ data: { id: 'p114'}, classes: 'NODE' },
+{ data: { id: 'p115'}, classes: 'NODE' },
+{ data: { id: 'p116', label: 'mix'}, classes: 'OPERATOR' },
+{ data: { id: 'p117'}, classes: 'NODE' },
+{ data: { id: 'p118', label: 'SOCIALGENE:CUSTOM_DUMPSOFTWAREVERSIONS'}, classes: 'PROCESS' },
+{ data: { id: 'p119'}, classes: 'NODE' },
+{ data: { id: 'p120'}, classes: 'NODE' },
+{ data: { id: 'p121'}, classes: 'NODE' },
+],
+edges: [
+{ data: { source: 'p0', target: 'p32', label: 'ch_versions' } },
+{ data: { source: 'p1', target: 'p2'} },
+{ data: { source: 'p2', target: 'p110', label: 'parameters_ch' } },
+{ data: { source: 'p3', target: 'p5', label: 'chembl_fasta_ch' } },
+{ data: { source: 'p4', target: 'p5', label: 'local_fasta_ch' } },
+{ data: { source: 'p5', target: 'p16', label: 'fasta_ch' } },
+{ data: { source: 'p6', target: 'p15', label: 'ch_versions' } },
+{ data: { source: 'p7', target: 'p14', label: 'gbk_file_ch' } },
+{ data: { source: 'p8', target: 'p9', label: 'info_ch' } },
+{ data: { source: 'p10', target: 'p11', label: 'ch_read' } },
+{ data: { source: 'p12', target: 'p13', label: 'input_args' } },
+{ data: { source: 'p13', target: 'p14'} },
+{ data: { source: 'p13', target: 'p15'} },
+{ data: { source: 'p14', target: 'p16', label: 'gbk_file_ch' } },
+{ data: { source: 'p15', target: 'p27', label: 'ch_versions' } },
+{ data: { source: 'p16', target: 'p17', label: 'gbk_and_fasta_ch' } },
+{ data: { source: 'p17', target: 'p18'} },
+{ data: { source: 'p18', target: 'p19'} },
+{ data: { source: 'p19', target: 'p20'} },
+{ data: { source: 'p20', target: 'p21'} },
+{ data: { source: 'p21', target: 'p108', label: 'ch_protein_info' } },
+{ data: { source: 'p21', target: 'p26'} },
+{ data: { source: 'p21', target: 'p25'} },
+{ data: { source: 'p21', target: 'p24'} },
+{ data: { source: 'p21', target: 'p23'} },
+{ data: { source: 'p21', target: 'p22'} },
+{ data: { source: 'p21', target: 'p33', label: 'ch_fasta' } },
+{ data: { source: 'p21', target: 'p27'} },
+{ data: { source: 'p21', target: 'p107', label: 'ch_genome_info' } },
+{ data: { source: 'p27', target: 'p32', label: 'ch_versions' } },
+{ data: { source: 'p14', target: 'p28', label: 'gbk_file_ch' } },
+{ data: { source: 'p28', target: 'p29'} },
+{ data: { source: 'p29', target: 'p30'} },
+{ data: { source: 'p30', target: 'p31', label: 'ch_gbk' } },
+{ data: { source: 'p32', target: 'p63', label: 'ch_versions' } },
+{ data: { source: 'p33', target: 'p34'} },
+{ data: { source: 'p34', target: 'p35', label: 'collected_fasta' } },
+{ data: { source: 'p35', target: 'p39', label: 'single_ch_fasta' } },
+{ data: { source: 'p35', target: 'p38'} },
+{ data: { source: 'p35', target: 'p37'} },
+{ data: { source: 'p35', target: 'p36'} },
+{ data: { source: 'p39', target: 'p41'} },
+{ data: { source: 'p39', target: 'p40'} },
+{ data: { source: 'p41', target: 'p59', label: 'ch_split_fasta' } },
+{ data: { source: 'p42', target: 'p43', label: 'versions' } },
+{ data: { source: 'p44', target: 'p50', label: 'ch_versions' } },
+{ data: { source: 'p45', target: 'p49', label: 'ch_hmms' } },
+{ data: { source: 'p46', target: 'p47'} },
+{ data: { source: 'p47', target: 'p48', label: 'hmmlist_ch' } },
+{ data: { source: 'p48', target: 'p49'} },
+{ data: { source: 'p48', target: 'p50'} },
+{ data: { source: 'p49', target: 'p52', label: 'ch_hmms' } },
+{ data: { source: 'p50', target: 'p51', label: 'versions' } },
+{ data: { source: 'p52', target: 'p54', label: 'hmms' } },
+{ data: { source: 'p53', target: 'p54', label: 'hmm_splits' } },
+{ data: { source: 'p54', target: 'p56'} },
+{ data: { source: 'p54', target: 'p58', label: 'hmms' } },
+{ data: { source: 'p54', target: 'p55'} },
+{ data: { source: 'p56', target: 'p69', label: 'hmm_tsv_nodes' } },
+{ data: { source: 'p56', target: 'p69', label: 'hmm_tsv_out' } },
+{ data: { source: 'p56', target: 'p57'} },
+{ data: { source: 'p58', target: 'p60'} },
+{ data: { source: 'p59', target: 'p60'} },
+{ data: { source: 'p60', target: 'p61', label: 'mixed_hmm_fasta_ch' } },
+{ data: { source: 'p61', target: 'p64', label: 'domtblout_ch' } },
+{ data: { source: 'p61', target: 'p62'} },
+{ data: { source: 'p62', target: 'p63'} },
+{ data: { source: 'p63', target: 'p68', label: 'ch_versions' } },
+{ data: { source: 'p64', target: 'p65'} },
+{ data: { source: 'p65', target: 'p66'} },
+{ data: { source: 'p65', target: 'p67'} },
+{ data: { source: 'p66', target: 'p110', label: 'hmmer_result_ch' } },
+{ data: { source: 'p67', target: 'p68'} },
+{ data: { source: 'p68', target: 'p76', label: 'ch_versions' } },
+{ data: { source: 'p69', target: 'p70'} },
+{ data: { source: 'p70', target: 'p110', label: 'hmm_tsv_parse_ch' } },
+{ data: { source: 'p71', target: 'p72'} },
+{ data: { source: 'p72', target: 'p110', label: 'tigrfam_ch' } },
+{ data: { source: 'p35', target: 'p73', label: 'single_ch_fasta' } },
+{ data: { source: 'p73', target: 'p74'} },
+{ data: { source: 'p73', target: 'p76'} },
+{ data: { source: 'p35', target: 'p74', label: 'single_ch_fasta' } },
+{ data: { source: 'p74', target: 'p75'} },
+{ data: { source: 'p74', target: 'p77'} },
+{ data: { source: 'p75', target: 'p110', label: 'blast_ch' } },
+{ data: { source: 'p76', target: 'p77', label: 'ch_versions' } },
+{ data: { source: 'p77', target: 'p86', label: 'ch_versions' } },
+{ data: { source: 'p35', target: 'p78', label: 'single_ch_fasta' } },
+{ data: { source: 'p78', target: 'p80'} },
+{ data: { source: 'p78', target: 'p79'} },
+{ data: { source: 'p80', target: 'p81'} },
+{ data: { source: 'p35', target: 'p82', label: 'single_ch_fasta' } },
+{ data: { source: 'p82', target: 'p84'} },
+{ data: { source: 'p82', target: 'p85'} },
+{ data: { source: 'p82', target: 'p83'} },
+{ data: { source: 'p82', target: 'p86'} },
+{ data: { source: 'p85', target: 'p110', label: 'mmseqs2_ch' } },
+{ data: { source: 'p86', target: 'p94', label: 'ch_versions' } },
+{ data: { source: 'p87', target: 'p90', label: 'ch_versions' } },
+{ data: { source: 'p88', target: 'p89'} },
+{ data: { source: 'p88', target: 'p90'} },
+{ data: { source: 'p89', target: 'p92', label: 'nodes_taxid' } },
+{ data: { source: 'p89', target: 'p92', label: 'taxid_to_taxid' } },
+{ data: { source: 'p89', target: 'p91'} },
+{ data: { source: 'p90', target: 'p91', label: 'ch_versions' } },
+{ data: { source: 'p91', target: 'p94', label: 'versions' } },
+{ data: { source: 'p92', target: 'p93'} },
+{ data: { source: 'p93', target: 'p110', label: 'taxdump_ch' } },
+{ data: { source: 'p94', target: 'p99', label: 'ch_versions' } },
+{ data: { source: 'p95', target: 'p97', label: 'sg_modules' } },
+{ data: { source: 'p96', target: 'p97', label: 'hmmlist' } },
+{ data: { source: 'p97', target: 'p98'} },
+{ data: { source: 'p97', target: 'p99'} },
+{ data: { source: 'p98', target: 'p110', label: 'neo4j_header_ch' } },
+{ data: { source: 'p99', target: 'p100', label: 'ch_versions' } },
+{ data: { source: 'p100', target: 'p118', label: 'collected_version_files' } },
+{ data: { source: 'p95', target: 'p102', label: 'sg_modules' } },
+{ data: { source: 'p101', target: 'p102', label: 'hmmlist' } },
+{ data: { source: 'p102', target: 'p105'} },
+{ data: { source: 'p102', target: 'p104'} },
+{ data: { source: 'p102', target: 'p103'} },
+{ data: { source: 'p95', target: 'p106', label: 'sg_modules' } },
+{ data: { source: 'p106', target: 'p110'} },
+{ data: { source: 'p107', target: 'p110'} },
+{ data: { source: 'p108', target: 'p110'} },
+{ data: { source: 'p109', target: 'p110', label: 'hmmlist' } },
+{ data: { source: 'p110', target: 'p115'} },
+{ data: { source: 'p110', target: 'p114'} },
+{ data: { source: 'p110', target: 'p113'} },
+{ data: { source: 'p110', target: 'p112'} },
+{ data: { source: 'p110', target: 'p116'} },
+{ data: { source: 'p110', target: 'p111'} },
+{ data: { source: 'p99', target: 'p116', label: 'ch_versions' } },
+{ data: { source: 'p116', target: 'p117', label: 'ch_versions' } },
+{ data: { source: 'p118', target: 'p121'} },
+{ data: { source: 'p118', target: 'p120'} },
+{ data: { source: 'p118', target: 'p119'} },
+],
+},
+
+                });
+
+            });
+        </script>
+    </head>
+
+    <body>
+        <h1>Nextflow Cytoscape.js with Dagre</h1>
+        <div id="cy"></div>
+    </body>
+
+</html>

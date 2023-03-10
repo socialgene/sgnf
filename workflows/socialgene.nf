@@ -216,7 +216,7 @@ println "Manifest's pipeline version: $workflow.profile"
 
         hmm_tsv_parse_ch = HMM_PREP.out.hmm_tsv_nodes.concat(
             HMM_PREP.out.hmm_tsv_out
-        ).collect().collectFile(name: '0_parsed_domtblout.gz', newLine: true)
+        ).collect()
 
         tigrfam_ch = HMM_PREP.out.tigr_ch.collect()
 
@@ -306,10 +306,10 @@ println "Manifest's pipeline version: $workflow.profile"
 
     // all the '.collect()'s were added to ensure a cardinality of 1 for all inputs to database build
 
-    NEO4J_ADMIN_IMPORT_DRYRUN(
-        sg_modules,
-        hmmlist
-    )
+    // NEO4J_ADMIN_IMPORT_DRYRUN(
+    //     sg_modules,
+    //     hmmlist
+    // )
 
 if (run_build_database) {
 

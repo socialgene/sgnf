@@ -40,7 +40,7 @@ process PROCESS_GENBANK_FILES {
     md5_as_filename_after_gzip.sh "assembly_to_taxid" "assembly_to_taxid.gz"
     md5_as_filename_after_gzip.sh "*faa" "faa.gz"
     md5_as_filename_after_gzip.sh "loci" "loci.gz"
-    md5_as_filename_after_gzip.sh "assemblies" "assemblies.gz"
+    md5_as_filename_after_gzip.sh "assembly" "assemblies.gz"
 
 
     cat <<-END_VERSIONS > versions.yml

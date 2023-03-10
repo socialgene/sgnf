@@ -2,10 +2,11 @@ process NEO4J_ADMIN_IMPORT {
     tag 'Building Neo4j database'
     label 'process_high'
 
-    stageInMode 'copy'
+    stageInMode 'rellink'
 
-    containerOptions "-v /data/opt/conda/bin/neo4j/neo4j-community-5.1.0/data"
+    containerOptions "-v /data:/opt/conda/bin/neo4j/neo4j-community-5.1.0/data"
     containerOptions "-v /import:/opt/conda/bin/neo4j/neo4j-community-5.1.0/import"
+
 
     input:
     val sg_modules
@@ -38,7 +39,9 @@ process NEO4J_ADMIN_IMPORT {
     """
 
     # This is based on the Dockerfile (neo4j-admin writes into this directory)
+    touch import.report
     NEO4J_BASE_DIR='/opt/conda/bin/neo4j/neo4j-community-5.1.0'
+
 
     sg_create_neo4j_db \\
     --neo4j_top_dir . \\
@@ -60,8 +63,6 @@ process NEO4J_ADMIN_IMPORT {
     --gid None \\
     --sg_modules ${sg_modules_delim} \\
     --hmmlist ${hmm_s_delim}
-
-    mkdir -p plugins data logs
 
     mv \${NEO4J_BASE_DIR}/data/* ./data/
     mv \${NEO4J_BASE_DIR}/logs/* ./logs/

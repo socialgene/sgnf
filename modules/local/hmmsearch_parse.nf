@@ -23,7 +23,6 @@ process HMMSEARCH_PARSE {
 
     # TODO: fix in sgpy
     # remove empty files which hash to -> 7029066c27ac6f5ef18d660d5741979a.parseddomtblout.gz
-
     [ ! -e '7029066c27ac6f5ef18d660d5741979a.parseddomtblout.gz' ] || rm '7029066c27ac6f5ef18d660d5741979a.parseddomtblout.gz'
 
 

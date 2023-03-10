@@ -1,6 +1,7 @@
 FROM mambaorg/micromamba:1.1.0
 
 COPY environment.yaml /tmp/env.yaml
+COPY sgpy/ sgpy
 
 RUN micromamba install -y -n base -f /tmp/env.yaml && \
     micromamba clean --all --yes
@@ -21,7 +22,7 @@ RUN /opt/conda/bin/wget -q https://neo4j.com/artifact.php?name=neo4j-community-5
 USER $MAMBA_USER
 ARG MAMBA_DOCKERFILE_ACTIVATE=1  # (otherwise python will not be found)
 
-#RUN /opt/conda/bin/pip3 install git+https://github.com/socialgene/sgpy.git@d0a6bfe16f0ae7f31066239a794167fabea8430e
+RUN /opt/conda/bin/pip3 install -e sgpy
 
 ENV PATH="/opt/conda/envs/bin:$PATH:/opt/conda/condabin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/conda/bin/neo4j/neo4j-community-5.1.0/bin"
 

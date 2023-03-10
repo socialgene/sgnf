@@ -40,7 +40,7 @@ workflow HMM_PREP {
 
     emit:
         hmms            = HMM_HASH.out.socialgene_hmms
-        hmm_tsv_nodes   = HMM_TSV_PARSE.out.sg_hmm_nodes_out
+        hmm_tsv_nodes   = HMM_TSV_PARSE.out.sg_hmm_nodes
         hmm_tsv_out     = HMM_TSV_PARSE.out.hmms_out
         versions        = ch_versions
         tigr_ch         = tigr_ch

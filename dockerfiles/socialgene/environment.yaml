@@ -33,5 +33,5 @@ dependencies:
   - zip
 
   - pip:
-      - git+https://github.com/socialgene/sgpy.git@ae5111af8b235d44eb7deddbea3a4f0e030ed41c
+      - git+https://github.com/socialgene/sgpy.git@7dba8a2639c786c074a5f5693e19bd0b89a6fe9f
       - git+https://github.com/socialgene/antismash_gbk_to_table.git@e8d8b9f83eae0305550cd3b32e53c2a11f32c69e

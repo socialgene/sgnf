@@ -23,8 +23,6 @@ workflow GENOME_HANDLING {
         // Create a channel to mix inputs from different sources
         ch_read = Channel.empty()
 
-
-
         if (params.mibig){
             MIBIG_DOWNLOAD()
             gbk_file_ch = gbk_file_ch.mix(MIBIG_DOWNLOAD.out.genbank)
@@ -40,7 +38,6 @@ workflow GENOME_HANDLING {
         if (params.local_genbank) {
             temp_file_ch = Channel.fromPath( params.local_genbank )
             gbk_file_ch= gbk_file_ch.mix(temp_file_ch)
-
         }
 
         if (params.ncbi_datasets_command){
@@ -68,7 +65,6 @@ workflow GENOME_HANDLING {
         PROCESS_GENBANK_FILES.out.fasta.set{ch_fasta_out}
 
         ch_versions = ch_versions.mix(PROCESS_GENBANK_FILES.out.versions)
-
 
         PROCESS_GENBANK_FILES.out.genomic_info.set{genome_info}
         PROCESS_GENBANK_FILES.out.protein_info.set{protein_info}

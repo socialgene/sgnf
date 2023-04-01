@@ -7,16 +7,15 @@ process PROCESS_GENBANK_FILES {
     path "file?.input_genome"
 
     output:
-    path "import/genomic_info/*.protein_ids.gz"         , emit: protein_ids
-    path "import/genomic_info/*.protein_info.gz"        , emit: protein_info
-    path "import/genomic_info/*.locus_to_protein.gz"    , emit: locus_to_protein
-    path "import/genomic_info/*.assembly_to_locus.gz"   , emit: assembly_to_locus
-    path "import/genomic_info/*.assembly_to_taxid.gz"   , emit: assembly_to_taxid
-    path "import/genomic_info/*.loci.gz"                , emit: loci
-    path "import/genomic_info/*.assemblies.gz"          , emit: assembly
-    path "import/genomic_info/*.faa.gz"                 , emit: fasta
-    path "import/genomic_info/versions.yml"             , emit: versions
-    path "import/genomic_info/"                         , emit: genomic_info
+    path "*.protein_ids.gz"         , emit: protein_ids
+    path "*.protein_info.gz"        , emit: protein_info
+    path "*.locus_to_protein.gz"    , emit: locus_to_protein
+    path "*.assembly_to_locus.gz"   , emit: assembly_to_locus
+    path "*.assembly_to_taxid.gz"   , emit: assembly_to_taxid
+    path "*.loci.gz"                , emit: loci
+    path "*.assemblies.gz"          , emit: assembly
+    path "*.faa.gz"                 , emit: fasta
+    path "versions.yml"             , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -41,10 +40,7 @@ process PROCESS_GENBANK_FILES {
     md5_as_filename_after_gzip.sh "loci" "loci.gz"
     md5_as_filename_after_gzip.sh "assembly" "assemblies.gz"
 
-    mkdir -p import/genomic_info
-    mv *.gz import/genomic_info
-
-    cat <<-END_VERSIONS > import/genomic_info/versions.yml
+    cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         python: \$(python --version 2>&1 | tail -n 1 | sed 's/^Python //')
         socialgene: \$(sg_version)

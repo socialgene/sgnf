@@ -328,8 +328,8 @@ if (run_build_database) {
                 hmmer_result_ch,
                 tigrfam_ch,
                 parameters_ch,
-                GENOME_HANDLING.out.ch_genome_info.collect(),
-                GENOME_HANDLING.out.ch_protein_info.collect()
+                GENOME_HANDLING.out.ch_genome_info,
+                GENOME_HANDLING.out.ch_protein_info
             )
 
             ch_versions = ch_versions.mix(NEO4J_ADMIN_IMPORT.out.versions)

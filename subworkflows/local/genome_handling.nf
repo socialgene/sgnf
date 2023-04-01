@@ -73,24 +73,32 @@ workflow GENOME_HANDLING {
 
     PROCESS_GENBANK_FILES.out.protein_ids
         .collectFile(name:'protein_ids.gz', sort: false )
+        .map {[it.getSimpleName(), it]}
         .set{ch_protein_ids}
+
     PROCESS_GENBANK_FILES.out.protein_info
         .collectFile(name:'protein_info.gz', sort: false )
+        .map {[it.getSimpleName(), it]}
         .set{ch_protein_info}
     PROCESS_GENBANK_FILES.out.locus_to_protein
         .collectFile(name:'locus_to_protein.gz', sort: false )
+        .map {[it.getSimpleName(), it]}
         .set{ch_locus_to_protein}
     PROCESS_GENBANK_FILES.out.assembly_to_locus
         .collectFile(name:'assembly_to_locus.gz', sort: false )
+        .map {[it.getSimpleName(), it]}
         .set{ch_assembly_to_locus}
     PROCESS_GENBANK_FILES.out.assembly_to_taxid
         .collectFile(name:'assembly_to_taxid.gz', sort: false )
+        .map {[it.getSimpleName(), it]}
         .set{ch_assembly_to_taxid}
     PROCESS_GENBANK_FILES.out.loci
         .collectFile(name:'loci.gz', sort: false )
+        .map {[it.getSimpleName(), it]}
         .set{ch_loci}
     PROCESS_GENBANK_FILES.out.assembly
         .collectFile(name:'assembly.gz', sort: false )
+        .map {[it.getSimpleName(), it]}
         .set{ch_assembly}
 
 

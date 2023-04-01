@@ -97,13 +97,12 @@ workflow GENOME_HANDLING {
         .map {[it.getSimpleName(), it]}
         .set{ch_loci}
     PROCESS_GENBANK_FILES.out.assembly
-        .collectFile(name:'assembly.gz', sort: false )
+        .collectFile(name:'assemblies.gz', sort: false )
         .map {[it.getSimpleName(), it]}
         .set{ch_assembly}
 
 
     ch_genomic_to_dedup = ch_locus_to_protein.mix(
-        ch_locus_to_protein,
         ch_assembly_to_locus,
         ch_assembly_to_taxid,
         ch_loci,

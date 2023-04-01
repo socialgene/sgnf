@@ -5,7 +5,7 @@ process DEDUPY {
     tuple val(x), path('input_file')
 
     output:
-    path "*$x*" , emit: deduped
+    path "*.gz" , emit: deduped
 
     when:
     task.ext.when == null || task.ext.when

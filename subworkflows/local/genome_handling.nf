@@ -9,6 +9,7 @@ include { MIBIG_DOWNLOAD                    } from '../../modules/local/mibig_do
 include { NCBI_DATASETS_DOWNLOAD            } from '../../modules/local/ncbi_datasets_download'
 include { NCBI_GENOME_DOWNLOAD              } from '../../modules/local/ncbi_genome_download'
 include { PROCESS_GENBANK_FILES             } from '../../modules/local/process_genbank_files'
+include { DEDUPY as GENOMIC_INFO            } from '../../modules/local/dedupy'
 
 
 workflow GENOME_HANDLING {
@@ -68,6 +69,41 @@ workflow GENOME_HANDLING {
 
         PROCESS_GENBANK_FILES.out.genomic_info.set{genome_info}
         PROCESS_GENBANK_FILES.out.protein_info.set{protein_info}
+
+
+    PROCESS_GENBANK_FILES.out.protein_ids
+        .collectFile(name:'protein_ids.gz', sort: false )
+        .set{ch_protein_ids}
+    PROCESS_GENBANK_FILES.out.protein_info
+        .collectFile(name:'protein_info.gz', sort: false )
+        .set{ch_protein_info}
+    PROCESS_GENBANK_FILES.out.locus_to_protein
+        .collectFile(name:'locus_to_protein.gz', sort: false )
+        .set{ch_locus_to_protein}
+    PROCESS_GENBANK_FILES.out.assembly_to_locus
+        .collectFile(name:'assembly_to_locus.gz', sort: false )
+        .set{ch_assembly_to_locus}
+    PROCESS_GENBANK_FILES.out.assembly_to_taxid
+        .collectFile(name:'assembly_to_taxid.gz', sort: false )
+        .set{ch_assembly_to_taxid}
+    PROCESS_GENBANK_FILES.out.loci
+        .collectFile(name:'loci.gz', sort: false )
+        .set{ch_loci}
+    PROCESS_GENBANK_FILES.out.assembly
+        .collectFile(name:'assembly.gz', sort: false )
+        .set{ch_assembly}
+
+
+    ch_to_dedup = ch_protein_ids.mix(
+        ch_protein_info,
+        ch_locus_to_protein,
+        ch_assembly_to_locus,
+        ch_assembly_to_taxid,
+        ch_loci,
+        ch_assembly)
+
+
+    GENOMIC_INFO(ch_to_dedup)
 
 
 

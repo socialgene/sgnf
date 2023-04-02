@@ -7,7 +7,6 @@ process HMMSEARCH_PARSE {
     path "*.parseddomtblout.gz", emit: parseddomtblout, optional:true //optional in case no domains found
     path "versions.yml" , emit: versions
 
-
     when:
     task.ext.when == null || task.ext.when
 
@@ -17,9 +16,11 @@ process HMMSEARCH_PARSE {
     do
         sg_process_domtblout \\
             --domtblout_file "\${i}" \\
-            --outpath "parseddomtblout"
-        md5_as_filename_after_gzip.sh "parseddomtblout" "parseddomtblout.gz"
+            --outpath "\${i}.tempparseddomtblout"
     done
+    cat *.tempparseddomtblout >> parseddomtblout
+    rm *.tempparseddomtblout
+    md5_as_filename_after_gzip.sh "parseddomtblout" "parseddomtblout.gz"
 
     # TODO: fix in sgpy
     # remove empty files which hash to -> 7029066c27ac6f5ef18d660d5741979a.parseddomtblout.gz

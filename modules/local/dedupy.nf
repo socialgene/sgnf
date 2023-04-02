@@ -1,5 +1,6 @@
 
 process DEDUPY {
+    tag $x
 
     input:
     tuple val(x), path('input_file')

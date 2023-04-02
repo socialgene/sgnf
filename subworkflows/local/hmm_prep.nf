@@ -11,7 +11,6 @@ include { HMM_TSV_PARSE             } from '../../modules/local/hmm_tsv_parse'
 
 workflow HMM_PREP {
     take:
-        ch_split_fasta
         hmmlist
 
     main:

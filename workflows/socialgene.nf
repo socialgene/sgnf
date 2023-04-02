@@ -37,8 +37,8 @@ include { HTCONDOR_PREP                     } from '../modules/local/htcondor_pr
 include { HMMER_HMMSEARCH                   } from '../modules/local/hmmsearch'
 include { HMMSEARCH_PARSE                   } from '../modules/local/hmmsearch_parse'
 include { INDEX_FASTA                       } from '../modules/local/index_fasta'
-
-include { DOWNLOAD_CHEMBL_DATA                       } from '../modules/local/download_chembl_data'
+include { DOWNLOAD_CHEMBL_DATA              } from '../modules/local/download_chembl_data'
+include { MD5_AS_FILENAME as COMBINE_DOMTBLOUT } from '../modules/local/md5_as_filename'
 
 
 
@@ -161,56 +161,59 @@ println "Manifest's pipeline version: $workflow.profile"
     if (params.hmmlist || params.custom_hmm_file){
 
 
-            if (params.fasta_splits > 1){
-                 SEQKIT_SPLIT(
-                     single_ch_fasta
-                     )
-                 SEQKIT_SPLIT
-                     .out
-                     .fasta
-                     .flatten()
-                     .set{ch_split_fasta}
+        if (params.fasta_splits > 1){
+            SEQKIT_SPLIT(
+                single_ch_fasta
+                )
+            SEQKIT_SPLIT
+                .out
+                .fasta
+                .flatten()
+                .set{ch_split_fasta}
 
-//            ch_split_fasta = single_ch_fasta.splitFasta(size:'15.MB', file:true, compress:true, decompress:true)
+        } else {
+            ch_split_fasta = single_ch_fasta
+        }
 
-            } else {
-                ch_split_fasta = single_ch_fasta
-            }
-            HMM_PREP(ch_split_fasta, hmmlist)
-            if (params.htcondor){
-                // collect all fasta and all hmms to pass to HTCONDOR_PREP
-                // kept separate to control renaming files in the process
-                ch_split_fasta.collect().set{all_split_fasta}
-                HMM_PREP.out.hmms.collect().set{all_split_hmms}
+        HMM_PREP(hmmlist)
 
-                HTCONDOR_PREP(all_split_hmms, all_split_fasta)
-                ch_versions = ch_versions.mix(HTCONDOR_PREP.out.versions)
-                domtblout_ch = false
-            } else if (params.domtblout_path){
-                domtblout_ch = Channel.fromPath(params.domtblout_path)
+        // either
+        // 1) collect files to send to high throughput computing (outside of nf-workflow)
+        // 2) use path to domtblout file
+        // 3) run HMMER using nextflow
 
+        if (params.htcondor){
+            // collect all fasta and all hmms to pass to HTCONDOR_PREP
+            // kept separate to control renaming files in the process
+            ch_split_fasta.collect().set{all_split_fasta}
+            HMM_PREP.out.hmms.collect().set{all_split_hmms}
+            HTCONDOR_PREP(all_split_hmms, all_split_fasta)
+            ch_versions = ch_versions.mix(HTCONDOR_PREP.out.versions)
+            domtblout_ch = false
+        } else if (params.domtblout_path){
+            domtblout_ch = Channel.fromPath(params.domtblout_path)
+        } else {
+            // create a channel that's the cartesian product of all hmm files and all fasta files
+            HMM_PREP.out.hmms
+                .flatten()
+                .combine(
+                    ch_split_fasta
+                        .flatten()
+                )
+                .set{ mixed_hmm_fasta_ch }
+            HMMER_HMMSEARCH(mixed_hmm_fasta_ch)
+            ch_versions = ch_versions.mix(HMMER_HMMSEARCH.out.versions.last())
 
-            } else {
-                // create a channel that's the cartesian product of all hmm files and all fasta files
-                HMM_PREP.out.hmms
-                    .flatten()
-                    .combine(
-                        ch_split_fasta
-                            .flatten()
-                    )
-                    .set{ mixed_hmm_fasta_ch }
-                HMMER_HMMSEARCH(mixed_hmm_fasta_ch)
-                ch_versions = ch_versions.mix(HMMER_HMMSEARCH.out.versions.last())
+            domtblout_ch = HMMER_HMMSEARCH.out.domtblout
 
-                domtblout_ch = HMMER_HMMSEARCH.out.domtblout
-
-            }
-
+        }
 
 
         if (domtblout_ch){
             HMMSEARCH_PARSE(domtblout_ch.buffer( size: 50, remainder: true ))
-            hmmer_result_ch = HMMSEARCH_PARSE.out.parseddomtblout.collect()
+            ch_parsed_domtblout_concat = HMMSEARCH_PARSE.out.parseddomtblout.collectFile(name: "parseddomtblout", sort: false )
+            COMBINE_DOMTBLOUT(ch_parsed_domtblout_concat)
+            hmmer_result_ch = COMBINE_DOMTBLOUT.out.outfile
             ch_versions = ch_versions.mix(HMMSEARCH_PARSE.out.versions.last())
         }
 
@@ -221,7 +224,6 @@ println "Manifest's pipeline version: $workflow.profile"
         tigrfam_ch = HMM_PREP.out.tigr_ch.collect()
 
     } else {
-
 
         hmm_tsv_parse_ch =  file("${baseDir}/assets/EMPTY_FILE")
         tigrfam_ch =  file("${baseDir}/assets/EMPTY_FILE")

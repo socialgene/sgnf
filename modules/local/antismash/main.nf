@@ -35,11 +35,11 @@ process ANTISMASH {
         $sequence_input
 
     # SocialGene doesn't care about a bunch of the output, just save the genbank files and json
-    find ${prefix} -name "*region*gbk"  -exec gzip --stdout {} +  > ${prefix}_regions.gbk.gz
+    find ${prefix} -name "*region*gbk"  -exec gzip -n --stdout {} +  > ${prefix}_regions.gbk.gz
 
-    gzip --stdout "${prefix}/regions.js" > "${prefix}_regions.js.gz"
+    gzip -n --stdout "${prefix}/regions.js" > "${prefix}_regions.js.gz"
 
-    tar -C ${prefix} -cf - . | gzip --rsyncable > ${prefix}.tgz
+    tar -C ${prefix} -cf - . | gzip -n --rsyncable > ${prefix}.tgz
     rm -r ${prefix}
 
     cat <<-END_VERSIONS > versions.yml

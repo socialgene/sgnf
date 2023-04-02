@@ -30,24 +30,24 @@ wget -i - << EOF
     https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/latest/chembl_31.fps.gz
     https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/latest/checksums.txt
 EOF
-    gzip chembl_uniprot_mapping.txt
+    gzip -n chembl_uniprot_mapping.txt
 
     # remove headers
     # chembl_id       canonical_smiles        standard_inchi  standard_inchi_key
     zcat 'chembl_31_chemreps.txt.gz' |\\
         tail -n +2 |\\
-        gzip > temp
+        gzip -n > temp
     rm chembl_31_chemreps.txt.gz
     mv temp chembl_31_chemreps.txt.gz
 
     cat 'chembl_uniprot_mapping.txt' |\\
         tail -n +2 |\\
-        gzip > chembl_uniprot_mapping.txt.gz
+        gzip -n > chembl_uniprot_mapping.txt.gz
     rm 'chembl_uniprot_mapping.txt'
 
     zcat chembl_31.fps.gz |\\
         sed '/^#/d' |\\
-        gzip > temp
+        gzip -n > temp
     rm chembl_31.fps.gz
     mv temp chembl_31.fps.gz
 

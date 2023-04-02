@@ -21,24 +21,25 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
     IMPORT LOCAL MODULES
 ========================================================================================
 */
-include { ANTISMASH                         } from '../modules/local/antismash/main'
-include { ANTISMASH_GBK_TO_TABLE            } from '../modules/local/antismash/antismash_gbk_to_table'
-include { MMSEQS2_EASYCLUSTER               } from '../modules/local/mmseqs2_easycluster'
-include { MMSEQS2_CREATEDB                  } from '../modules/local/mmseqs2_createdb'
-include { MMSEQS_CREATEINDEX                } from '../modules/nf-core/mmseqs/createindex/main'
-include { NEO4J_ADMIN_IMPORT                } from '../modules/local/neo4j_admin_import'
-include { NEO4J_ADMIN_IMPORT_DRYRUN         } from '../modules/local/neo4j_admin_import_dryrun'
-include { NEO4J_HEADERS                     } from '../modules/local/neo4j_headers'
-include { PARAMETER_EXPORT_FOR_NEO4J        } from '../modules/local/parameter_export_for_neo4j'
-include { SEQKIT_SORT                       } from '../modules/local/seqkit/sort/main'
-include { DEDUP_AND_INDEX                   } from '../modules/local/dedup_and_index'
-include { SEQKIT_SPLIT                      } from '../modules/local/seqkit/split/main'
-include { HTCONDOR_PREP                     } from '../modules/local/htcondor_prep'
-include { HMMER_HMMSEARCH                   } from '../modules/local/hmmsearch'
-include { HMMSEARCH_PARSE                   } from '../modules/local/hmmsearch_parse'
-include { INDEX_FASTA                       } from '../modules/local/index_fasta'
-include { DOWNLOAD_CHEMBL_DATA              } from '../modules/local/download_chembl_data'
-include { MD5_AS_FILENAME as COMBINE_DOMTBLOUT } from '../modules/local/md5_as_filename'
+include { ANTISMASH                                     } from '../modules/local/antismash/main'
+include { ANTISMASH_GBK_TO_TABLE                        } from '../modules/local/antismash/antismash_gbk_to_table'
+include { MMSEQS2_EASYCLUSTER                           } from '../modules/local/mmseqs2_easycluster'
+include { MMSEQS2_CREATEDB                              } from '../modules/local/mmseqs2_createdb'
+include { MMSEQS_CREATEINDEX                            } from '../modules/nf-core/mmseqs/createindex/main'
+include { NEO4J_ADMIN_IMPORT                            } from '../modules/local/neo4j_admin_import'
+include { NEO4J_ADMIN_IMPORT_DRYRUN                     } from '../modules/local/neo4j_admin_import_dryrun'
+include { NEO4J_HEADERS                                 } from '../modules/local/neo4j_headers'
+include { PARAMETER_EXPORT_FOR_NEO4J                    } from '../modules/local/parameter_export_for_neo4j'
+include { SEQKIT_SORT                                   } from '../modules/local/seqkit/sort/main'
+include { DEDUP_AND_INDEX                               } from '../modules/local/dedup_and_index'
+include { SEQKIT_SPLIT                                  } from '../modules/local/seqkit/split/main'
+include { HTCONDOR_PREP                                 } from '../modules/local/htcondor_prep'
+include { HMMER_HMMSEARCH                               } from '../modules/local/hmmsearch'
+include { HMMSEARCH_PARSE                               } from '../modules/local/hmmsearch_parse'
+include { INDEX_FASTA                                   } from '../modules/local/index_fasta'
+include { DOWNLOAD_CHEMBL_DATA                          } from '../modules/local/download_chembl_data'
+include { MD5_AS_FILENAME as COMBINE_PARSED_DOMTBLOUT   } from '../modules/local/md5_as_filename'
+include { MD5_AS_FILENAME as COMBINE_DOMTBLOUT          } from '../modules/local/md5_as_filename'
 
 
 
@@ -210,9 +211,15 @@ println "Manifest's pipeline version: $workflow.profile"
 
 
         if (domtblout_ch){
+
             HMMSEARCH_PARSE(domtblout_ch.buffer( size: 50, remainder: true ))
+            ch_domtblout_concat = HMMSEARCH_PARSE.out.parseddomtblout.collectFile(name: "parseddomtblout", sort: false )
+
+            COMBINE_DOMTBLOUT(ch_domtblout_concat)
+
+
             ch_parsed_domtblout_concat = HMMSEARCH_PARSE.out.parseddomtblout.collectFile(name: "parseddomtblout", sort: false )
-            COMBINE_DOMTBLOUT(ch_parsed_domtblout_concat)
+            COMBINE_PARSED_DOMTBLOUT(ch_parsed_domtblout_concat)
             hmmer_result_ch = COMBINE_DOMTBLOUT.out.outfile
             ch_versions = ch_versions.mix(HMMSEARCH_PARSE.out.versions.last())
         }

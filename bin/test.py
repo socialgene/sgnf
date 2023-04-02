@@ -21,7 +21,7 @@ parser.add_argument(
     metavar="filepath",
     help="url to ground truth  json file ",
     required=False,
-    default="https://gist.githubusercontent.com/chasemc/540ba908e617535bdadcd0a3ea9f5ab4/raw/91b93ebd2837c4489720fac1797ee86e89369ee9/a.json",
+    default="https://gist.githubusercontent.com/chasemc/540ba908e617535bdadcd0a3ea9f5ab4/raw/675237d82febb900cc46df706e0c9f263e70ab74/a.json",
 )
 parser.add_argument("--verbose", action=argparse.BooleanOptionalAction)
 

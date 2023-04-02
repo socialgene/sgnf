@@ -20,7 +20,7 @@ process ANTISMASH_GBK_TO_TABLE {
      --output antismash_gbk_to_table.tsv \
      --header
 
-    gzip -6 --rsyncable antismash_gbk_to_table.tsv
+    gzip -n -6 antismash_gbk_to_table.tsv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -1,6 +1,6 @@
 
 process DEDUPY {
-    tag $x
+    tag "$x"
 
     input:
     tuple val(x), path('input_file')
@@ -18,7 +18,7 @@ process DEDUPY {
     zcat 'input_file' |\
         sort |\
         uniq |
-        gzip -6 > "${x}"
+        gzip -n -6 > "${x}"
 
     md5_as_filename.sh "${x}" "${x}.gz"
 

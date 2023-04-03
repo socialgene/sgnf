@@ -18,15 +18,8 @@ process HMM_TSV_PARSE {
 
     sg_hmm_tsv_parser --all_hmms ${x}
 
-    sort sg_hmm_nodes > temp
-    rm sg_hmm_nodes
-    mv temp sg_hmm_nodes
-
     ls | grep -v "all_hmms.tsv" |\\
         while read -r line ; do md5_as_filename_after_gzip.sh "\$line" "\$line".gz; done
-
-
-
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

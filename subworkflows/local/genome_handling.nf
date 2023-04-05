@@ -70,34 +70,33 @@ workflow GENOME_HANDLING {
 
         PROCESS_GENBANK_FILES.out.protein_info.set{protein_info}
 
-
+    // sort by hash is needed for caching to work
     PROCESS_GENBANK_FILES.out.protein_ids
-        .collectFile(name:'protein_ids.gz', sort: false )
+        .collectFile(name:'protein_ids.gz', sort: 'hash', cache: true)
         .map {[it.getSimpleName(), it]}
         .set{ch_protein_ids}
-
     PROCESS_GENBANK_FILES.out.protein_info
-        .collectFile(name:'protein_info.gz', sort: false )
+        .collectFile(name:'protein_info.gz', sort: 'hash', cache: true)
         .map {[it.getSimpleName(), it]}
         .set{ch_protein_info}
     PROCESS_GENBANK_FILES.out.locus_to_protein
-        .collectFile(name:'locus_to_protein.gz', sort: false )
+        .collectFile(name:'locus_to_protein.gz', sort: 'hash', cache: true)
         .map {[it.getSimpleName(), it]}
         .set{ch_locus_to_protein}
     PROCESS_GENBANK_FILES.out.assembly_to_locus
-        .collectFile(name:'assembly_to_locus.gz', sort: false )
+        .collectFile(name:'assembly_to_locus.gz', sort: 'hash', cache: true)
         .map {[it.getSimpleName(), it]}
         .set{ch_assembly_to_locus}
     PROCESS_GENBANK_FILES.out.assembly_to_taxid
-        .collectFile(name:'assembly_to_taxid.gz', sort: false )
+        .collectFile(name:'assembly_to_taxid.gz', sort: 'hash', cache: true)
         .map {[it.getSimpleName(), it]}
         .set{ch_assembly_to_taxid}
     PROCESS_GENBANK_FILES.out.loci
-        .collectFile(name:'loci.gz', sort: false )
+        .collectFile(name:'loci.gz', sort: 'hash', cache: true)
         .map {[it.getSimpleName(), it]}
         .set{ch_loci}
     PROCESS_GENBANK_FILES.out.assembly
-        .collectFile(name:'assemblies.gz', sort: false )
+        .collectFile(name:'assemblies.gz', sort: 'hash', cache: true)
         .map {[it.getSimpleName(), it]}
         .set{ch_assembly}
 
@@ -108,7 +107,7 @@ workflow GENOME_HANDLING {
         ch_loci,
         ch_assembly)
 
-    ch_protein_to_dedup = ch_protein_ids.mix(ch_protein_info)
+    ch_protein_to_dedup = ch_protein_ids.concat(ch_protein_info)
 
     DEDUPLICATE_GENOMIC_INFO(ch_genomic_to_dedup)
     DEDUPLICATE_PROTEIN_INFO(ch_protein_to_dedup)

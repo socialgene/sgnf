@@ -1,8 +1,9 @@
 process ANTISMASH {
     cpus 1
     memory { 5.GB * task.attempt }
+    // only retry if memory issue
     errorStrategy { task.exitStatus == 137 ? 'retry' : 'ignore' }
-    maxRetries 1
+    maxRetries 3
 
     println '\033[0;34m The first time antismash is run it may take some time to download/build the conda environment or docker image. Keep calm, don\'t panic, it may look like nothing is happening.\033[0m'
 

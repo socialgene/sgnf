@@ -14,6 +14,7 @@ workflow SG_MODULES {
     sg_modules = ["parameters"]
 
     if (hmmlist){
+         sg_modules.add("base_hmm")
         if (hmmlist.contains("tigrfam")){
             // This is module handles the tigrfam dta apart from just the HMM
             sg_modules.add("tigrfam")

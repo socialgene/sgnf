@@ -32,15 +32,15 @@ workflow HMM_PREP {
         )
         //ch_versions = ch_versions.mix(HMM_HASH.out.versions)
 
-        HMM_TSV_PARSE(
-            HMM_HASH.out.all_hmms_tsv
-        )
+        // HMM_TSV_PARSE(
+        //     HMM_HASH.out.all_hmms_tsv
+        // )
        // ch_versions = ch_versions.mix(HMM_TSV_PARSE.out.versions)
 
     emit:
-        hmms            = HMM_HASH.out.socialgene_hmms
-        hmm_tsv_nodes   = HMM_TSV_PARSE.out.sg_hmm_nodes
-        hmm_tsv_out     = HMM_TSV_PARSE.out.hmms_out
+        hmm_models      = HMM_HASH.out.socialgene_hmms
+        hmm_info        = HMM_HASH.out.hmminfo
+        hmm_nodes       = HMM_HASH.out.hmm_nodes
         versions        = ch_versions
         tigr_ch         = tigr_ch
 }

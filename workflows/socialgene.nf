@@ -31,15 +31,15 @@ include { NEO4J_ADMIN_IMPORT_DRYRUN                     } from '../modules/local
 include { NEO4J_HEADERS                                 } from '../modules/local/neo4j_headers'
 include { PARAMETER_EXPORT_FOR_NEO4J                    } from '../modules/local/parameter_export_for_neo4j'
 include { SEQKIT_SORT                                   } from '../modules/local/seqkit/sort/main'
-include { DEDUP_AND_INDEX                               } from '../modules/local/dedup_and_index'
+include { DEDUPLICATE_AND_INDEX_FASTA                               } from '../modules/local/dedup_and_index'
 include { SEQKIT_SPLIT                                  } from '../modules/local/seqkit/split/main'
 include { HTCONDOR_PREP                                 } from '../modules/local/htcondor_prep'
 include { HMMER_HMMSEARCH                               } from '../modules/local/hmmsearch'
 include { HMMSEARCH_PARSE                               } from '../modules/local/hmmsearch_parse'
 include { INDEX_FASTA                                   } from '../modules/local/index_fasta'
 include { DOWNLOAD_CHEMBL_DATA                          } from '../modules/local/download_chembl_data'
-include { MD5_AS_FILENAME as COMBINE_PARSED_DOMTBLOUT   } from '../modules/local/md5_as_filename'
-include { MD5_AS_FILENAME as COMBINE_DOMTBLOUT          } from '../modules/local/md5_as_filename'
+include { MD5_AS_FILENAME as MERGE_PARSED_DOMTBLOUT   } from '../modules/local/md5_as_filename'
+include { MD5_AS_FILENAME as MERGE_DOMTBLOUT          } from '../modules/local/md5_as_filename'
 
 
 
@@ -136,10 +136,10 @@ println "Manifest's pipeline version: $workflow.profile"
         GENOME_HANDLING.out.ch_fasta.set{ch_fasta}
         ch_versions = ch_versions.mix(GENOME_HANDLING.out.ch_versions)
 
-        // TODO: just pass this straight to DEDUP_AND_INDEX, dont' create a collected_fasta.faa.gz
+        // TODO: just pass this straight to DEDUPLICATE_AND_INDEX_FASTA, dont' create a collected_fasta.faa.gz
         GENOME_HANDLING.out.ch_fasta.collect().set{ fasta_to_dedup}
-        DEDUP_AND_INDEX(fasta_to_dedup)
-        DEDUP_AND_INDEX.out
+        DEDUPLICATE_AND_INDEX_FASTA(fasta_to_dedup)
+        DEDUPLICATE_AND_INDEX_FASTA.out
             .fasta
             .set{ch_nr_fasta}
 
@@ -187,7 +187,7 @@ println "Manifest's pipeline version: $workflow.profile"
             // collect all fasta and all hmms to pass to HTCONDOR_PREP
             // kept separate to control renaming files in the process
             ch_split_fasta.collect().set{all_split_fasta}
-            HMM_PREP.out.hmms.collect().set{all_split_hmms}
+            HMM_PREP.out.hmm_models.collect().set{all_split_hmms}
             HTCONDOR_PREP(all_split_hmms, all_split_fasta)
             ch_versions = ch_versions.mix(HTCONDOR_PREP.out.versions)
             domtblout_ch = false
@@ -195,7 +195,7 @@ println "Manifest's pipeline version: $workflow.profile"
             domtblout_ch = Channel.fromPath(params.domtblout_path)
         } else {
             // create a channel that's the cartesian product of all hmm files and all fasta files
-            HMM_PREP.out.hmms
+            HMM_PREP.out.hmm_models
                 .flatten()
                 .combine(
                     ch_split_fasta
@@ -215,24 +215,25 @@ println "Manifest's pipeline version: $workflow.profile"
             HMMSEARCH_PARSE(domtblout_ch.buffer( size: 50, remainder: true ))
             ch_domtblout_concat = HMMSEARCH_PARSE.out.parseddomtblout.collectFile(name: "parseddomtblout", sort: false )
 
-            COMBINE_DOMTBLOUT(ch_domtblout_concat)
+            MERGE_DOMTBLOUT(ch_domtblout_concat)
 
 
             ch_parsed_domtblout_concat = HMMSEARCH_PARSE.out.parseddomtblout.collectFile(name: "parseddomtblout", sort: false )
-            COMBINE_PARSED_DOMTBLOUT(ch_parsed_domtblout_concat)
-            hmmer_result_ch = COMBINE_DOMTBLOUT.out.outfile
+            MERGE_PARSED_DOMTBLOUT(ch_parsed_domtblout_concat)
+            hmmer_result_ch = MERGE_DOMTBLOUT.out.outfile
             ch_versions = ch_versions.mix(HMMSEARCH_PARSE.out.versions.last())
         }
 
-        hmm_tsv_parse_ch = HMM_PREP.out.hmm_tsv_nodes.concat(
-            HMM_PREP.out.hmm_tsv_out
-        ).collect()
+        hmm_info_ch = HMM_PREP.out.hmm_info
+        hmm_nodes_ch = HMM_PREP.out.hmm_nodes
+
 
         tigrfam_ch = HMM_PREP.out.tigr_ch.collect()
 
     } else {
 
-        hmm_tsv_parse_ch =  file("${baseDir}/assets/EMPTY_FILE")
+        hmm_info_ch =  file("${baseDir}/assets/EMPTY_FILE")
+        hmm_nodes_ch =  file("${baseDir}/assets/EMPTY_FILE")
         tigrfam_ch =  file("${baseDir}/assets/EMPTY_FILE")
         hmmer_result_ch = file("${baseDir}/assets/EMPTY_FILE")
     }
@@ -315,10 +316,9 @@ println "Manifest's pipeline version: $workflow.profile"
 
     // all the '.collect()'s were added to ensure a cardinality of 1 for all inputs to database build
 
-    // NEO4J_ADMIN_IMPORT_DRYRUN(
-    //     sg_modules,
-    //     hmmlist
-    // )
+    NEO4J_ADMIN_IMPORT_DRYRUN(
+        sg_modules
+    )
 
 if (run_build_database) {
 
@@ -331,7 +331,8 @@ if (run_build_database) {
                 hmmlist.collect(),
                 neo4j_header_ch,
                 taxdump_ch,
-                hmm_tsv_parse_ch,
+                hmm_info_ch,
+                hmm_nodes_ch,
                 blast_ch,
                 mmseqs2_ch,
                 hmmer_result_ch,

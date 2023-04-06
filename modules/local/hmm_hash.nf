@@ -8,9 +8,10 @@ process HMM_HASH {
     val hmm_splits
 
     output:
-    path 'all_hmms.tsv', emit: all_hmms_tsv
-    path "socialgene_nr_hmms_file_*", emit: socialgene_hmms
-    path "versions.yml" , emit: versions
+    path '*.hmminfo'                    , emit: hmminfo
+    path '*.sg_hmm_nodes'               , emit: hmm_nodes
+    path "socialgene_nr_hmms_file_*"    , emit: socialgene_hmms
+    path "versions.yml"                 , emit: versions
 
 
     when:
@@ -22,6 +23,9 @@ process HMM_HASH {
         --input_dir . \
         --outdir . \
         --numoutfiles ${hmm_splits}
+
+    md5_as_filename_after_gzip.sh all.hmminfo all.hmminfo
+    md5_as_filename_after_gzip.sh sg_hmm_nodes sg_hmm_nodes
 
     gzip -n -6 socialgene_nr_hmms_file*
 

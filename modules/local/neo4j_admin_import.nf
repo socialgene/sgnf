@@ -13,7 +13,8 @@ process NEO4J_ADMIN_IMPORT {
     val hmmlist
     path "import/neo4j_headers/*"
     path "import/taxdump_process/*"
-    path "import/hmm_tsv_parse/*"
+    path "import/hmm_info/*"
+    path "import/hmm_info/*"
     path "import/diamond_blastp/*"
     path "import/mmseqs2_easycluster/*"
     path "import/parsed_domtblout/*"
@@ -51,7 +52,6 @@ process NEO4J_ADMIN_IMPORT {
     --docker true \\
     --gid None \\
     --sg_modules ${sg_modules_delim} \\
-    --hmmlist ${hmm_s_delim} \\
     --dryrun true \\
     --dryrun_filepath "command_to_build_neo4j_database.sh"
 
@@ -61,8 +61,7 @@ process NEO4J_ADMIN_IMPORT {
     --additional_args "" \\
     --uid None \\
     --gid None \\
-    --sg_modules ${sg_modules_delim} \\
-    --hmmlist ${hmm_s_delim}
+    --sg_modules ${sg_modules_delim}
 
     mv \${NEO4J_BASE_DIR}/data/* ./data/
     mv \${NEO4J_BASE_DIR}/logs/* ./logs/

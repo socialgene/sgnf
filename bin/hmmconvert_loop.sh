@@ -7,5 +7,5 @@ do
     basename="${i##*/}"
     filepath="$(dirname $i)"
     hmmconvert ${i} |\
-        gzip -3 > "${i}_socialgene.gz"
+        gzip -n -3 > "${i}_socialgene.gz"
 done

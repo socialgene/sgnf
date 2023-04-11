@@ -1,5 +1,5 @@
 #!/bin/bash
-
+mkdir -p amrfinder
 wget https://ftp.ncbi.nlm.nih.gov/hmm/NCBIfam-AMRFinder/${1}/NCBIfam-AMRFinder.HMM.tar.gz
 
 # file integerity check
@@ -11,10 +11,7 @@ tar -xf NCBIfam-AMRFinder.HMM.tar.gz
 rm NCBIfam-AMRFinder.HMM.tar.gz
 
 # move hmm files into "amrfinder" directory
-mv HMM amrfinder
-
-# convert hmm models to HMMER version 3
-hmmconvert_loop.sh
+mv HMM/* amrfinder
 
 cat <<-END_VERSIONS > versions.yml
 amrfinder:

@@ -39,7 +39,6 @@ include { HMMSEARCH_PARSE                               } from '../modules/local
 include { INDEX_FASTA                                   } from '../modules/local/index_fasta'
 include { DOWNLOAD_CHEMBL_DATA                          } from '../modules/local/download_chembl_data'
 include { MD5_AS_FILENAME as MERGE_PARSED_DOMTBLOUT   } from '../modules/local/md5_as_filename'
-include { MD5_AS_FILENAME as MERGE_DOMTBLOUT          } from '../modules/local/md5_as_filename'
 
 
 
@@ -213,14 +212,11 @@ println "Manifest's pipeline version: $workflow.profile"
         if (domtblout_ch){
 
             HMMSEARCH_PARSE(domtblout_ch.buffer( size: 50, remainder: true ))
-            ch_domtblout_concat = HMMSEARCH_PARSE.out.parseddomtblout.collectFile(name: "parseddomtblout", sort: 'hash', cache: true)
-
-            MERGE_DOMTBLOUT(ch_domtblout_concat)
-
-
+        
+        
             ch_parsed_domtblout_concat = HMMSEARCH_PARSE.out.parseddomtblout.collectFile(name: "parseddomtblout", sort: 'hash', cache: true)
             MERGE_PARSED_DOMTBLOUT(ch_parsed_domtblout_concat)
-            hmmer_result_ch = MERGE_DOMTBLOUT.out.outfile
+            hmmer_result_ch = MERGE_PARSED_DOMTBLOUT.out.outfile
             ch_versions = ch_versions.mix(HMMSEARCH_PARSE.out.versions.last())
         }
 

@@ -1,7 +1,7 @@
 
 process PROCESS_GENBANK_FILES {
     cpus 1
-    memory '2.5GB'
+    memory '11.GB'
 
     input:
     path "file?.input_genome"

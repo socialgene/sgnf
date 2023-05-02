@@ -23,15 +23,14 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 */
 include { ANTISMASH                                     } from '../modules/local/antismash/main'
 include { ANTISMASH_GBK_TO_TABLE                        } from '../modules/local/antismash/antismash_gbk_to_table'
-include { MMSEQS2_EASYCLUSTER                           } from '../modules/local/mmseqs2_easycluster'
+include { MMSEQS2_CLUSTER                               } from '../modules/local/mmseqs2_cluster'
 include { MMSEQS2_CREATEDB                              } from '../modules/local/mmseqs2_createdb'
-include { MMSEQS_CREATEINDEX                            } from '../modules/nf-core/mmseqs/createindex/main'
 include { NEO4J_ADMIN_IMPORT                            } from '../modules/local/neo4j_admin_import'
 include { NEO4J_ADMIN_IMPORT_DRYRUN                     } from '../modules/local/neo4j_admin_import_dryrun'
 include { NEO4J_HEADERS                                 } from '../modules/local/neo4j_headers'
 include { PARAMETER_EXPORT_FOR_NEO4J                    } from '../modules/local/parameter_export_for_neo4j'
 include { SEQKIT_SORT                                   } from '../modules/local/seqkit/sort/main'
-include { DEDUPLICATE_AND_INDEX_FASTA                               } from '../modules/local/dedup_and_index'
+include { DEDUPLICATE_AND_INDEX_FASTA                   } from '../modules/local/dedup_and_index'
 include { SEQKIT_SPLIT                                  } from '../modules/local/seqkit/split/main'
 include { HTCONDOR_PREP                                 } from '../modules/local/htcondor_prep'
 include { HMMER_HMMSEARCH                               } from '../modules/local/hmmsearch'
@@ -212,8 +211,8 @@ println "Manifest's pipeline version: $workflow.profile"
         if (domtblout_ch){
 
             HMMSEARCH_PARSE(domtblout_ch.buffer( size: 50, remainder: true ))
-        
-        
+
+
             ch_parsed_domtblout_concat = HMMSEARCH_PARSE.out.parseddomtblout.collectFile(name: "parseddomtblout", sort: 'hash', cache: true)
             MERGE_PARSED_DOMTBLOUT(ch_parsed_domtblout_concat)
             hmmer_result_ch = MERGE_PARSED_DOMTBLOUT.out.outfile
@@ -267,13 +266,11 @@ println "Manifest's pipeline version: $workflow.profile"
     */
     if (run_mmseqs2){
         MMSEQS2_CREATEDB(single_ch_fasta)
-        MMSEQS_CREATEINDEX(MMSEQS2_CREATEDB.out.mmseqs_database)
-
-        MMSEQS2_EASYCLUSTER(single_ch_fasta)
-        MMSEQS2_EASYCLUSTER.out.clusterres_cluster
+        MMSEQS2_CLUSTER(MMSEQS2_CREATEDB.out.mmseqs_database, single_ch_fasta)
+        MMSEQS2_CLUSTER.out.mmseqs_clustered_db_tsv
             .collect()
             .set{mmseqs2_ch}
-        ch_versions = ch_versions.mix(MMSEQS2_EASYCLUSTER.out.versions)
+        ch_versions = ch_versions.mix(MMSEQS2_CLUSTER.out.versions)
     } else {
         mmseqs2_ch = file("${baseDir}/assets/EMPTY_FILE")
     }

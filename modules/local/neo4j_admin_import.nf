@@ -2,7 +2,7 @@ process NEO4J_ADMIN_IMPORT {
     tag 'Building Neo4j database'
     label 'process_high'
 
-    beforeScript 'mkdir -p import data logs plugins'
+    beforeScript 'mkdir -p import data logs plugins conf'
     stageInMode 'symlink'
 
     containerOptions "-v /data:/opt/conda/bin/neo4j/data"

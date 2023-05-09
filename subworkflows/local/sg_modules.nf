@@ -20,7 +20,7 @@ workflow SG_MODULES {
             sg_modules.add("tigrfam")
         }
     }
-    if (params.ncbi_genome_download_command || params.local_genbank || params.ncbi_datasets_command || params.mibig){
+    if (params.ncbi_genome_download_command || params.local_genbank || params.ncbi_datasets_command || params.mibig || params.local_fasta){
         sg_modules.add("base")
     }
     if (params.local_fasta){

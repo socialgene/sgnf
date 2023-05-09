@@ -7,7 +7,7 @@ process MMSEQS2_CLUSTER {
 
     output:
     path 'clusterdb*'                                , emit: mmseqs_clustered_db
-    path '*.mmseqs2_clusters.tsv.gz'      , emit: mmseqs_clustered_db_tsv
+    path '*.mmseqs2_results_cluster.tsv.gz'      , emit: mmseqs_clustered_db_tsv
     path '*.mmseqs2_rep_seq.fasta.gz'              , emit: mmseqs_clustered_fasta
     path "versions.yml" , emit: versions
 
@@ -25,7 +25,7 @@ process MMSEQS2_CLUSTER {
 
         mmseqs cluster mmseqs2_database clusterdb tmp --threads $task.cpus --compressed 1 $args $args2
 
-        mmseqs createtsv mmseqs2_database mmseqs2_database clusterdb mmseqs2_clusters.tsv
+        mmseqs createtsv mmseqs2_database mmseqs2_database clusterdb mmseqs2_results_cluster.tsv
 
         mmseqs createsubdb clusterdb mmseqs2_database DB_clu_rep
         mmseqs convert2fasta DB_clu_rep mmseqs2_rep_seq.fasta
@@ -41,7 +41,7 @@ process MMSEQS2_CLUSTER {
         rm mmseqs2_rep_seq.fasta
         mv mmseqs2_rep_seq.fasta_2 mmseqs2_rep_seq.fasta
 
-        md5_as_filename_after_gzip.sh 'mmseqs2_clusters.tsv'    'mmseqs2_clusters.tsv.gz'
+        md5_as_filename_after_gzip.sh 'mmseqs2_results_cluster.tsv'    'mmseqs2_results_cluster.tsv.gz'
         md5_as_filename_after_gzip.sh 'mmseqs2_rep_seq.fasta'  'mmseqs2_rep_seq.fasta.gz'
 
 
@@ -57,7 +57,7 @@ process MMSEQS2_CLUSTER {
 
         mmseqs cluster mmseqs2_database clusterdb tmp --threads $task.cpus --compressed 1 $args $args2
 
-        mmseqs createtsv mmseqs2_database mmseqs2_database clusterdb mmseqs2_clusters.tsv
+        mmseqs createtsv mmseqs2_database mmseqs2_database clusterdb mmseqs2_results_cluster.tsv
 
         mmseqs createsubdb clusterdb mmseqs2_database DB_clu_rep
         mmseqs convert2fasta DB_clu_rep mmseqs2_rep_seq.fasta
@@ -66,7 +66,7 @@ process MMSEQS2_CLUSTER {
 
         rm -r tmp
 
-        md5_as_filename_after_gzip.sh 'mmseqs2_clusters.tsv'    'mmseqs2_clusters.tsv.gz'
+        md5_as_filename_after_gzip.sh 'mmseqs2_results_cluster.tsv'    'mmseqs2_results_cluster.tsv.gz'
         md5_as_filename_after_gzip.sh 'mmseqs2_rep_seq.fasta'  'mmseqs2_rep_seq.fasta.gz'
 
 

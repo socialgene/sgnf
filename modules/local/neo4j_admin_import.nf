@@ -5,10 +5,10 @@ process NEO4J_ADMIN_IMPORT {
     beforeScript 'mkdir -p import data logs plugins'
     stageInMode 'symlink'
 
-    containerOptions "-v /data:/opt/conda/bin/neo4j/neo4j-community-5.1.0/data"
-    containerOptions "-v /import:/opt/conda/bin/neo4j/neo4j-community-5.1.0/import"
-    containerOptions "-v /logs:/opt/conda/bin/neo4j/neo4j-community-5.1.0/logs"
-    containerOptions "-v /plugins:/opt/conda/bin/neo4j/neo4j-community-5.1.0/plugins"
+    containerOptions "-v /data:/opt/conda/bin/neo4j/data"
+    containerOptions "-v /import:/opt/conda/bin/neo4j/import"
+    containerOptions "-v /logs:/opt/conda/bin/neo4j/logs"
+    containerOptions "-v /plugins:/opt/conda/bin/neo4j/plugins"
 
 
     input:
@@ -19,7 +19,7 @@ process NEO4J_ADMIN_IMPORT {
     path "import/hmm_info/*"
     path "import/hmm_info/*"
     path "import/diamond_blastp/*"
-    path "import/mmseqs2_easycluster/*"
+    path "import/mmseqs2_cluster/*"
     path "import/parsed_domtblout/*"
     path "import/tigrfam_info/*"
     path "import/parameters/*"
@@ -44,7 +44,7 @@ process NEO4J_ADMIN_IMPORT {
 
     # This is based on the Dockerfile (neo4j-admin writes into this directory)
     touch import.report
-    NEO4J_BASE_DIR='/opt/conda/bin/neo4j/neo4j-community-5.1.0'
+    NEO4J_BASE_DIR='/opt/conda/bin/neo4j'
 
 
     sg_create_neo4j_db \\

@@ -228,7 +228,7 @@ println "Manifest's pipeline version: $workflow.profile"
     } else {
 
         hmm_info_ch =  file("${baseDir}/assets/EMPTY_FILE")
-        hmm_nodes_ch =  file("${baseDir}/assets/EMPTY_FILE")
+        hmm_nodes_ch =  file("${baseDir}/assets/EMPTY_FILE2")
         tigrfam_ch =  file("${baseDir}/assets/EMPTY_FILE")
         hmmer_result_ch = file("${baseDir}/assets/EMPTY_FILE")
     }

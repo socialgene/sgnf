@@ -6,8 +6,8 @@ process MMSEQS2_CLUSTER {
     path fasta
 
     output:
-    path 'clusterdb*'                                , emit: mmseqs_clustered_db
-    path '*.mmseqs2_results_cluster.tsv.gz'      , emit: mmseqs_clustered_db_tsv
+    path 'clusterdb*'                              , emit: mmseqs_clustered_db
+    path '*.mmseqs2_results_cluster.tsv.gz'        , emit: mmseqs_clustered_db_tsv
     path '*.mmseqs2_rep_seq.fasta.gz'              , emit: mmseqs_clustered_fasta
     path "versions.yml" , emit: versions
 

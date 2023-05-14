@@ -30,8 +30,6 @@ process MMSEQS2_CLUSTER {
         mmseqs createsubdb clusterdb mmseqs2_database DB_clu_rep
         mmseqs convert2fasta DB_clu_rep mmseqs2_rep_seq.fasta
 
-        gzip -n 6 mmseqs2_rep_seq.fasta
-
         rm -r tmp
 
         # sort for consisent output for testing
@@ -61,8 +59,6 @@ process MMSEQS2_CLUSTER {
 
         mmseqs createsubdb clusterdb mmseqs2_database DB_clu_rep
         mmseqs convert2fasta DB_clu_rep mmseqs2_rep_seq.fasta
-
-        #gzip -n 6 mmseqs2_rep_seq.fasta
 
         rm -r tmp
 

@@ -1,4 +1,4 @@
-/*
+        /*
 ========================================================================================
 This is the subworkflow that controls downloading and processing input genomes
 ========================================================================================
@@ -30,18 +30,14 @@ workflow HMM_PREP {
             GATHER_HMMS.out.hmms,
             params.hmm_splits
         )
-        //ch_versions = ch_versions.mix(HMM_HASH.out.versions)
-
-        // HMM_TSV_PARSE(
-        //     HMM_HASH.out.all_hmms_tsv
-        // )
-       // ch_versions = ch_versions.mix(HMM_TSV_PARSE.out.versions)
 
     emit:
-        hmm_models      = HMM_HASH.out.socialgene_hmms
-        hmm_info        = HMM_HASH.out.hmminfo
-        hmm_nodes       = HMM_HASH.out.hmm_nodes
-        versions        = ch_versions
-        tigr_ch         = tigr_ch
+        hmms_file_with_cutoffs      = HMM_HASH.out.hmms_file_with_cutoffs
+        hmms_file_without_cutoffs   = HMM_HASH.out.hmms_file_without_cutoffs
+        hmm_info                    = HMM_HASH.out.hmminfo
+        hmm_nodes                   = HMM_HASH.out.hmm_nodes
+        versions                    = ch_versions
+        tigr_ch                     = tigr_ch
 }
+
 

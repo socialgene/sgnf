@@ -52,10 +52,10 @@ process NEO4J_ADMIN_IMPORT {
     --cpus ${task.cpus} \\
     --additional_args "" \\
     --uid None \\
-    --docker true \\
+    --docker \\
     --gid None \\
     --sg_modules ${sg_modules_delim} \\
-    --dryrun true \\
+    --dryrun \\
     --dryrun_filepath "command_to_build_neo4j_database.sh"
 
     sg_create_neo4j_db \\

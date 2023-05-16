@@ -193,8 +193,7 @@ println "Manifest's pipeline version: $workflow.profile"
             domtblout_ch = Channel.fromPath(params.domtblout_path)
         } else {
             // create a channel that's the cartesian product of all hmm files and all fasta files
-            HMM_PREP.out.hmm_models
-                .flatten()
+            HMM_PREP.out.hmms_file_with_cutoffs.mix(HMM_PREP.out.hmms_file_without_cutoffs)
                 .combine(
                     ch_split_fasta
                         .flatten()
@@ -202,11 +201,8 @@ println "Manifest's pipeline version: $workflow.profile"
                 .set{ mixed_hmm_fasta_ch }
             HMMER_HMMSEARCH(mixed_hmm_fasta_ch)
             ch_versions = ch_versions.mix(HMMER_HMMSEARCH.out.versions.last())
-
             domtblout_ch = HMMER_HMMSEARCH.out.domtblout
-
         }
-
 
         if (domtblout_ch){
 

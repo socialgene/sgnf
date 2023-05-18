@@ -34,6 +34,7 @@ workflow HMM_PREP {
     emit:
         hmms_file_with_cutoffs      = HMM_HASH.out.hmms_file_with_cutoffs
         hmms_file_without_cutoffs   = HMM_HASH.out.hmms_file_without_cutoffs
+        all_hmms                    = HMM_HASH.out.all_hmms
         hmm_info                    = HMM_HASH.out.hmminfo
         hmm_nodes                   = HMM_HASH.out.hmm_nodes
         versions                    = ch_versions

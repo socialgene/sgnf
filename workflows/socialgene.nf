@@ -185,8 +185,7 @@ println "Manifest's pipeline version: $workflow.profile"
             // collect all fasta and all hmms to pass to HTCONDOR_PREP
             // kept separate to control renaming files in the process
             ch_split_fasta.collect().set{all_split_fasta}
-            HMM_PREP.out.hmm_models.collect().set{all_split_hmms}
-            HTCONDOR_PREP(all_split_hmms, all_split_fasta)
+            HTCONDOR_PREP(HMM_PREP.out.all_hmms, all_split_fasta)
             ch_versions = ch_versions.mix(HTCONDOR_PREP.out.versions)
             domtblout_ch = false
         } else if (params.domtblout_path){

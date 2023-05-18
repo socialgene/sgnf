@@ -11,6 +11,7 @@ process HMM_HASH {
     path '*.sg_hmm_nodes'                               , emit: hmm_nodes
     tuple val(true), path("socialgene_nr_hmms_file_with_cutoffs_*") , emit: hmms_file_with_cutoffs, optional:true
     tuple val(false), path("socialgene_nr_hmms_file_without_cutoffs_*")      , emit: hmms_file_without_cutoffs, optional:true
+    path "*.hmm.gz"                                     , emit: all_hmms
     path "versions.yml"                                 , emit: versions
 
     when:

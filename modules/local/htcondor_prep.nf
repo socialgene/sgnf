@@ -3,7 +3,7 @@ process HTCONDOR_PREP {
     label 'process_really_low'
 
     input:
-    path "??.hmm.gz"
+    path hmms
     path "??.faa.gz"
 
     output:
@@ -37,6 +37,7 @@ process HTCONDOR_PREP {
     export HMMSEARCH_SEED=${params.HMMSEARCH_SEED}
 
     # export env variables which control the creation of the CHTC submission script
+    export hmmsearch_model_threshold=${params.hmmsearch_model_threshold}
     export htcondor_request_cpus=${params.htcondor_request_cpus}
     export htcondor_request_memory=${params.htcondor_request_memory}
     export htcondor_request_disk=${params.htcondor_request_disk}

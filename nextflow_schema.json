@@ -47,6 +47,15 @@
                 "mibig": {
                     "type": "boolean",
                     "description": "Set to true to download and include all MIBiG BGCs as input"
+                },
+                "genbank_input_buffer": {
+                    "type": "integer",
+                    "default": 50
+                },
+                "crabhash_cpus": {
+                    "type": "integer",
+                    "default": 20,
+                    "hidden": true
                 }
             }
         },
@@ -400,6 +409,12 @@
             "description": "",
             "default": "",
             "properties": {
+                "hmmsearch_model_threshold": {
+                    "type": "string",
+                    "default": "--cut_ga",
+                    "description": "--cut_ga or --cut_nc or --cut_tc",
+                    "help_text": "From HMMER documentation:\nOptions controlling model-specific thresholding:\n\n--cut_ga : use profile's GA gathering cutoffs to set all thresholding\n\n--cut_nc : use profile's NC noise cutoffs to set all thresholding\n\n--cut_tc : use profile's TC trusted cutoffs to set all thresholding\n"
+                },
                 "HMMSEARCH_Z": {
                     "type": "integer",
                     "default": 100000000,
@@ -414,13 +429,13 @@
                 },
                 "HMMSEARCH_E": {
                     "type": "number",
-                    "default": 10.0,
+                    "default": 10,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 },
                 "HMMSEARCH_DOME": {
                     "type": "number",
-                    "default": 10.0,
+                    "default": 10,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 },
@@ -456,7 +471,7 @@
                 },
                 "HMMSEARCH_F3": {
                     "type": "number",
-                    "default": 1e-05,
+                    "default": 1e-5,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 }
@@ -553,6 +568,34 @@
                     "hidden": true
                 }
             }
+        },
+        "multiqc": {
+            "title": "MULTIQC",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "multiqc_title": {
+                    "type": "string",
+                    "default": null
+                },
+                "multiqc_logo": {
+                    "type": "string",
+                    "default": null
+                },
+                "multiqc_config": {
+                    "type": "string",
+                    "default": null
+                },
+                "max_multiqc_email_size": {
+                    "type": "string",
+                    "default": "25.MB"
+                },
+                "multiqc_methods_description": {
+                    "type": "string",
+                    "default": null
+                }
+            }
         }
     },
     "allOf": [
@@ -594,16 +637,9 @@
         },
         {
             "$ref": "#/definitions/hmm_database_versions"
-        }
-    ],
-    "properties": {
-        "crabhash_cpus": {
-            "type": "integer",
-            "default": 20
         },
-        "genbank_input_buffer": {
-            "type": "integer",
-            "default": 50
+        {
+            "$ref": "#/definitions/multiqc"
         }
-    }
+    ]
 }

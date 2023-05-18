@@ -10,6 +10,7 @@ process MMSEQS2_CLUSTER {
     path '*.mmseqs2_results_cluster.tsv.gz'        , emit: mmseqs_clustered_db_tsv
     path '*.mmseqs2_rep_seq.fasta.gz'              , emit: mmseqs_clustered_fasta
     path "versions.yml" , emit: versions
+    path "citations.yml" , emit: citations
 
     when:
     task.ext.when == null || task.ext.when
@@ -69,6 +70,11 @@ process MMSEQS2_CLUSTER {
         cat <<-END_VERSIONS > versions.yml
         "${task.process}":
             mmseqs: \$(mmseqs | grep 'Version' | sed 's/MMseqs2 Version: //')
+        END_VERSIONS
+
+        cat <<-END_CITATIONS > citations.yml
+        "${task.process}":
+            mmseqs: Hauser M, Steinegger M, Söding J. MMseqs software suite for fast and deep clustering and searching of large protein sequence sets. Bioinformatics. 2016 May 1;32(9):1323-30. doi: 10.1093/bioinformatics/btw006. Epub 2016 Jan 6. PMID: 26743509.
         END_VERSIONS
         """
 }

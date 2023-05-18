@@ -4,17 +4,16 @@
 ========================================================================================
 */
 
+
+
 def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 
+
+
 // Validate input parameters
-//          WorkflowSocialgene.initialise(params, log)
+WorkflowSocialgene.initialise(params, log)
 
-// Check input path parameters to see if they exist
-//          def checkPathParamList = [ params.input, params.multiqc_config, params.fasta ]
-//          for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
-// Check mandatory parameters
-//          if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
 
 /*
 ========================================================================================
@@ -62,7 +61,7 @@ include { HMM_PREP                  } from '../subworkflows/local/hmm_prep'
 include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 include { DIAMOND_BLASTP                } from '../modules/local/diamond/blastp/main'
 include { DIAMOND_MAKEDB                } from '../modules/local/diamond/makedb/main'
-
+include { MULTIQC                       } from '../modules/nf-core/multiqc/main'
 
 /*
 ========================================================================================
@@ -75,6 +74,7 @@ available_hmms=["antismash","amrfinder","bigslice","classiphage", "ipresto","pfa
 workflow SOCIALGENE {
 println "Manifest's pipeline version: $workflow.profile"
     ch_versions = Channel.empty()
+    ch_citations = Channel.empty()
 
     def hmmlist = []
     // if not `null`, hmmlist needs to be a list
@@ -266,6 +266,7 @@ println "Manifest's pipeline version: $workflow.profile"
             .collect()
             .set{mmseqs2_ch}
         ch_versions = ch_versions.mix(MMSEQS2_CLUSTER.out.versions)
+        ch_citations = ch_citations.mix(MMSEQS2_CLUSTER.out.citations)
     } else {
         mmseqs2_ch = file("${baseDir}/assets/EMPTY_FILE")
     }
@@ -300,7 +301,6 @@ println "Manifest's pipeline version: $workflow.profile"
     ////////////////////////
     */
     // collected_version_files ensures everythin was run first
-    collected_version_files = ch_versions.collectFile(name: 'temp.yml', newLine: true)
 
     // all the '.collect()'s were added to ensure a cardinality of 1 for all inputs to database build
 
@@ -333,6 +333,9 @@ if (run_build_database) {
             ch_versions = ch_versions.mix(NEO4J_ADMIN_IMPORT.out.versions)
         }
     }
+
+        collected_version_files = ch_versions.collectFile(name: 'temp.yml', newLine: true)
+
     /*
     ////////////////////////
     OUTPUT SOFTWARE VERSIONS
@@ -340,6 +343,22 @@ if (run_build_database) {
     */
     CUSTOM_DUMPSOFTWAREVERSIONS (
         collected_version_files
+    )
+
+    ch_multiqc_files            = Channel.empty()
+    ch_multiqc_config           = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
+    ch_multiqc_custom_config    = params.multiqc_config ? Channel.fromPath( params.multiqc_config, checkIfExists: true ) : Channel.empty()
+    ch_multiqc_logo             = params.multiqc_logo   ? Channel.fromPath( params.multiqc_logo, checkIfExists: true ) : Channel.empty()
+    ch_multiqc_files            = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
+    ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
+    methods_description         = WorkflowSocialgene.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description)
+
+
+    MULTIQC (
+        ch_multiqc_files.collect(),
+        ch_multiqc_config.toList(),
+        ch_multiqc_custom_config.toList(),
+        ch_multiqc_logo.toList()
     )
 
 }

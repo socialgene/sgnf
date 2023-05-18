@@ -29,6 +29,5 @@ lint:
     - docs/images/nf-core-sgnf_logo_dark.png
   readme: false
   actions_ci: false
-  nextflow_config: false
 
 repository_type: pipeline

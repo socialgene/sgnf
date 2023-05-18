@@ -1,0 +1,10 @@
+name: socialgene
+description: A cool pipeline
+author: me
+prefix: myorg
+skip:
+  - github
+  - ci
+  - github_badges
+  - igenomes
+  - nf_core_configs

@@ -1,5 +1,5 @@
 process NCBI_GENOME_DOWNLOAD {
-    label 'process_medium' // medium so get more cores
+    label 'process_medium'
 
     conda "bioconda::ncbi-genome-download==0.3.1"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?

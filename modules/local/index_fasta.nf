@@ -2,7 +2,7 @@ process INDEX_FASTA {
     tag "$fasta"
     label 'process_really_low'
 
-    conda "bioconda::samtools=1.16.1 bioconda::tabix=1.11"
+    conda "bioconda::samtools=1.17 bioconda::tabix=1.11"
 
     input:
     path fasta

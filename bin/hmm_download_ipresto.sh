@@ -5,9 +5,6 @@ mkdir ipresto
 wget "https://zenodo.org/record/7006969/files/Pfam_100subs_tc.hmm" -O ipresto.hmm
 mv "ipresto.hmm" ipresto
 
-# convert hmm models to HMMER version 3
-hmmconvert_loop.sh
-
 cat <<-END_VERSIONS > versions.yml
 "tigrfam":
     version: ${1}

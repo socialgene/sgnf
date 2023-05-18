@@ -1,7 +1,7 @@
 process SEQKIT_SORT {
     label 'process_medium'
 
-    conda (params.enable_conda ? 'bioconda::seqkit=2.3.0' : null)
+    conda 'bioconda::seqkit=2.3.0'
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/seqkit:2.3.0--h9ee0642_0' :
         'quay.io/biocontainers/seqkit:2.3.0--h9ee0642_0' }"

@@ -20,7 +20,6 @@ process MMSEQS2_CREATEDB {
     def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
     """
-
     # mmseqs doesn't expect bgz
     ln -s ${fasta} myfasta.gz
 
@@ -33,12 +32,19 @@ process MMSEQS2_CREATEDB {
         --dbtype 1 \\
         $args
 
+
+    mmseqs createindex \
+        mmseqs2_database \
+        tmp1 \\
+        $args
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         mmseqs: \$(mmseqs | grep 'Version' | sed 's/MMseqs2 Version: //')
     END_VERSIONS
     """
 
-
-
 }
+
+
+

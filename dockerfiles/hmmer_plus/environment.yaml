@@ -13,4 +13,5 @@ dependencies:
   - conda-forge::wget
   - conda-forge::curl
   - conda-forge::git
+  - conda-forge::unzip
   - procps-ng # required by nextflow

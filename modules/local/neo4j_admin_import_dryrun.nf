@@ -4,7 +4,7 @@ process NEO4J_ADMIN_IMPORT_DRYRUN {
 
     input:
     val sg_modules
-    val hmmlist
+
 
     output:
     path "command_to_build_neo4j_database.sh"               , emit: command_to_build_neo4j_database
@@ -16,32 +16,30 @@ process NEO4J_ADMIN_IMPORT_DRYRUN {
 
     script:
     def sg_modules_delim = sg_modules ? sg_modules.join(' ') : '""'
-    def hmm_s_delim = hmmlist ? hmmlist.join(' ') : '""'
     """
-    sg_create_neo4j_db \\
-    --neo4j_top_dir . \\
-    --cpus ${task.cpus} \\
-    --additional_args "" \\
-    --uid None \\
-    --gid None \\
-    --sg_modules ${sg_modules_delim} \\
-    --hmmlist ${hmm_s_delim} \\
-    --dryrun true \\
-    --dryrun_filepath "command_to_build_neo4j_database.sh"
-
 
     sg_create_neo4j_db \\
     --neo4j_top_dir . \\
     --cpus ${task.cpus} \\
     --additional_args "" \\
     --uid None \\
+    --docker \\
     --gid None \\
     --sg_modules ${sg_modules_delim} \\
-    --hmmlist ${hmm_s_delim} \\
-    --docker true \\
-    --dryrun true \\
+    --dryrun \\
     --dryrun_filepath "command_to_build_neo4j_database_with_docker.sh"
 
+
+    sg_create_neo4j_db \\
+    --neo4j_top_dir . \\
+    --cpus ${task.cpus} \\
+    --additional_args "" \\
+    --uid None \\
+    --docker \\
+    --gid None \\
+    --sg_modules ${sg_modules_delim} \\
+    --dryrun \\
+    --dryrun_filepath "command_to_build_neo4j_database.sh"
 
 
     cat <<-END_VERSIONS > versions.yml

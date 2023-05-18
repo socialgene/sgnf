@@ -28,7 +28,10 @@ lint:
     - docs/images/nf-core-sgnf_logo_light.png
     - docs/images/nf-core-sgnf_logo_dark.png
   readme: false
+  actions_schema_validation: false
   actions_ci: false
-  nextflow_config: false
-
+  nextflow_config:
+    - manifest.name
+    - manifest.homePage
+  multiqc_config: false
 repository_type: pipeline

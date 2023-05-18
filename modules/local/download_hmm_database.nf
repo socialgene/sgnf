@@ -23,7 +23,8 @@ process DOWNLOAD_HMM_DATABASE {
     hmm_download_${database}.sh $version
 
     # convert hmm models to HMMER version 3
-    hmmconvert_loop.sh
+    hmmconvert_loop.sh ${database}
+
 
     # remove all files not needed by socialgene
     remove_files_keep_directory_structure.sh  "${database}"

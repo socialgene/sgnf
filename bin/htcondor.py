@@ -7,8 +7,9 @@ import tarfile
 from pathlib import Path
 from socialgene.config import env_vars as sg_env
 import tarfile
+import glob
 
-env_vars = dict(os.environ)
+sg_env = sg_env | dict(os.environ)
 
 # need a custom delimter to avoid messing with the bash substitution
 class CustomTemplate(Template):
@@ -16,24 +17,41 @@ class CustomTemplate(Template):
 
 
 ################################
+# check hmm files
+################################
+
+WITH_CUTOFFS = glob.glob("socialgene_nr_hmms_file_with_cutoffs_*")
+WITHOUT_CUTOFFS = glob.glob("socialgene_nr_hmms_file_without_cutoffs_*")
+
+################################
 # write sample_matrix.csv
 ################################
 
-with tarfile.open("hmm.tar", "r") as tar:
-    hmm_files = [str(Path(i).name) for i in tar.getnames()]
+hmm_files = WITH_CUTOFFS + WITHOUT_CUTOFFS
 
+# get fasta filenames for tar
 with tarfile.open("fasta.tar", "r") as tar:
     fasta_files = [str(Path(i).name) for i in tar.getnames()]
 
+# make lists for 3-column matrix [hmm_file,fasta_file,has_cutoffs]
+
+# WITH_CUTOFFS =true
+t1 = [list(i) + ["true"] for i in list(itertools.product(*[WITH_CUTOFFS, fasta_files]))]
+# WITHOUT_CUTOFFS =true
+t2 = [
+    list(i) + ["false"]
+    for i in list(itertools.product(*[WITHOUT_CUTOFFS, fasta_files]))
+]
+
 with open("sample_matrix.csv", "a") as out_handle:
-    for i in itertools.product(*[hmm_files, fasta_files]):
-        _ = out_handle.write(f"{i[0]},{i[1]}\n")
+    for i in t1 + t2:
+        # hmm_file,fasta_file,has_cutoffs
+        _ = out_handle.write(f"{i[0]},{i[1]},{i[2]}\n")
 
 
 ################################
 # write hmmsearch.sh
 ################################
-
 
 input = """#!/bin/bash
 
@@ -66,20 +84,36 @@ zcat ${FASTA_INPUT_FILE} > input_fasta_file.faa
 # especially for troubleshooting any chtc issues
 outfilename="${HMM_BASENAME}-sgout-${FAA_BASENAME}"
 
-hmmsearch \
-    --domtblout "${outfilename}.domtblout" \
-    -Z %$%{HMMSEARCH_Z} \
-    -E %$%{HMMSEARCH_E} \
-    --domE %$%{HMMSEARCH_DOME} \
-    --incE %$%{HMMSEARCH_INCE} \
-    --incdomE %$%{HMMSEARCH_INCDOME} \
-    --F1 %$%{HMMSEARCH_F1} \
-    --F2 %$%{HMMSEARCH_F2} \
-    --F3 %$%{HMMSEARCH_F3} \
-    --seed %$%{HMMSEARCH_SEED} \
-    --cpu 1 \
-    ${HMM_INPUT_FILE} \
-    input_fasta_file.faa > /dev/null 2>&1
+if [ "$3" = true ]
+then
+    hmmsearch \
+        --domtblout "${outfilename}.domtblout" \
+        %$%{hmmsearch_model_threshold} \
+        -Z %$%{HMMSEARCH_Z} \
+        --F1 %$%{HMMSEARCH_F1} \
+        --F2 %$%{HMMSEARCH_F2} \
+        --F3 %$%{HMMSEARCH_F3} \
+        --seed %$%{HMMSEARCH_SEED} \
+        --cpu 1 \
+        ${HMM_INPUT_FILE} \
+        input_fasta_file.faa > /dev/null 2>&1
+else
+
+    hmmsearch \
+        --domtblout "${outfilename}.domtblout" \
+        -Z %$%{HMMSEARCH_Z} \
+        -E %$%{HMMSEARCH_E} \
+        --domE %$%{HMMSEARCH_DOME} \
+        --incE %$%{HMMSEARCH_INCE} \
+        --incdomE %$%{HMMSEARCH_INCDOME} \
+        --F1 %$%{HMMSEARCH_F1} \
+        --F2 %$%{HMMSEARCH_F2} \
+        --F3 %$%{HMMSEARCH_F3} \
+        --seed %$%{HMMSEARCH_SEED} \
+        --cpu 1 \
+        ${HMM_INPUT_FILE} \
+        input_fasta_file.faa > /dev/null 2>&1
+fi
 
 # send files we don't want returned to nope
 mkdir nope
@@ -107,7 +141,7 @@ error = errors/job_$(Cluster)_$(Process).err
 output = outputs/job_$(Cluster)_$(Process).out
 
 executable = hmmsearch.sh
-arguments = $(hmm_model_basename) $(fasta_file_basename)
+arguments = $(hmm_model_basename) $(fasta_file_basename) $(has_cutoffs)
 
 should_transfer_files = YES
 when_to_transfer_output = ON_EXIT
@@ -121,28 +155,10 @@ max_idle = %$%{htcondor_max_idle}
 +WantGlideIn = %$%{htcondor_WantGlideIn}
 +WantFlocking = %$%{htcondor_WantFlocking}
 
-queue hmm_model_basename fasta_file_basename from sample_matrix.csv
+queue hmm_model_basename fasta_file_basename has_cutoffs from sample_matrix.csv
 """
 
-d = {}
-
-if env_vars["htcondor_WantGlideIn"] == "true":
-    d["htcondor_WantGlideIn"] = "true"
-else:
-    d["htcondor_WantGlideIn"] = "false"
-
-if env_vars["htcondor_WantFlocking"] == "true":
-    d["htcondor_WantFlocking"] = "true"
-else:
-    d["htcondor_WantFlocking"] = "false"
-
-d["htcondor_request_cpus"] = env_vars["htcondor_request_cpus"]
-d["htcondor_request_memory"] = env_vars["htcondor_request_memory"]
-d["htcondor_request_disk"] = env_vars["htcondor_request_disk"]
-d["htcondor_max_idle"] = env_vars["htcondor_max_idle"]
-d["htcondor_squid_username"] = env_vars["htcondor_squid_username"]
-
-result = CustomTemplate(input).substitute(d)
+result = CustomTemplate(input).substitute(sg_env)
 with open("chtc_submission_file.sub", "w") as out_handle:
     out_handle.writelines(result)
 
@@ -187,11 +203,7 @@ conda pack -n socialgene
 chmod 644 socialgene.tar.gz
 """
 
-d = {}
-
-d["htcondor_squid_username"] = env_vars["htcondor_squid_username"]
-
-result = CustomTemplate(input).substitute(d)
+result = CustomTemplate(input).substitute(sg_env)
 with open("submit_server_setup.sh", "w") as out_handle:
     out_handle.writelines(result)
 

@@ -4,41 +4,39 @@
 ========================================================================================
 */
 
+
+
 def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 
+
+
 // Validate input parameters
-//          WorkflowSocialgene.initialise(params, log)
+WorkflowSocialgene.initialise(params, log)
 
-// Check input path parameters to see if they exist
-//          def checkPathParamList = [ params.input, params.multiqc_config, params.fasta ]
-//          for (param in checkPathParamList) { if (param) { file(param, checkIfExists: true) } }
 
-// Check mandatory parameters
-//          if (params.input) { ch_input = file(params.input) } else { exit 1, 'Input samplesheet not specified!' }
 
 /*
 ========================================================================================
     IMPORT LOCAL MODULES
 ========================================================================================
 */
-include { ANTISMASH                         } from '../modules/local/antismash/main'
-include { ANTISMASH_GBK_TO_TABLE            } from '../modules/local/antismash/antismash_gbk_to_table'
-include { MMSEQS2_EASYCLUSTER               } from '../modules/local/mmseqs2_easycluster'
-include { MMSEQS2_CREATEDB                  } from '../modules/local/mmseqs2_createdb'
-include { MMSEQS_CREATEINDEX                } from '../modules/nf-core/mmseqs/createindex/main'
-include { NEO4J_ADMIN_IMPORT                } from '../modules/local/neo4j_admin_import'
-include { NEO4J_ADMIN_IMPORT_DRYRUN         } from '../modules/local/neo4j_admin_import_dryrun'
-include { NEO4J_HEADERS                     } from '../modules/local/neo4j_headers'
-include { PARAMETER_EXPORT_FOR_NEO4J        } from '../modules/local/parameter_export_for_neo4j'
-include { SEQKIT_SORT                       } from '../modules/local/seqkit/sort/main'
-include { DEDUP_AND_INDEX                   } from '../modules/local/dedup_and_index'
-include { SEQKIT_SPLIT                      } from '../modules/local/seqkit/split/main'
-include { HTCONDOR_PREP                     } from '../modules/local/htcondor_prep'
-include { HMMER_HMMSEARCH                   } from '../modules/local/hmmsearch'
-include { HMMSEARCH_PARSE                   } from '../modules/local/hmmsearch_parse'
-include { INDEX_FASTA                       } from '../modules/local/index_fasta'
-
-include { DOWNLOAD_CHEMBL_DATA                       } from '../modules/local/download_chembl_data'
+include { ANTISMASH                                     } from '../modules/local/antismash/main'
+include { ANTISMASH_GBK_TO_TABLE                        } from '../modules/local/antismash/antismash_gbk_to_table'
+include { MMSEQS2_CLUSTER                               } from '../modules/local/mmseqs2_cluster'
+include { MMSEQS2_CREATEDB                              } from '../modules/local/mmseqs2_createdb'
+include { NEO4J_ADMIN_IMPORT                            } from '../modules/local/neo4j_admin_import'
+include { NEO4J_ADMIN_IMPORT_DRYRUN                     } from '../modules/local/neo4j_admin_import_dryrun'
+include { NEO4J_HEADERS                                 } from '../modules/local/neo4j_headers'
+include { PARAMETER_EXPORT_FOR_NEO4J                    } from '../modules/local/parameter_export_for_neo4j'
+include { SEQKIT_SORT                                   } from '../modules/local/seqkit/sort/main'
+include { DEDUPLICATE_AND_INDEX_FASTA                   } from '../modules/local/dedup_and_index'
+include { SEQKIT_SPLIT                                  } from '../modules/local/seqkit/split/main'
+include { HTCONDOR_PREP                                 } from '../modules/local/htcondor_prep'
+include { HMMER_HMMSEARCH                               } from '../modules/local/hmmsearch'
+include { HMMSEARCH_PARSE                               } from '../modules/local/hmmsearch_parse'
+include { INDEX_FASTA                                   } from '../modules/local/index_fasta'
+include { DOWNLOAD_CHEMBL_DATA                          } from '../modules/local/download_chembl_data'
+include { MD5_AS_FILENAME as MERGE_PARSED_DOMTBLOUT   } from '../modules/local/md5_as_filename'
 
 
 
@@ -63,7 +61,7 @@ include { HMM_PREP                  } from '../subworkflows/local/hmm_prep'
 include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/nf-core/custom/dumpsoftwareversions/main'
 include { DIAMOND_BLASTP                } from '../modules/local/diamond/blastp/main'
 include { DIAMOND_MAKEDB                } from '../modules/local/diamond/makedb/main'
-
+include { MULTIQC                       } from '../modules/nf-core/multiqc/main'
 
 /*
 ========================================================================================
@@ -76,6 +74,7 @@ available_hmms=["antismash","amrfinder","bigslice","classiphage", "ipresto","pfa
 workflow SOCIALGENE {
 println "Manifest's pipeline version: $workflow.profile"
     ch_versions = Channel.empty()
+    ch_citations = Channel.empty()
 
     def hmmlist = []
     // if not `null`, hmmlist needs to be a list
@@ -135,10 +134,10 @@ println "Manifest's pipeline version: $workflow.profile"
         GENOME_HANDLING.out.ch_fasta.set{ch_fasta}
         ch_versions = ch_versions.mix(GENOME_HANDLING.out.ch_versions)
 
-        // TODO: just pass this straight to DEDUP_AND_INDEX, dont' create a collected_fasta.faa.gz
+        // TODO: just pass this straight to DEDUPLICATE_AND_INDEX_FASTA, dont' create a collected_fasta.faa.gz
         GENOME_HANDLING.out.ch_fasta.collect().set{ fasta_to_dedup}
-        DEDUP_AND_INDEX(fasta_to_dedup)
-        DEDUP_AND_INDEX.out
+        DEDUPLICATE_AND_INDEX_FASTA(fasta_to_dedup)
+        DEDUPLICATE_AND_INDEX_FASTA.out
             .fasta
             .set{ch_nr_fasta}
 
@@ -161,69 +160,70 @@ println "Manifest's pipeline version: $workflow.profile"
     if (params.hmmlist || params.custom_hmm_file){
 
 
-            if (params.fasta_splits > 1){
-                 SEQKIT_SPLIT(
-                     single_ch_fasta
-                     )
-                 SEQKIT_SPLIT
-                     .out
-                     .fasta
-                     .flatten()
-                     .set{ch_split_fasta}
+        if (params.fasta_splits > 1){
+            SEQKIT_SPLIT(
+                single_ch_fasta
+                )
+            SEQKIT_SPLIT
+                .out
+                .fasta
+                .flatten()
+                .set{ch_split_fasta}
 
-//            ch_split_fasta = single_ch_fasta.splitFasta(size:'15.MB', file:true, compress:true, decompress:true)
+        } else {
+            ch_split_fasta = single_ch_fasta
+        }
 
-            } else {
-                ch_split_fasta = single_ch_fasta
-            }
-            HMM_PREP(ch_split_fasta, hmmlist)
-            if (params.htcondor){
-                // collect all fasta and all hmms to pass to HTCONDOR_PREP
-                // kept separate to control renaming files in the process
-                ch_split_fasta.collect().set{all_split_fasta}
-                HMM_PREP.out.hmms.collect().set{all_split_hmms}
+        HMM_PREP(hmmlist)
 
-                HTCONDOR_PREP(all_split_hmms, all_split_fasta)
-                ch_versions = ch_versions.mix(HTCONDOR_PREP.out.versions)
-                domtblout_ch = false
-            } else if (params.domtblout_path){
-                domtblout_ch = Channel.fromPath(params.domtblout_path)
+        // either
+        // 1) collect files to send to high throughput computing (outside of nf-workflow)
+        // 2) use path to domtblout file
+        // 3) run HMMER using nextflow
 
-
-            } else {
-                // create a channel that's the cartesian product of all hmm files and all fasta files
-                HMM_PREP.out.hmms
-                    .flatten()
-                    .combine(
-                        ch_split_fasta
-                            .flatten()
-                    )
-                    .set{ mixed_hmm_fasta_ch }
-                HMMER_HMMSEARCH(mixed_hmm_fasta_ch)
-                ch_versions = ch_versions.mix(HMMER_HMMSEARCH.out.versions.last())
-
-                domtblout_ch = HMMER_HMMSEARCH.out.domtblout
-
-            }
-
-
+        if (params.htcondor){
+            // collect all fasta and all hmms to pass to HTCONDOR_PREP
+            // kept separate to control renaming files in the process
+            ch_split_fasta.collect().set{all_split_fasta}
+            HTCONDOR_PREP(HMM_PREP.out.all_hmms, all_split_fasta)
+            ch_versions = ch_versions.mix(HTCONDOR_PREP.out.versions)
+            domtblout_ch = false
+        } else if (params.domtblout_path){
+            domtblout_ch = Channel.fromPath(params.domtblout_path)
+        } else {
+            // create a channel that's the cartesian product of all hmm files and all fasta files
+            HMM_PREP.out.hmms_file_with_cutoffs.mix(HMM_PREP.out.hmms_file_without_cutoffs)
+                .combine(
+                    ch_split_fasta
+                        .flatten()
+                )
+                .set{ mixed_hmm_fasta_ch }
+            HMMER_HMMSEARCH(mixed_hmm_fasta_ch)
+            ch_versions = ch_versions.mix(HMMER_HMMSEARCH.out.versions.last())
+            domtblout_ch = HMMER_HMMSEARCH.out.domtblout
+        }
 
         if (domtblout_ch){
+
             HMMSEARCH_PARSE(domtblout_ch.buffer( size: 50, remainder: true ))
-            hmmer_result_ch = HMMSEARCH_PARSE.out.parseddomtblout.collect()
+
+
+            ch_parsed_domtblout_concat = HMMSEARCH_PARSE.out.parseddomtblout.collectFile(name: "parseddomtblout", sort: 'hash', cache: true)
+            MERGE_PARSED_DOMTBLOUT(ch_parsed_domtblout_concat)
+            hmmer_result_ch = MERGE_PARSED_DOMTBLOUT.out.outfile
             ch_versions = ch_versions.mix(HMMSEARCH_PARSE.out.versions.last())
         }
 
-        hmm_tsv_parse_ch = HMM_PREP.out.hmm_tsv_nodes.concat(
-            HMM_PREP.out.hmm_tsv_out
-        ).collect()
+        hmm_info_ch = HMM_PREP.out.hmm_info
+        hmm_nodes_ch = HMM_PREP.out.hmm_nodes
+
 
         tigrfam_ch = HMM_PREP.out.tigr_ch.collect()
 
     } else {
 
-
-        hmm_tsv_parse_ch =  file("${baseDir}/assets/EMPTY_FILE")
+        hmm_info_ch =  file("${baseDir}/assets/EMPTY_FILE")
+        hmm_nodes_ch =  file("${baseDir}/assets/EMPTY_FILE2")
         tigrfam_ch =  file("${baseDir}/assets/EMPTY_FILE")
         hmmer_result_ch = file("${baseDir}/assets/EMPTY_FILE")
     }
@@ -261,13 +261,12 @@ println "Manifest's pipeline version: $workflow.profile"
     */
     if (run_mmseqs2){
         MMSEQS2_CREATEDB(single_ch_fasta)
-        MMSEQS_CREATEINDEX(MMSEQS2_CREATEDB.out.mmseqs_database)
-
-        MMSEQS2_EASYCLUSTER(single_ch_fasta)
-        MMSEQS2_EASYCLUSTER.out.clusterres_cluster
+        MMSEQS2_CLUSTER(MMSEQS2_CREATEDB.out.mmseqs_database, single_ch_fasta)
+        MMSEQS2_CLUSTER.out.mmseqs_clustered_db_tsv
             .collect()
             .set{mmseqs2_ch}
-        ch_versions = ch_versions.mix(MMSEQS2_EASYCLUSTER.out.versions)
+        ch_versions = ch_versions.mix(MMSEQS2_CLUSTER.out.versions)
+        ch_citations = ch_citations.mix(MMSEQS2_CLUSTER.out.citations)
     } else {
         mmseqs2_ch = file("${baseDir}/assets/EMPTY_FILE")
     }
@@ -302,14 +301,12 @@ println "Manifest's pipeline version: $workflow.profile"
     ////////////////////////
     */
     // collected_version_files ensures everythin was run first
-    collected_version_files = ch_versions.collectFile(name: 'temp.yml', newLine: true)
 
     // all the '.collect()'s were added to ensure a cardinality of 1 for all inputs to database build
 
-    // NEO4J_ADMIN_IMPORT_DRYRUN(
-    //     sg_modules,
-    //     hmmlist
-    // )
+    NEO4J_ADMIN_IMPORT_DRYRUN(
+        sg_modules
+    )
 
 if (run_build_database) {
 
@@ -322,19 +319,23 @@ if (run_build_database) {
                 hmmlist.collect(),
                 neo4j_header_ch,
                 taxdump_ch,
-                hmm_tsv_parse_ch,
+                hmm_info_ch,
+                hmm_nodes_ch,
                 blast_ch,
                 mmseqs2_ch,
                 hmmer_result_ch,
                 tigrfam_ch,
                 parameters_ch,
-                GENOME_HANDLING.out.ch_genome_info.collect(),
-                GENOME_HANDLING.out.ch_protein_info.collect()
+                GENOME_HANDLING.out.ch_genome_info,
+                GENOME_HANDLING.out.ch_protein_info
             )
 
             ch_versions = ch_versions.mix(NEO4J_ADMIN_IMPORT.out.versions)
         }
     }
+
+        collected_version_files = ch_versions.collectFile(name: 'temp.yml', newLine: true)
+
     /*
     ////////////////////////
     OUTPUT SOFTWARE VERSIONS
@@ -342,6 +343,22 @@ if (run_build_database) {
     */
     CUSTOM_DUMPSOFTWAREVERSIONS (
         collected_version_files
+    )
+
+    ch_multiqc_files            = Channel.empty()
+    ch_multiqc_config           = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
+    ch_multiqc_custom_config    = params.multiqc_config ? Channel.fromPath( params.multiqc_config, checkIfExists: true ) : Channel.empty()
+    ch_multiqc_logo             = params.multiqc_logo   ? Channel.fromPath( params.multiqc_logo, checkIfExists: true ) : Channel.empty()
+    ch_multiqc_files            = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
+    ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
+    methods_description         = WorkflowSocialgene.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description)
+
+
+    MULTIQC (
+        ch_multiqc_files.collect(),
+        ch_multiqc_config.toList(),
+        ch_multiqc_custom_config.toList(),
+        ch_multiqc_logo.toList()
     )
 
 }

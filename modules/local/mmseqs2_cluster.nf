@@ -1,54 +1,80 @@
 process MMSEQS2_CLUSTER {
     label 'process_high'
 
-    conda "bioconda::mmseqs2=14.7e284"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/mmseqs2:14.7e284--pl5321hf1761c0_0':
-        'quay.io/biocontainers/mmseqs2:14.7e284--pl5321hf1761c0_0' }"
-
     input:
-    path(fasta)
+    path '*'
+    path fasta
 
     output:
-    path('*.mmseqs2_results_all_seqs.fasta.gz')   , emit: clusterres_all_seqs
-    path('*.mmseqs2_results_cluster.tsv.gz')      , emit: clusterres_cluster
-    path('*.mmseqs2_results_rep_seq.fasta.gz')    , emit: clusterres_rep_seq
+    path 'clusterdb*'                              , emit: mmseqs_clustered_db
+    path '*.mmseqs2_results_cluster.tsv.gz'        , emit: mmseqs_clustered_db_tsv
+    path '*.mmseqs2_rep_seq.fasta.gz'              , emit: mmseqs_clustered_fasta
     path "versions.yml" , emit: versions
+    path "citations.yml" , emit: citations
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''
-    """
-    # have to modify fasta until mmseqs is fixed:
-    # https://github.com/soedinglab/MMseqs2/issues/557
+    def args2 = task.ext.args2 ?: ''
 
-    mmseqs createdb ${fasta} DB
+    if (workflow.profile.contains("test"))
+        """
+        # have to modify fasta until mmseqs is fixed:
+        # https://github.com/soedinglab/MMseqs2/issues/557
 
-    mmseqs \\
-        easy-cluster \\
-        modified_fasta.faa.gz \\
-        'mmseqs2_results' \\
-        /tmp \\
-        --threads $task.cpus \\
-        $args
+        mmseqs cluster mmseqs2_database clusterdb tmp --threads $task.cpus --compressed 1 $args $args2
 
-    rm -rf tmp modified_fasta.faa.gz
+        mmseqs createtsv mmseqs2_database mmseqs2_database clusterdb mmseqs2_results_cluster.tsv
 
-    # change back hash_ids
-    sed -i 's/>mmseqsmmseqs/>/g' mmseqs2_results_all_seqs.fasta
-    sed -i 's/>mmseqsmmseqs/>/g' mmseqs2_results_rep_seq.fasta
-    sed -i 's/^mmseqsmmseqs//g' mmseqs2_results_cluster.tsv
-    sed -i 's/\tmmseqsmmseqs/\t/g' mmseqs2_results_cluster.tsv
+        mmseqs createsubdb clusterdb mmseqs2_database DB_clu_rep
+        mmseqs convert2fasta DB_clu_rep mmseqs2_rep_seq.fasta
 
-    md5_as_filename_after_gzip.sh 'mmseqs2_results_all_seqs.fasta' 'mmseqs2_results_all_seqs.fasta.gz'
-    md5_as_filename_after_gzip.sh 'mmseqs2_results_cluster.tsv'    'mmseqs2_results_cluster.tsv.gz'
-    md5_as_filename_after_gzip.sh 'mmseqs2_results_rep_seq.fasta'  'mmseqs2_results_rep_seq.fasta.gz'
+        rm -r tmp
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        mmseqs2: '13.45111'
-    END_VERSIONS
-    """
+        # sort for consisent output for testing
+        seqkit seq -w 0 -j ${task.cpus} -m 1 mmseqs2_rep_seq.fasta |\\
+                seqkit sort -w 0 --by-name --two-pass --threads ${task.cpus} > mmseqs2_rep_seq.fasta_2
+
+        rm mmseqs2_rep_seq.fasta
+        mv mmseqs2_rep_seq.fasta_2 mmseqs2_rep_seq.fasta
+
+        md5_as_filename_after_gzip.sh 'mmseqs2_results_cluster.tsv'    'mmseqs2_results_cluster.tsv.gz'
+        md5_as_filename_after_gzip.sh 'mmseqs2_rep_seq.fasta'  'mmseqs2_rep_seq.fasta.gz'
+
+
+        cat <<-END_VERSIONS > versions.yml
+        "${task.process}":
+            mmseqs: \$(mmseqs | grep 'Version' | sed 's/MMseqs2 Version: //')
+        END_VERSIONS
+        """
+    else
+        """
+        # have to modify fasta until mmseqs is fixed:
+        # https://github.com/soedinglab/MMseqs2/issues/557
+
+        mmseqs cluster mmseqs2_database clusterdb tmp --threads $task.cpus --compressed 1 $args $args2
+
+        mmseqs createtsv mmseqs2_database mmseqs2_database clusterdb mmseqs2_results_cluster.tsv
+
+        mmseqs createsubdb clusterdb mmseqs2_database DB_clu_rep
+        mmseqs convert2fasta DB_clu_rep mmseqs2_rep_seq.fasta
+
+        rm -r tmp
+
+        md5_as_filename_after_gzip.sh 'mmseqs2_results_cluster.tsv'    'mmseqs2_results_cluster.tsv.gz'
+        md5_as_filename_after_gzip.sh 'mmseqs2_rep_seq.fasta'  'mmseqs2_rep_seq.fasta.gz'
+
+
+        cat <<-END_VERSIONS > versions.yml
+        "${task.process}":
+            mmseqs: \$(mmseqs | grep 'Version' | sed 's/MMseqs2 Version: //')
+        END_VERSIONS
+
+        cat <<-END_CITATIONS > citations.yml
+        "${task.process}":
+            mmseqs: Hauser M, Steinegger M, Söding J. MMseqs software suite for fast and deep clustering and searching of large protein sequence sets. Bioinformatics. 2016 May 1;32(9):1323-30. doi: 10.1093/bioinformatics/btw006. Epub 2016 Jan 6. PMID: 26743509.
+        END_VERSIONS
+        """
 }

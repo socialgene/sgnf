@@ -3,9 +3,6 @@
 mkdir prism
 cd prism
 wget -r -np -nH --no-check-certificate --cut-dirs=3 -R index.html https://magarveylab.ca/Skinnider_etal/models/hmm/
-# remove any non-hmm files
-# convert hmm models to HMMER version 3
-bash hmmconvert_loop.sh "prism"
 
 cd ..
 

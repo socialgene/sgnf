@@ -1,19 +1,13 @@
 
 process PROCESS_GENBANK_FILES {
     cpus 1
-    memory '2.5GB'
-
-    publishDir "${params.outdir_neo4j}/import/protein_info", mode: 'copy', overwrite: false, pattern: "*.protein_info.gz"
-    publishDir "${params.outdir_neo4j}/import/genomic_info", mode: 'copy', overwrite: false, pattern: "*.locus_to_protein.gz"
-    publishDir "${params.outdir_neo4j}/import/genomic_info", mode: 'copy', overwrite: false, pattern: "*.assembly_to_locus.gz"
-    publishDir "${params.outdir_neo4j}/import/genomic_info", mode: 'copy', overwrite: false, pattern: "*.assembly_to_taxid.gz"
-    publishDir "${params.outdir_neo4j}/import/genomic_info", mode: 'copy', overwrite: false, pattern: "*.loci.gz"
-    publishDir "${params.outdir_neo4j}/import/genomic_info", mode: 'copy', overwrite: false, pattern: "*.assemblies.gz"
+    memory '5.GB'
 
     input:
     path "file?.input_genome"
 
     output:
+    path "*.protein_ids.gz"         , emit: protein_ids
     path "*.protein_info.gz"        , emit: protein_info
     path "*.locus_to_protein.gz"    , emit: locus_to_protein
     path "*.assembly_to_locus.gz"   , emit: assembly_to_locus
@@ -22,7 +16,6 @@ process PROCESS_GENBANK_FILES {
     path "*.assemblies.gz"          , emit: assembly
     path "*.faa.gz"                 , emit: fasta
     path "versions.yml"             , emit: versions
-    tuple path("*.locus_to_protein.gz"), path("*.assembly_to_locus.gz"), path("*.assembly_to_taxid.gz"), path("*.loci.gz"), path("*.assemblies.gz") , emit: genomic_info
 
     when:
     task.ext.when == null || task.ext.when
@@ -34,6 +27,11 @@ process PROCESS_GENBANK_FILES {
         --outdir '.' \\
         --n_fasta_splits 1
 
+    cut -f1 protein_info|\
+        sort |\
+        uniq > protein_ids
+
+    md5_as_filename_after_gzip.sh "protein_ids" "protein_ids.gz"
     md5_as_filename_after_gzip.sh "protein_info" "protein_info.gz"
     md5_as_filename_after_gzip.sh "locus_to_protein" "locus_to_protein.gz"
     md5_as_filename_after_gzip.sh "assembly_to_locus" "assembly_to_locus.gz"
@@ -41,7 +39,6 @@ process PROCESS_GENBANK_FILES {
     md5_as_filename_after_gzip.sh "*faa" "faa.gz"
     md5_as_filename_after_gzip.sh "loci" "loci.gz"
     md5_as_filename_after_gzip.sh "assembly" "assemblies.gz"
-
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -2,7 +2,7 @@ process SEQKIT_SPLIT {
     label 'process_medium'
     label 'process_high_memory'
 
-    conda (params.enable_conda ? 'bioconda::seqkit=2.3.0' : null)
+    conda 'bioconda::seqkit=2.3.0'
 
     input:
     path fasta

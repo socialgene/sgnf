@@ -2,10 +2,13 @@ process NEO4J_ADMIN_IMPORT {
     tag 'Building Neo4j database'
     label 'process_high'
 
-    stageInMode 'rellink'
+    beforeScript 'mkdir -p import data logs plugins conf'
+    stageInMode 'symlink'
 
-    containerOptions "-v /data:/opt/conda/bin/neo4j/neo4j-community-5.1.0/data"
-    containerOptions "-v /import:/opt/conda/bin/neo4j/neo4j-community-5.1.0/import"
+    containerOptions "-v /data:/opt/conda/bin/neo4j/data"
+    containerOptions "-v /import:/opt/conda/bin/neo4j/import"
+    containerOptions "-v /logs:/opt/conda/bin/neo4j/logs"
+    containerOptions "-v /plugins:/opt/conda/bin/neo4j/plugins"
 
 
     input:
@@ -13,9 +16,10 @@ process NEO4J_ADMIN_IMPORT {
     val hmmlist
     path "import/neo4j_headers/*"
     path "import/taxdump_process/*"
-    path "import/hmm_tsv_parse/*"
+    path "import/hmm_info/*"
+    path "import/hmm_info/*"
     path "import/diamond_blastp/*"
-    path "import/mmseqs2_easycluster/*"
+    path "import/mmseqs2_cluster/*"
     path "import/parsed_domtblout/*"
     path "import/tigrfam_info/*"
     path "import/parameters/*"
@@ -40,7 +44,7 @@ process NEO4J_ADMIN_IMPORT {
 
     # This is based on the Dockerfile (neo4j-admin writes into this directory)
     touch import.report
-    NEO4J_BASE_DIR='/opt/conda/bin/neo4j/neo4j-community-5.1.0'
+    NEO4J_BASE_DIR='/opt/conda/bin/neo4j'
 
 
     sg_create_neo4j_db \\
@@ -48,11 +52,10 @@ process NEO4J_ADMIN_IMPORT {
     --cpus ${task.cpus} \\
     --additional_args "" \\
     --uid None \\
-    --docker true \\
+    --docker \\
     --gid None \\
     --sg_modules ${sg_modules_delim} \\
-    --hmmlist ${hmm_s_delim} \\
-    --dryrun true \\
+    --dryrun \\
     --dryrun_filepath "command_to_build_neo4j_database.sh"
 
     sg_create_neo4j_db \\
@@ -61,8 +64,7 @@ process NEO4J_ADMIN_IMPORT {
     --additional_args "" \\
     --uid None \\
     --gid None \\
-    --sg_modules ${sg_modules_delim} \\
-    --hmmlist ${hmm_s_delim}
+    --sg_modules ${sg_modules_delim}
 
     mv \${NEO4J_BASE_DIR}/data/* ./data/
     mv \${NEO4J_BASE_DIR}/logs/* ./logs/

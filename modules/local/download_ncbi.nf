@@ -1,8 +1,7 @@
-
 process DOWNLOAD_NCBI {
     label 'process_really_low'
 
-    conda (params.enable_conda ? "hcc::aspera-cli bioconda::entrez-direct" : null)
+    conda "hcc::aspera-cli bioconda::entrez-direct"
 
     input:
     val input_taxon
@@ -25,7 +24,6 @@ process DOWNLOAD_NCBI {
         \${CONDA_PREFIX}/etc/asperaweb_id_dsa.openssh \
         $input_taxon
 
-    # TODO: how to get esearch version
     cat <<-END_VERSIONS > ncbi_versions.yml
     "${task.process}":
         aspera: \$(ascp --version | head -n1 | sed -E 's/IBM Aspera CLI version //g')

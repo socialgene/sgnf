@@ -18,7 +18,7 @@ process NEO4J_HEADERS {
     def sg_modules_delim = sg_modules ? sg_modules.join(' ') : '""'
     def hmm_s_delim = hmmlist ? hmmlist.join(' ') : '""'
     """
-    sg_export_neo4j_headers --outdir . --sg_modules ${sg_modules_delim} --hmmlist ${hmm_s_delim}
+    sg_export_neo4j_headers --outdir . --sg_modules ${sg_modules_delim}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

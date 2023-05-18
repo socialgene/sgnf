@@ -2,7 +2,7 @@
 process DOWNLOAD_NCBI {
     label 'process_really_low'
 
-    conda (params.enable_conda ? "hcc::aspera-cli bioconda::entrez-direct" : null)
+    conda "hcc::aspera-cli bioconda::entrez-direct"
 
     input:
     val input_taxon

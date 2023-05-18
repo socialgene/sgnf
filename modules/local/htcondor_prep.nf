@@ -7,14 +7,14 @@ process HTCONDOR_PREP {
     path "??.faa.gz"
 
     output:
-    path "hmm.tar"
-    path "fasta.tar"
-    path "submit_server_setup.sh"
-    path "chtc_submission_file.sub"
-    path "instructions.txt"
-    path "sample_matrix.csv"
-    path "hmmsearch.sh"
-    path "submit_server_finish.sh"
+    path "hmm.tar"                  , emit: hmm
+    path "fasta.tar"                , emit: fasta
+    path "submit_server_setup.sh"   , emit: submit_server_setup
+    path "chtc_submission_file.sub" , emit: chtc_submission_file
+    path "instructions.txt"         , emit: instructions
+    path "sample_matrix.csv"        , emit: sample_matrix
+    path "hmmsearch.sh"             , emit: hmmsearch
+    path "submit_server_finish.sh"  , emit: submit_server_finish
     path "versions.yml" , emit: versions
 
     when:

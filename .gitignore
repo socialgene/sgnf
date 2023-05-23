@@ -7,8 +7,6 @@ testing/
 testing*
 *.pyc
 
-lint_log.txt
-
-socialgene_results/
-
 true/
+socialgene_results/
+lint_log.txt

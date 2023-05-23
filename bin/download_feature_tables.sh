@@ -13,9 +13,3 @@ rsync -a \
         $p \
         .
 done <temp
-
-
-
-
-
- rsync --include "**/*_feature_table.txt.gz"   --exclude='*'  --no-relative --recursive --times --verbose rsync://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/ .

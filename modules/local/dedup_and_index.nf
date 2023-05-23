@@ -1,7 +1,7 @@
 process DEDUPLICATE_AND_INDEX_FASTA {
     label 'process_medium'
 
-  //  conda 'bioconda::seqkit>=2.3.0 bioconda::samtools>=1.16.1 tabix coreutils'
+    //  conda 'bioconda::seqkit>=2.3.0 bioconda::samtools>=1.16.1 tabix coreutils'
 
     input:
     path 'file??.gz'

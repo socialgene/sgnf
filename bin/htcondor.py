@@ -38,10 +38,7 @@ with tarfile.open("fasta.tar", "r") as tar:
 # WITH_CUTOFFS =true
 t1 = [list(i) + ["true"] for i in list(itertools.product(*[WITH_CUTOFFS, fasta_files]))]
 # WITHOUT_CUTOFFS =true
-t2 = [
-    list(i) + ["false"]
-    for i in list(itertools.product(*[WITHOUT_CUTOFFS, fasta_files]))
-]
+t2 = [list(i) + ["false"] for i in list(itertools.product(*[WITHOUT_CUTOFFS, fasta_files]))]
 
 with open("sample_matrix.csv", "a") as out_handle:
     for i in t1 + t2:

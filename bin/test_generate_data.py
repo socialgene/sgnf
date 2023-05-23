@@ -46,9 +46,7 @@ def main():
         expected_files[i] = temp
 
     neo4j_import = Path(base_path).glob("import/**/*")
-    import_files = {
-        str(i).removeprefix(sg_outdir): hash(i) for i in neo4j_import if i.is_file()
-    }
+    import_files = {str(i).removeprefix(sg_outdir): hash(i) for i in neo4j_import if i.is_file()}
 
     z = {"import_files": import_files, "expected_files": expected_files}
     with open(outpath, "w") as outfile:

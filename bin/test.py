@@ -68,9 +68,7 @@ def check_versions_exist(x, messenger):
 def check_import_files(base_path, sg_outdir, messenger, ground_truth_dict):
     print(f"Checking import files for Neo4j")
     neo4j_import = Path(base_path).glob("import/**/*")
-    files = {
-        str(i).removeprefix(sg_outdir): hash(i) for i in neo4j_import if i.is_file()
-    }
+    files = {str(i).removeprefix(sg_outdir): hash(i) for i in neo4j_import if i.is_file()}
     filenames = set(files.keys())
     expected_filenames = set(ground_truth_dict["import_files"].keys())
     messenger["import"] = {
@@ -84,14 +82,12 @@ def check_import_files(base_path, sg_outdir, messenger, ground_truth_dict):
                 "expected_hash": ground_truth_dict["import_files"][k],
             }
             for k, v in files.items()
-            if k in ground_truth_dict["import_files"]
-            and v != ground_truth_dict["import_files"][k]
+            if k in ground_truth_dict["import_files"] and v != ground_truth_dict["import_files"][k]
         ],
         "good_hash": [
             k
             for k, v in files.items()
-            if k in ground_truth_dict["import_files"]
-            and v == ground_truth_dict["import_files"][k]
+            if k in ground_truth_dict["import_files"] and v == ground_truth_dict["import_files"][k]
         ],
     }
     print("Done")
@@ -113,10 +109,7 @@ def run_tests(sg_outdir, ground_truth_dict, verbose=False):
         )
 
     check_versions_exist(
-        x={
-            str(i.relative_to(sg_outdir))
-            for i in Path(base_path).glob("**/versions.yml")
-        },
+        x={str(i.relative_to(sg_outdir)) for i in Path(base_path).glob("**/versions.yml")},
         messenger=messenger,
     )
 
@@ -174,9 +167,7 @@ def main():
     with urlopen(args.url) as h:
         data_json = json.load(h)
 
-    run_tests(
-        sg_outdir=args.sg_outdir, ground_truth_dict=data_json, verbose=args.verbose
-    )
+    run_tests(sg_outdir=args.sg_outdir, ground_truth_dict=data_json, verbose=args.verbose)
 
 
 if __name__ == "__main__":

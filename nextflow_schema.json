@@ -78,7 +78,10 @@
                     "default": "socialgene_downloads"
                 }
             },
-            "required": ["outdir", "outdir_download_cache"]
+            "required": [
+                "outdir",
+                "outdir_download_cache"
+            ]
         },
         "input_hmms": {
             "title": "Input HMMs",
@@ -255,6 +258,11 @@
                     "fa_icon": "far fa-clock",
                     "pattern": "^(\\d+\\.?\\s*(s|m|h|day)\\s*)+$",
                     "help_text": "Used to set an upper-limit for the amount of time any single process is allowed to run. Should be a string in the format integer-unit e.g. `--max_time '2.h'`\n\nhttps://www.nextflow.io/docs/latest/process.html#time"
+                },
+                "slurm_queue_size": {
+                    "type": "integer",
+                    "default": 15,
+                    "hidden": true
                 }
             }
         },
@@ -306,93 +314,6 @@
                 }
             }
         },
-        "generic_options": {
-            "title": "Generic options",
-            "type": "object",
-            "fa_icon": "fas fa-file-import",
-            "description": "Less common options for the pipeline, typically set in a config file.",
-            "help_text": "These options are common to all nf-core pipelines and allow you to customise some of the core preferences for how the pipeline runs.\n\nTypically these options would be set in a Nextflow config file loaded for all pipeline runs, such as `~/.nextflow/config`.",
-            "properties": {
-                "help": {
-                    "type": "boolean",
-                    "description": "Display help text.",
-                    "fa_icon": "fas fa-question-circle",
-                    "hidden": true
-                },
-                "email_on_fail": {
-                    "type": "string",
-                    "description": "Email address for completion summary, only when pipeline fails.",
-                    "fa_icon": "fas fa-exclamation-triangle",
-                    "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
-                    "help_text": "An email address to send a summary email to when the pipeline is completed - ONLY sent if the pipeline does not exit successfully.",
-                    "hidden": true
-                },
-                "plaintext_email": {
-                    "type": "boolean",
-                    "description": "Send plain-text email instead of HTML.",
-                    "fa_icon": "fas fa-remove-format",
-                    "hidden": true
-                },
-                "monochrome_logs": {
-                    "type": "boolean",
-                    "description": "Do not use coloured log outputs.",
-                    "fa_icon": "fas fa-palette",
-                    "hidden": true
-                },
-                "tracedir": {
-                    "type": "string",
-                    "description": "Directory to keep pipeline Nextflow logs and reports.",
-                    "default": "${params.outdir}/pipeline_info",
-                    "fa_icon": "fas fa-cogs",
-                    "hidden": true
-                },
-                "validate_params": {
-                    "type": "boolean",
-                    "description": "Boolean whether to validate parameters against the schema at runtime",
-                    "default": true,
-                    "fa_icon": "fas fa-check-square",
-                    "hidden": true
-                },
-                "show_hidden_params": {
-                    "type": "boolean",
-                    "fa_icon": "far fa-eye-slash",
-                    "description": "Show all params when using `--help`",
-                    "hidden": true,
-                    "help_text": "By default, parameters set as _hidden_ in the schema are not shown on the command line when a user runs with `--help`. Specifying this option will tell the pipeline to show all parameters."
-                },
-                "slurm_queue_size": {
-                    "type": "integer",
-                    "default": 15,
-                    "hidden": true
-                },
-                "email": {
-                    "type": "string",
-                    "description": "Email address for completion summary.",
-                    "fa_icon": "fas fa-envelope",
-                    "help_text": "Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the command line for every run.",
-                    "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
-                    "hidden": true
-                },
-                "fasta": {
-                    "type": "string",
-                    "default": "not-used-but-needed-in-lint",
-                    "description": "not used, required by nf-core linter",
-                    "hidden": true
-                },
-                "input": {
-                    "type": "string",
-                    "default": "not-used-but-needed-in-lint",
-                    "description": "not used, required by nf-core linter",
-                    "hidden": true
-                },
-                "sort_fasta": {
-                    "type": "string",
-                    "default": "None",
-                    "description": "BLAST (and maybe MMseqs2?) differ based on sequence order, setting this to true will sort the protein fasta file first (note: this will make a copy of the data)",
-                    "hidden": true
-                }
-            }
-        },
         "hmmer_options": {
             "title": "HMMER Options",
             "type": "object",
@@ -419,13 +340,13 @@
                 },
                 "HMMSEARCH_E": {
                     "type": "number",
-                    "default": 10.0,
+                    "default": 10,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 },
                 "HMMSEARCH_DOME": {
                     "type": "number",
-                    "default": 10.0,
+                    "default": 10,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 },
@@ -467,8 +388,8 @@
                 }
             }
         },
-        "htcondor_specific_paramters": {
-            "title": "HTCONDOR specific paramters",
+        "htcondor_specific_parameters": {
+            "title": "HTCONDOR specific parameters",
             "type": "object",
             "description": "These parameters are specific to UW-Madison's CHTC high throuput computing cluster",
             "default": "",
@@ -576,6 +497,98 @@
                     "default": "None"
                 }
             }
+        },
+        "generic_options": {
+            "title": "Generic options",
+            "type": "object",
+            "fa_icon": "fas fa-file-import",
+            "description": "Less common options for the pipeline, typically set in a config file.",
+            "help_text": "These options are common to all nf-core pipelines and allow you to customise some of the core preferences for how the pipeline runs.\n\nTypically these options would be set in a Nextflow config file loaded for all pipeline runs, such as `~/.nextflow/config`.",
+            "properties": {
+                "help": {
+                    "type": "boolean",
+                    "description": "Display help text.",
+                    "fa_icon": "fas fa-question-circle",
+                    "hidden": true
+                },
+                "email_on_fail": {
+                    "type": "string",
+                    "description": "Email address for completion summary, only when pipeline fails.",
+                    "fa_icon": "fas fa-exclamation-triangle",
+                    "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
+                    "help_text": "An email address to send a summary email to when the pipeline is completed - ONLY sent if the pipeline does not exit successfully.",
+                    "hidden": true
+                },
+                "plaintext_email": {
+                    "type": "boolean",
+                    "description": "Send plain-text email instead of HTML.",
+                    "fa_icon": "fas fa-remove-format",
+                    "hidden": true
+                },
+                "monochrome_logs": {
+                    "type": "boolean",
+                    "description": "Do not use coloured log outputs.",
+                    "fa_icon": "fas fa-palette",
+                    "hidden": true
+                },
+                "tracedir": {
+                    "type": "string",
+                    "description": "Directory to keep pipeline Nextflow logs and reports.",
+                    "default": "${params.outdir}/pipeline_info",
+                    "fa_icon": "fas fa-cogs",
+                    "hidden": true
+                },
+                "validate_params": {
+                    "type": "boolean",
+                    "description": "Boolean whether to validate parameters against the schema at runtime",
+                    "default": true,
+                    "fa_icon": "fas fa-check-square",
+                    "hidden": true
+                },
+                "show_hidden_params": {
+                    "type": "boolean",
+                    "fa_icon": "far fa-eye-slash",
+                    "description": "Show all params when using `--help`",
+                    "hidden": true,
+                    "help_text": "By default, parameters set as _hidden_ in the schema are not shown on the command line when a user runs with `--help`. Specifying this option will tell the pipeline to show all parameters."
+                },
+                "hook_url": {
+                    "type": "string",
+                    "default": null,
+                    "hidden": true
+                },
+                "version": {
+                    "type": "string",
+                    "default": "false",
+                    "hidden": true
+                },
+                "email": {
+                    "type": "string",
+                    "description": "Email address for completion summary.",
+                    "fa_icon": "fas fa-envelope",
+                    "help_text": "Set this parameter to your e-mail address to get a summary e-mail with details of the run sent to you when the workflow exits. If set in your user config file (`~/.nextflow/config`) then you don't need to specify this on the command line for every run.",
+                    "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
+                    "hidden": true
+                },
+                "fasta": {
+                    "type": "string",
+                    "default": "not-used-but-needed-in-lint",
+                    "description": "not used, required by nf-core linter",
+                    "hidden": true
+                },
+                "input": {
+                    "type": "string",
+                    "default": "not-used-but-needed-in-lint",
+                    "description": "not used, required by nf-core linter",
+                    "hidden": true
+                },
+                "sort_fasta": {
+                    "type": "string",
+                    "default": "None",
+                    "description": "BLAST (and maybe MMseqs2?) differ based on sequence order, setting this to true will sort the protein fasta file first (note: this will make a copy of the data)",
+                    "hidden": true
+                }
+            }
         }
     },
     "allOf": [
@@ -607,19 +620,19 @@
             "$ref": "#/definitions/institutional_config_options"
         },
         {
-            "$ref": "#/definitions/generic_options"
-        },
-        {
             "$ref": "#/definitions/hmmer_options"
         },
         {
-            "$ref": "#/definitions/htcondor_specific_paramters"
+            "$ref": "#/definitions/htcondor_specific_parameters"
         },
         {
             "$ref": "#/definitions/hmm_database_versions"
         },
         {
             "$ref": "#/definitions/multiqc"
+        },
+        {
+            "$ref": "#/definitions/generic_options"
         }
     ]
 }

@@ -43,4 +43,3 @@ workflow TIGRFAM_INFO {
     versions = ch_versions
 
 }
-

@@ -52,6 +52,6 @@ EOF
     mv temp chembl_31.fps.gz
 
     # grep to remove sha256sum warnings about improper lines in the checksum file
-   # grep ".gz" checksums.txt | sha256sum --ignore-missing -c
+    # grep ".gz" checksums.txt | sha256sum --ignore-missing -c
     """
 }

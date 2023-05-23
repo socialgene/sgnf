@@ -187,8 +187,8 @@ chmod +r /squid/%$%{htcondor_squid_username}/*
 if ! command -v conda &> /dev/null
 then
     echo "conda could not be found, downloading and install first"
-   wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-   sh Miniconda3-latest-Linux-x86_64.sh
+    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    sh Miniconda3-latest-Linux-x86_64.sh
 fi
 eval "$(conda shell.bash hook)"
 conda create -n socialgene -y

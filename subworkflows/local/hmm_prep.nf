@@ -16,14 +16,14 @@ workflow HMM_PREP {
     main:
         ch_versions = Channel.empty()
         GATHER_HMMS(hmmlist)
-       // ch_versions = ch_versions.mix(GATHER_HMMS.out.versions)
+        // ch_versions = ch_versions.mix(GATHER_HMMS.out.versions)
 
         if (hmmlist.contains("tigrfam")){
             TIGRFAM_INFO()
             tigr_ch = TIGRFAM_INFO.out.tigr_ch
             ch_versions = ch_versions.mix(TIGRFAM_INFO.out.versions)
         } else {
-           tigr_ch = file("${baseDir}/assets/EMPTY_FILE")
+            tigr_ch = file("${baseDir}/assets/EMPTY_FILE")
         }
 
         HMM_HASH(
@@ -40,5 +40,3 @@ workflow HMM_PREP {
         versions                    = ch_versions
         tigr_ch                     = tigr_ch
 }
-
-

@@ -30,4 +30,3 @@ process DOWNLOAD_NCBI {
     END_VERSIONS
     """
 }
-

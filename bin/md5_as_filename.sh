@@ -7,4 +7,3 @@ find $1 -print0 | xargs -0 md5sum |
     while read -r newname oldname; do
         mv -v "$oldname" "$newname".$2
     done
-

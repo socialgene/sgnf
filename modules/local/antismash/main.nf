@@ -49,4 +49,3 @@ process ANTISMASH {
     END_VERSIONS
     """
 }
-

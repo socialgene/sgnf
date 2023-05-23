@@ -7,4 +7,3 @@ RUN micromamba install -y -n base -f /tmp/env.yaml && \
 
 USER $MAMBA_USER
 ARG MAMBA_DOCKERFILE_ACTIVATE=1
-

@@ -30,7 +30,3 @@ process DOWNLOAD_HMM_DATABASE {
     remove_files_keep_directory_structure.sh  "${database}"
     """
 }
-
-
-
-

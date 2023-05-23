@@ -10,5 +10,3 @@ md5sum ${1}.gz |
     while read -r newname oldname; do
     mv -v "$oldname" "$newname".${2}
     done
-
-

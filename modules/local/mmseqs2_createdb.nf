@@ -45,6 +45,3 @@ process MMSEQS2_CREATEDB {
     """
 
 }
-
-
-

@@ -26,15 +26,15 @@ Note: This is all pre-alpha stuff (i.e. being worked on extensively, there will 
 **socialgene/sgnf** is a bioinformatics pipeline that ...
 
 <!-- TODO nf-core:
-   Complete this sentence with a 2-3 sentence summary of what types of data the pipeline ingests, a brief overview of the
-   major pipeline sections and the types of output it produces. You're giving an overview to someone new
+  Complete this sentence with a 2-3 sentence summary of what types of data the pipeline ingests, a brief overview of the
+  major pipeline sections and the types of output it produces. You're giving an overview to someone new
 
 -->
 
 to nf-core here, in 15-20 seconds. For an example, see https://github.com/nf-core/rnaseq/blob/master/README.md#introduction
 
 <!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core
-     workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
+    workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
 <!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
 
 ## Usage
@@ -45,7 +45,7 @@ to nf-core here, in 15-20 seconds. For an example, see https://github.com/nf-cor
 > with `-profile test` before running the workflow on actual data.
 
 <!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.
-     Explain what rows and columns represent. For instance (please edit as appropriate):
+    Explain what rows and columns represent. For instance (please edit as appropriate):
 
 Now, you can run the pipeline using:
 
@@ -53,9 +53,9 @@ Now, you can run the pipeline using:
 
 ```bash
 nextflow run socialgene/sgnf \
-   --input samplesheet.csv \
-   --outdir <OUTDIR>
-   -profile <docker/singularity/.../institute> \
+  --input samplesheet.csv \
+  --outdir <OUTDIR>
+  -profile <docker/singularity/.../institute> \
 ```
 
 > **Warning:**

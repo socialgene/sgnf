@@ -16,9 +16,9 @@ process ANTISMASH_GBK_TO_TABLE {
     def args = task.ext.args ?: ''
     """
     antismash_gbk_to_table \
-     --input '*regions.gbk.gz' \
-     --output antismash_gbk_to_table.tsv \
-     --header
+    --input '*regions.gbk.gz' \
+    --output antismash_gbk_to_table.tsv \
+    --header
 
     gzip -n -6 antismash_gbk_to_table.tsv
 
@@ -29,4 +29,3 @@ process ANTISMASH_GBK_TO_TABLE {
     END_VERSIONS
     """
 }
-

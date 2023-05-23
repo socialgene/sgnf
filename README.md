@@ -30,7 +30,9 @@ Note: This is all pre-alpha stuff (i.e. being worked on extensively, there will 
    major pipeline sections and the types of output it produces. You're giving an overview to someone new
 
 -->
-   to nf-core here, in 15-20 seconds. For an example, see https://github.com/nf-core/rnaseq/blob/master/README.md#introduction
+
+to nf-core here, in 15-20 seconds. For an example, see https://github.com/nf-core/rnaseq/blob/master/README.md#introduction
+
 <!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core
      workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
 <!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
@@ -55,6 +57,7 @@ nextflow run socialgene/sgnf \
    --outdir <OUTDIR>
    -profile <docker/singularity/.../institute> \
 ```
+
 > **Warning:**
 > Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those
 > provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_;
@@ -62,18 +65,18 @@ nextflow run socialgene/sgnf \
 > see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).
 
 ## Credits
+
 socialgene/sgnf was originally written by Chase M. Clark.
 
-
 We thank the following people for their extensive assistance in the development of this pipeline:
-<!-- TODO nf-core: If applicable, make list of people who have also contributed -->
 
+<!-- TODO nf-core: If applicable, make list of people who have also contributed -->
 
 If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
 
 ## Contributions and Support
-## Citations
 
+## Citations
 
 <!-- TODO nf-core: Add citation for pipeline after first release. Uncomment lines below and update Zenodo doi and badge at the top of this file. -->
 
@@ -85,7 +88,6 @@ An extensive list of references for the tools used by the pipeline can be found 
 This pipeline uses code and infrastructure developed and maintained by the [nf-core](https://nf-co.re) community, reused here under the [MIT license](https://github.com/nf-core/tools/blob/master/LICENSE).
 
 > **The nf-core framework for community-curated bioinformatics pipelines.**
->
 >
 > Philip Ewels, Alexander Peltzer, Sven Fillinger, Harshil Patel, Johannes Alneberg, Andreas Wilm, Maxime Ulysse Garcia, Paolo Di Tommaso & Sven Nahnsen.
 > _Nat Biotechnol._ 2020 Feb 13. doi: [10.1038/s41587-020-0439-x](https://dx.doi.org/10.1038/s41587-020-0439-x).

@@ -78,10 +78,7 @@
                     "default": "socialgene_downloads"
                 }
             },
-            "required": [
-                "outdir",
-                "outdir_download_cache"
-            ]
+            "required": ["outdir", "outdir_download_cache"]
         },
         "input_hmms": {
             "title": "Input HMMs",

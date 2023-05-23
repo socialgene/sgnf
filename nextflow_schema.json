@@ -92,9 +92,8 @@
                     "description": "File path of a custom HMMER hmm file"
                 },
                 "hmmlist": {
-                    "type": "string",
-                    "default": "None",
-                    "description": "\"all\" or some combination of [\"antismash\",\"amrfinder\",\"bigslice\",\"classiphage\",\"pfam\",\"prism\",\"resfams\",\"tigrfam\",\"virus_orthologous_groups\"]"
+                    "type": "array",
+                    "description": "[\"all\"] or some combination of [\"antismash\",\"amrfinder\",\"bigslice\",\"classiphage\",\"pfam\",\"prism\",\"resfams\",\"tigrfam\",\"virus_orthologous_groups\"]"
                 },
                 "domtblout_path": {
                     "type": "string",
@@ -420,13 +419,13 @@
                 },
                 "HMMSEARCH_E": {
                     "type": "number",
-                    "default": 10,
+                    "default": 10.0,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 },
                 "HMMSEARCH_DOME": {
                     "type": "number",
-                    "default": 10,
+                    "default": 10.0,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 },
@@ -520,17 +519,7 @@
                     "default": "socialgene_results/htcondor_cache",
                     "hidden": true
                 }
-            },
-            "required": [
-                "htcondor",
-                "htcondor_request_memory",
-                "htcondor_request_cpus",
-                "htcondor_request_disk",
-                "htcondor_max_idle",
-                "htcondor_squid_username",
-                "htcondor_WantGlideIn",
-                "htcondor_WantFlocking"
-            ]
+            }
         },
         "hmm_database_versions": {
             "title": "HMM Database Versions",
@@ -568,15 +557,15 @@
             "properties": {
                 "multiqc_title": {
                     "type": "string",
-                    "default": null
+                    "default": "None"
                 },
                 "multiqc_logo": {
                     "type": "string",
-                    "default": null
+                    "default": "None"
                 },
                 "multiqc_config": {
                     "type": "string",
-                    "default": null
+                    "default": "None"
                 },
                 "max_multiqc_email_size": {
                     "type": "string",
@@ -584,7 +573,7 @@
                 },
                 "multiqc_methods_description": {
                     "type": "string",
-                    "default": null
+                    "default": "None"
                 }
             }
         }

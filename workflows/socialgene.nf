@@ -14,6 +14,16 @@ def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 WorkflowSocialgene.initialise(params, log)
 
 
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    CONFIG FILES
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+ch_multiqc_config          = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
+ch_multiqc_custom_config   = params.multiqc_config ? Channel.fromPath( params.multiqc_config, checkIfExists: true ) : Channel.empty()
+ch_multiqc_logo            = params.multiqc_logo   ? Channel.fromPath( params.multiqc_logo, checkIfExists: true ) : Channel.empty()
+ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
 
 /*
 ========================================================================================
@@ -71,8 +81,12 @@ include { MULTIQC                       } from '../modules/nf-core/multiqc/main'
 
 available_hmms=["antismash","amrfinder","bigslice","classiphage", "ipresto","pfam","prism","resfams","tigrfam","virus_orthologous_groups"]
 
+// Info required for completion email and summary
+def multiqc_report = []
+
 workflow SOCIALGENE {
-println "Manifest's pipeline version: $workflow.profile"
+
+    println "Manifest's pipeline version: $workflow.profile"
     ch_versions = Channel.empty()
     ch_citations = Channel.empty()
 
@@ -334,25 +348,33 @@ if (run_build_database) {
         }
     }
 
-        collected_version_files = ch_versions.collectFile(name: 'temp.yml', newLine: true)
 
     /*
     ////////////////////////
     OUTPUT SOFTWARE VERSIONS
     ////////////////////////
     */
+
     CUSTOM_DUMPSOFTWAREVERSIONS (
-        collected_version_files
+        ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )
 
-    ch_multiqc_files            = Channel.empty()
-    ch_multiqc_config           = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
-    ch_multiqc_custom_config    = params.multiqc_config ? Channel.fromPath( params.multiqc_config, checkIfExists: true ) : Channel.empty()
-    ch_multiqc_logo             = params.multiqc_logo   ? Channel.fromPath( params.multiqc_logo, checkIfExists: true ) : Channel.empty()
-    ch_multiqc_files            = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
-    ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
-    methods_description         = WorkflowSocialgene.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description)
+    /*
+    ////////////////////////
+    MultiQC
+    ////////////////////////
+    */
 
+    workflow_summary    = WorkflowSgnf.paramsSummaryMultiqc(workflow, summary_params)
+    ch_workflow_summary = Channel.value(workflow_summary)
+
+    methods_description    = WorkflowSgnf.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description)
+    ch_methods_description = Channel.value(methods_description)
+
+    ch_multiqc_files = Channel.empty()
+    ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+    ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
+    ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
 
     MULTIQC (
         ch_multiqc_files.collect(),
@@ -360,6 +382,7 @@ if (run_build_database) {
         ch_multiqc_custom_config.toList(),
         ch_multiqc_logo.toList()
     )
+    multiqc_report = MULTIQC.out.report.toList()
 
 }
 
@@ -374,6 +397,9 @@ workflow.onComplete {
         NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report)
     }
     NfcoreTemplate.summary(workflow, params, log)
+    if (params.hook_url) {
+        NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log)
+    }
 }
 
 /*

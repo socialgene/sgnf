@@ -14,33 +14,27 @@
                 "ncbi_genome_download_command": {
                     "type": "string",
                     "description": "Arguments to pass to ncbi_genome_download_command",
-                    "help_text": "See the following link for more info about commands you can use:\nhttps://github.com/kblin/ncbi-genome-download",
-                    "default": "None"
+                    "help_text": "See the following link for more info about commands you can use:\nhttps://github.com/kblin/ncbi-genome-download"
                 },
                 "ncbi_datasets_command": {
                     "type": "string",
-                    "default": "None",
                     "description": "Taxonomic name  (maybe NCBI taxonomy id as well?) see extended help before using",
                     "help_text": "Note/Warning: \nSpecifying a taxon directly has the potential to download a large number of genomes that you may not be prepared to handle.\nI highly recommend searching here (https://www.ncbi.nlm.nih.gov/genome/browse#!/prokaryotes/) first to get an idea of how many input genomes you can expect.\n\n\nThe input argument you provide will replace the `$args` in the command below:\n\n` datasets download genome taxon \"$args\" --include-gbff --exclude-genomic-cds --exclude-protein --exclude-rna --exclude-seq`\n\nInfo on use of NCBI datasets can be found here: https://www.ncbi.nlm.nih.gov/datasets/docs/v1/reference-docs/command-line/datasets/"
                 },
                 "ncbi_datasets_file": {
                     "type": "string",
-                    "default": "None",
                     "description": "Instead of using the 'ncbi_datasets_command', the path to a file of NCBI genome accessions to download can provided (single accessio per line)"
                 },
                 "local_genbank": {
                     "type": "string",
-                    "default": "None",
                     "description": "Path to local GenBank file(s), can be a glob",
                     "help_text": "Accepted files:\ngbff, gbk\nand gzipped versions of those\n"
                 },
                 "local_fasta": {
-                    "type": "string",
-                    "default": "None"
+                    "type": "string"
                 },
                 "paired_omics_json_path": {
                     "type": "string",
-                    "default": "None",
                     "description": "Paired omics json file, downloaded from: https://pairedomicsdata.bioinformatics.nl/projects",
                     "hidden": true
                 },
@@ -91,7 +85,6 @@
             "properties": {
                 "custom_hmm_file": {
                     "type": "string",
-                    "default": "None",
                     "description": "File path of a custom HMMER hmm file"
                 },
                 "hmmlist": {
@@ -477,24 +470,20 @@
             "default": "",
             "properties": {
                 "multiqc_title": {
-                    "type": "string",
-                    "default": "None"
+                    "type": "string"
                 },
                 "multiqc_logo": {
-                    "type": "string",
-                    "default": "None"
+                    "type": "string"
                 },
                 "multiqc_config": {
-                    "type": "string",
-                    "default": "None"
+                    "type": "string"
                 },
                 "max_multiqc_email_size": {
                     "type": "string",
                     "default": "25.MB"
                 },
                 "multiqc_methods_description": {
-                    "type": "string",
-                    "default": "None"
+                    "type": "string"
                 }
             }
         },
@@ -558,8 +547,9 @@
                     "hidden": true
                 },
                 "version": {
-                    "type": "string",
-                    "default": "false",
+                    "type": "boolean",
+                    "description": "Display version and exit.",
+                    "fa_icon": "fas fa-question-circle",
                     "hidden": true
                 },
                 "email": {
@@ -584,7 +574,6 @@
                 },
                 "sort_fasta": {
                     "type": "string",
-                    "default": "None",
                     "description": "BLAST (and maybe MMseqs2?) differ based on sequence order, setting this to true will sort the protein fasta file first (note: this will make a copy of the data)",
                     "hidden": true
                 }

@@ -59,7 +59,7 @@ EOF
     # grep ".gz" checksums.txt | sha256sum --ignore-missing -c
 
     cat <<-END_VERSIONS > versions.yml
-    chembl:
+    "${task.process}":
         version: ${chembl_version}
         url: "https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_${chembl_version}/chembl_${chembl_version}_chemreps.txt.gz"
         url: "https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_${chembl_version}/chembl_uniprot_mapping.txt"

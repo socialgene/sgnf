@@ -29,7 +29,7 @@ workflow GATHER_HMMS {
             hmm_map = [
                 "antismash":params.antismash_hmms_git_sha,
                 "amrfinder": params.amrfinder_version,
-                "bigslice": params.bigslice_versions,
+                "bigslice": params.bigslice_version,
                 "classiphage": '',
                 "ipresto": '',
                 "pfam": params.pfam_version,

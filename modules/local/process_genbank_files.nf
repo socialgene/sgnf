@@ -1,8 +1,7 @@
 
 process PROCESS_GENBANK_FILES {
-    label 'process_low' // makes linter happy
-    cpus 1
-    memory '5.GB'
+    // makes linter happy but actually resources are set in conf/base.config
+    label 'process_medium'
 
     input:
     path "file?.input_genome"

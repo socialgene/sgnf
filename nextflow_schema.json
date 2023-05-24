@@ -2,7 +2,7 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "$id": "https://raw.githubusercontent.com/socialgene/sgnf/master/nextflow_schema.json",
     "title": "socialgene/sgnf pipeline parameters",
-    "description": "Create a SocialGene Database",
+    "description": "Scalable genome mining with SocialGene knowledge graphs",
     "type": "object",
     "definitions": {
         "input_genomes": {
@@ -31,7 +31,8 @@
                     "help_text": "Accepted files:\ngbff, gbk\nand gzipped versions of those\n"
                 },
                 "local_fasta": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "Path to local protein FASTA file(s), can be a glob"
                 },
                 "paired_omics_json_path": {
                     "type": "string",
@@ -44,12 +45,9 @@
                 },
                 "genbank_input_buffer": {
                     "type": "integer",
-                    "default": 50
-                },
-                "crabhash_cpus": {
-                    "type": "integer",
-                    "default": 20,
-                    "hidden": true
+                    "default": 50,
+                    "description": "How many genbank files will be processed in a single task",
+                    "help_text": "PROCESS_GENBANK_FILES() is passed  a buffer( size: params.genbank_input_buffer, remainder: true )\n\nSo, if you have 100 gbk files and set params.genbank_input_buffer=20 then 5 processes will be spawned and process 20 gbk files each"
                 }
             }
         },
@@ -198,26 +196,6 @@
                 }
             }
         },
-        "versions": {
-            "title": "Versions",
-            "type": "object",
-            "description": "Here you can change the versions of databases that are used in the pipeline",
-            "default": "",
-            "properties": {
-                "pfam_version": {
-                    "type": "string",
-                    "default": "35.0",
-                    "description": "PFAM version. Ffor version numbers see: http://ftp.ebi.ac.uk/pub/databases/Pfam/releases",
-                    "hidden": true
-                },
-                "antismash_hmms_git_sha": {
-                    "type": "string",
-                    "default": "e2d777c6cd035e6bf20f7eec924a350b00b84c7b",
-                    "description": "Controls which version of antismash the antismash HMMS are pulled from",
-                    "hidden": true
-                }
-            }
-        },
         "max_job_resource_request_options": {
             "title": "Max job resource request options",
             "type": "object",
@@ -251,55 +229,52 @@
                 "slurm_queue_size": {
                     "type": "integer",
                     "default": 15,
-                    "hidden": true
+                    "hidden": true,
+                    "description": "Number of slurm jobs that can be running/submitted"
                 }
             }
         },
-        "institutional_config_options": {
-            "title": "Institutional config options",
+        "hmm_database_versions": {
+            "title": "HMM Database Versions",
             "type": "object",
-            "fa_icon": "fas fa-university",
-            "description": "Parameters used to describe centralised config profiles. These should not be edited.",
-            "help_text": "The centralised nf-core configuration profiles use a handful of pipeline parameters to describe themselves. This information is then printed to the Nextflow log when you run a pipeline. You should not need to change these values when you run a pipeline.",
+            "description": "",
+            "default": "",
             "properties": {
-                "custom_config_version": {
+                "amrfinder_version": {
                     "type": "string",
-                    "description": "Git commit id for Institutional configs.",
-                    "default": "master",
+                    "default": "2021-03-01.1",
                     "hidden": true,
-                    "fa_icon": "fas fa-users-cog"
+                    "description": "Version of amrfinder to download/use"
                 },
-                "custom_config_base": {
+                "bigslice_version": {
                     "type": "string",
-                    "description": "Base directory for Institutional configs.",
-                    "default": "https://raw.githubusercontent.com/nf-core/configs/master",
+                    "default": "v1.0.0/bigslice-models.2020-04-27",
                     "hidden": true,
-                    "help_text": "If you're running offline, Nextflow will not be able to fetch the institutional config files from the internet. If you don't need them, then this is not a problem. If you do need them, you should download the files from the repo and tell Nextflow where to find them with this parameter.",
-                    "fa_icon": "fas fa-users-cog"
+                    "description": "Version of bigslice to download/use"
                 },
-                "config_profile_name": {
+                "vog_version": {
                     "type": "string",
-                    "description": "Institutional config name.",
+                    "default": "vog211",
                     "hidden": true,
-                    "fa_icon": "fas fa-users-cog"
+                    "description": "Version of vog to download/use"
                 },
-                "config_profile_description": {
+                "tigrfam_version": {
                     "type": "string",
-                    "description": "Institutional config description.",
+                    "default": "15.0",
                     "hidden": true,
-                    "fa_icon": "fas fa-users-cog"
+                    "description": "Version of tigrfam to download/use"
                 },
-                "config_profile_contact": {
+                "pfam_version": {
                     "type": "string",
-                    "description": "Institutional config contact information.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-users-cog"
+                    "default": "35.0",
+                    "description": "PFAM version. Ffor version numbers see: http://ftp.ebi.ac.uk/pub/databases/Pfam/releases",
+                    "hidden": true
                 },
-                "config_profile_url": {
+                "antismash_hmms_git_sha": {
                     "type": "string",
-                    "description": "Institutional config URL link.",
-                    "hidden": true,
-                    "fa_icon": "fas fa-users-cog"
+                    "default": "e2d777c6cd035e6bf20f7eec924a350b00b84c7b",
+                    "description": "Controls which version of antismash the antismash HMMS are pulled from",
+                    "hidden": true
                 }
             }
         },
@@ -329,13 +304,13 @@
                 },
                 "HMMSEARCH_E": {
                     "type": "number",
-                    "default": 10,
+                    "default": 10.0,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 },
                 "HMMSEARCH_DOME": {
                     "type": "number",
-                    "default": 10,
+                    "default": 10.0,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 },
@@ -392,70 +367,50 @@
                 "htcondor_request_memory": {
                     "type": "string",
                     "default": "1GB",
-                    "hidden": true
+                    "hidden": true,
+                    "description": "See: https://chtc.cs.wisc.edu/uw-research-computing/helloworld"
                 },
                 "htcondor_request_cpus": {
                     "type": "integer",
                     "default": 1,
-                    "hidden": true
+                    "hidden": true,
+                    "description": "See: https://chtc.cs.wisc.edu/uw-research-computing/helloworld"
                 },
                 "htcondor_request_disk": {
                     "type": "string",
                     "default": "5GB",
-                    "hidden": true
+                    "hidden": true,
+                    "description": "See: https://chtc.cs.wisc.edu/uw-research-computing/helloworld"
                 },
                 "htcondor_max_idle": {
                     "type": "integer",
                     "default": 100,
-                    "hidden": true
+                    "hidden": true,
+                    "description": "See: https://chtc.cs.wisc.edu/uw-research-computing/helloworld"
                 },
                 "htcondor_squid_username": {
                     "type": "string",
                     "default": "cmclark8",
-                    "hidden": true
+                    "hidden": true,
+                    "description": "See: https://chtc.cs.wisc.edu/uw-research-computing/file-avail-squid"
                 },
                 "htcondor_WantGlideIn": {
                     "type": "boolean",
                     "default": true,
-                    "hidden": true
+                    "hidden": true,
+                    "description": "See: https://chtc.cs.wisc.edu/uw-research-computing/helloworld"
                 },
                 "htcondor_WantFlocking": {
                     "type": "boolean",
                     "default": true,
-                    "hidden": true
+                    "hidden": true,
+                    "description": "See: https://chtc.cs.wisc.edu/uw-research-computing/helloworld"
                 },
-                "htcondor_directory": {
+                "htcondor_prep_directory": {
                     "type": "string",
                     "default": "socialgene_results/htcondor_cache",
-                    "hidden": true
-                }
-            }
-        },
-        "hmm_database_versions": {
-            "title": "HMM Database Versions",
-            "type": "object",
-            "description": "",
-            "default": "",
-            "properties": {
-                "amrfinder_version": {
-                    "type": "string",
-                    "default": "2021-03-01.1",
-                    "hidden": true
-                },
-                "bigslice_versions": {
-                    "type": "string",
-                    "default": "v1.0.0/bigslice-models.2020-04-27",
-                    "hidden": true
-                },
-                "vog_version": {
-                    "type": "string",
-                    "default": "vog211",
-                    "hidden": true
-                },
-                "tigrfam_version": {
-                    "type": "string",
-                    "default": "15.0",
-                    "hidden": true
+                    "hidden": true,
+                    "description": "Where data to be sent to CHTC will be written"
                 }
             }
         },
@@ -466,20 +421,25 @@
             "default": "",
             "properties": {
                 "multiqc_title": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "x"
                 },
                 "multiqc_logo": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "x"
                 },
                 "multiqc_config": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "x"
                 },
                 "max_multiqc_email_size": {
                     "type": "string",
-                    "default": "25.MB"
+                    "default": "25.MB",
+                    "description": "x"
                 },
                 "multiqc_methods_description": {
-                    "type": "string"
+                    "type": "string",
+                    "description": "x"
                 }
             }
         },
@@ -540,7 +500,8 @@
                 "hook_url": {
                     "type": "string",
                     "default": "None",
-                    "hidden": true
+                    "hidden": true,
+                    "description": "x"
                 },
                 "version": {
                     "type": "boolean",
@@ -574,6 +535,54 @@
                     "hidden": true
                 }
             }
+        },
+        "institutional_config_options": {
+            "title": "Institutional config options",
+            "type": "object",
+            "fa_icon": "fas fa-university",
+            "description": "Parameters used to describe centralised config profiles. These should not be edited.",
+            "help_text": "The centralised nf-core configuration profiles use a handful of pipeline parameters to describe themselves. This information is then printed to the Nextflow log when you run a pipeline. You should not need to change these values when you run a pipeline.",
+            "properties": {
+                "custom_config_version": {
+                    "type": "string",
+                    "description": "Git commit id for Institutional configs.",
+                    "default": "master",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "custom_config_base": {
+                    "type": "string",
+                    "description": "Base directory for Institutional configs.",
+                    "default": "https://raw.githubusercontent.com/nf-core/configs/master",
+                    "hidden": true,
+                    "help_text": "If you're running offline, Nextflow will not be able to fetch the institutional config files from the internet. If you don't need them, then this is not a problem. If you do need them, you should download the files from the repo and tell Nextflow where to find them with this parameter.",
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "config_profile_name": {
+                    "type": "string",
+                    "description": "Institutional config name.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "config_profile_description": {
+                    "type": "string",
+                    "description": "Institutional config description.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "config_profile_contact": {
+                    "type": "string",
+                    "description": "Institutional config contact information.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                },
+                "config_profile_url": {
+                    "type": "string",
+                    "description": "Institutional config URL link.",
+                    "hidden": true,
+                    "fa_icon": "fas fa-users-cog"
+                }
+            }
         }
     },
     "allOf": [
@@ -596,13 +605,10 @@
             "$ref": "#/definitions/socialgene_modules"
         },
         {
-            "$ref": "#/definitions/versions"
-        },
-        {
             "$ref": "#/definitions/max_job_resource_request_options"
         },
         {
-            "$ref": "#/definitions/institutional_config_options"
+            "$ref": "#/definitions/hmm_database_versions"
         },
         {
             "$ref": "#/definitions/hmmer_options"
@@ -611,13 +617,13 @@
             "$ref": "#/definitions/htcondor_specific_parameters"
         },
         {
-            "$ref": "#/definitions/hmm_database_versions"
-        },
-        {
             "$ref": "#/definitions/multiqc"
         },
         {
             "$ref": "#/definitions/generic_options"
+        },
+        {
+            "$ref": "#/definitions/institutional_config_options"
         }
     ]
 }

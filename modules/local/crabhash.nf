@@ -1,7 +1,6 @@
 
 process CRABHASH {
     label 'process_high'
-    label 'process_high_memory'
 
     container 'chasemc2/crabhash:0.1.0'
 

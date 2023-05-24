@@ -1,0 +1,12 @@
+.nextflow*
+work/
+data/
+results/
+.DS_Store
+testing/
+testing*
+*.pyc
+
+true/
+socialgene_results/
+lint_log.txt

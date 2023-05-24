@@ -1,0 +1,10 @@
+name: sgnf
+
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+
+dependencies:
+  - bioconda::nf-core>=2.5.1
+  - bioconda::nextflow>=22.04.5

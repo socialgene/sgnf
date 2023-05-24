@@ -1,0 +1,17 @@
+name: socialgene_hmmer
+# hmmer plus programs for downloading
+
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+
+dependencies:
+  - bioconda::hmmer>=3.3.2
+  - conda-forge::coreutils
+  - conda-forge::gzip >=1.12
+  - conda-forge::wget
+  - conda-forge::curl
+  - conda-forge::git
+  - conda-forge::unzip
+  - procps-ng # required by nextflow

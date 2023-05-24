@@ -1,0 +1,13 @@
+name: seqkit_split
+description: Split fasta files
+keywords:
+  - split
+  - fasta
+tools:
+  - seqkit:
+    description: |
+      Cross-platform and ultrafast toolkit for FASTA/Q file manipulation, written by Wei Shen.
+    homepage: https://github.com/shenwei356/seqkit
+    documentation: https://bioinf.shenwei.me/seqkit/
+    doi: 10.1371/journal.pone.0163962
+    licence: ["MIT"]

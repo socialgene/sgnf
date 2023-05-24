@@ -573,7 +573,8 @@
                     "hidden": true
                 },
                 "sort_fasta": {
-                    "type": "string",
+                    "type": "boolean",
+                    "default": false,
                     "description": "BLAST (and maybe MMseqs2?) differ based on sequence order, setting this to true will sort the protein fasta file first (note: this will make a copy of the data)",
                     "hidden": true
                 }

@@ -9,7 +9,7 @@ process SEQKIT_SPLIT {
 
     output:
     path("outfolder/*")    , emit: fasta
-    path 'versions.yml'   , emit: version
+    path 'versions.yml'   , emit: versions
 
 
     when:

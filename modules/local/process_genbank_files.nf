@@ -1,5 +1,6 @@
 
 process PROCESS_GENBANK_FILES {
+    label 'process_low' // makes linter happy
     cpus 1
     memory '5.GB'
 

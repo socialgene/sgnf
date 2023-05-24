@@ -72,10 +72,7 @@
                     "default": "socialgene_downloads"
                 }
             },
-            "required": [
-                "outdir",
-                "outdir_download_cache"
-            ]
+            "required": ["outdir", "outdir_download_cache"]
         },
         "input_hmms": {
             "title": "Input HMMs",
@@ -185,19 +182,18 @@
                     "type": "boolean",
                     "description": "Download and insert the NCBI taxonomy database? Requires input assemblies to have NCBI  Assembly accessions"
                 },
-                "paired_omics": {
-                    "type": "boolean",
-                    "description": "Run paired omics pipeline?",
-                    "hidden": true
-                },
                 "antismash": {
                     "type": "boolean",
-                    "hidden": true,
-                    "description": "not-yetimplemented"
+                    "description": "Run antismash on all input genomes"
                 },
-                "chembl": {
+                "chembl_version": {
+                    "type": "string",
+                    "default": "None",
+                    "description": "Set (e.g. 31 for chembl version 31) to incorporate chembl into the database"
+                },
+                "paired_omics": {
                     "type": "boolean",
-                    "description": "Download and include ChEMBL in the graph database?",
+                    "description": "Not yet implemented",
                     "hidden": true
                 }
             }
@@ -543,7 +539,7 @@
                 },
                 "hook_url": {
                     "type": "string",
-                    "default": null,
+                    "default": "None",
                     "hidden": true
                 },
                 "version": {
@@ -574,7 +570,6 @@
                 },
                 "sort_fasta": {
                     "type": "boolean",
-                    "default": false,
                     "description": "BLAST (and maybe MMseqs2?) differ based on sequence order, setting this to true will sort the protein fasta file first (note: this will make a copy of the data)",
                     "hidden": true
                 }

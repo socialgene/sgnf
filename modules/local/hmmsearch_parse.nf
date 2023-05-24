@@ -1,5 +1,5 @@
 process HMMSEARCH_PARSE {
-
+    label 'process_medium'
     input:
     path domtblout
 

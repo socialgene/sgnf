@@ -1,6 +1,6 @@
 
 process MD5_AS_FILENAME {
-
+    label 'process_single'
     input:
     path x
 

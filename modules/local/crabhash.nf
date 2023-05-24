@@ -11,7 +11,7 @@ process CRABHASH {
     output:
     path "*.faa.gz"          , emit: fasta
     path "*.protein_info.gz" , emit: protein_info
-
+    path 'versions.yml'      , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

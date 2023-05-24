@@ -1,5 +1,5 @@
 process HMMER_HMMSEARCH {
-
+    label 'process_low'
     container 'chasemc2/socialgene-hmmer:0.0.1'
     conda 'conda-forge::sha256 conda-forge::sha256'
 

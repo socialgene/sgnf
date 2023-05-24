@@ -114,8 +114,8 @@ workflow GENOME_HANDLING {
 
 
     emit:
-        ch_genome_info  = DEDUPLICATE_GENOMIC_INFO.out.collect()
-        ch_protein_info = DEDUPLICATE_PROTEIN_INFO.out.collect()
+        ch_genome_info  = DEDUPLICATE_GENOMIC_INFO.out.deduped.collect()
+        ch_protein_info = DEDUPLICATE_PROTEIN_INFO.out.deduped.collect()
         ch_gbk          = gbk_file_ch.flatten().toSortedList().flatten()
         ch_fasta        = ch_fasta_out
         ch_versions     = ch_versions

@@ -70,10 +70,7 @@
                     "default": "socialgene_downloads"
                 }
             },
-            "required": [
-                "outdir",
-                "outdir_download_cache"
-            ]
+            "required": ["outdir", "outdir_download_cache"]
         },
         "input_hmms": {
             "title": "Input HMMs",
@@ -187,10 +184,10 @@
                     "type": "boolean",
                     "description": "Run antismash on all input genomes"
                 },
-                "chembl_version": {
-                    "type": "string",
-                    "default": "None",
-                    "description": "Set (e.g. 31 for chembl version 31) to incorporate chembl into the database"
+                "chembl": {
+                    "type": "boolean",
+                    "description": "Include chembl data into database Not yet implemented",
+                    "hidden": true
                 },
                 "paired_omics": {
                     "type": "boolean",
@@ -237,8 +234,8 @@
                 }
             }
         },
-        "hmm_database_versions": {
-            "title": "HMM Database Versions",
+        "external_data_versions": {
+            "title": "External Data Versions",
             "type": "object",
             "description": "",
             "default": "",
@@ -278,6 +275,11 @@
                     "default": "e2d777c6cd035e6bf20f7eec924a350b00b84c7b",
                     "description": "Controls which version of antismash the antismash HMMS are pulled from",
                     "hidden": true
+                },
+                "chembl_version": {
+                    "type": "string",
+                    "default": "None",
+                    "description": "Set (e.g. 31 for chembl version 31) to incorporate chembl into the database"
                 }
             }
         },
@@ -307,13 +309,13 @@
                 },
                 "HMMSEARCH_E": {
                     "type": "number",
-                    "default": 10.0,
+                    "default": 10,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 },
                 "HMMSEARCH_DOME": {
                     "type": "number",
-                    "default": 10.0,
+                    "default": 10,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 },
@@ -611,7 +613,7 @@
             "$ref": "#/definitions/max_job_resource_request_options"
         },
         {
-            "$ref": "#/definitions/hmm_database_versions"
+            "$ref": "#/definitions/external_data_versions"
         },
         {
             "$ref": "#/definitions/hmmer_options"

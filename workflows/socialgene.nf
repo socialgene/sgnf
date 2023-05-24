@@ -126,9 +126,10 @@ workflow SOCIALGENE {
     ////////////////////////
     */
 
-    if (params.chembl_version instanceof String ) {
+
+    if (params.chembl) {
         // chembl has fasta we need to process, so download here and pass fasta along
-        DOWNLOAD_CHEMBL_DATA(params.chembl_version)
+        DOWNLOAD_CHEMBL_DATA()
         chembl_fasta_ch = DOWNLOAD_CHEMBL_DATA.out.chembl_fa
         ch_versions = ch_versions.mix(DOWNLOAD_CHEMBL_DATA.out.ch_versions)
     } else {

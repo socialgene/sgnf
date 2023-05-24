@@ -3,6 +3,7 @@ process PARAMETER_EXPORT_FOR_NEO4J {
 
     output:
     path "*.socialgene_parameters.gz", emit: parameters
+    path 'versions.yml' , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

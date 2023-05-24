@@ -24,7 +24,7 @@ process DEDUPY {
     md5_as_filename.sh "${x}" "${x}.gz"
 
     cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
     END_VERSIONS
-
     """
 }

@@ -47,7 +47,7 @@
                     "type": "integer",
                     "default": 50,
                     "description": "How many genbank files will be processed in a single task",
-                    "help_text": "PROCESS_GENBANK_FILES() is passed  a buffer( size: params.genbank_input_buffer, remainder: true )\n\nSo, if you have 100 gbk files and set params.genbank_input_buffer=20 then 5 processes will be spawned and process 20 gbk files each"
+                    "help_text": "Decides how many parallel processes  will be used for genbank parsing; number of spawned parse processes = (# of input genomes) / (genbank_input_buffer)"
                 }
             }
         },
@@ -70,7 +70,10 @@
                     "default": "socialgene_downloads"
                 }
             },
-            "required": ["outdir", "outdir_download_cache"]
+            "required": [
+                "outdir",
+                "outdir_download_cache"
+            ]
         },
         "input_hmms": {
             "title": "Input HMMs",

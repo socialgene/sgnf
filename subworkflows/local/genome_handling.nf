@@ -112,8 +112,6 @@ workflow GENOME_HANDLING {
     DEDUPLICATE_GENOMIC_INFO(ch_genomic_to_dedup)
     DEDUPLICATE_PROTEIN_INFO(ch_protein_to_dedup)
 
-    ch_versions = ch_versions.mix(DEDUPLICATE_GENOMIC_INFO.out.versions)
-    ch_versions = ch_versions.mix(DEDUPLICATE_PROTEIN_INFO.out.versions)
 
     emit:
         ch_genome_info  = DEDUPLICATE_GENOMIC_INFO.out.collect()

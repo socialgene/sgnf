@@ -1,7 +1,7 @@
 
 process DEDUPY {
     label 'process_low'
-    labl
+
     tag "$x"
 
     input:

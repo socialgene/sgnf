@@ -10,14 +10,14 @@ process DOWNLOAD_CHEMBL_DATA {
     val chembl_version
 
     output:
-    path 'chembl_31_chemreps.txt.gz'        , emit: chembl_31_chemreps
-    path 'chembl_uniprot_mapping.txt.gz'    , emit: chembl_uniprot_mapping
-    //path 'chembl_31_sqlite.tar.gz'        , emit: chembl_31_sqlite
-    path 'chembl_31.fa.gz'                  , emit: chembl_31_fa
-    path 'chembl_31_bio.fa.gz'              , emit: chembl_31_bio_fa
-    path 'chembl_31.fps.gz'                 , emit: chembl_31_fps
-    path 'checksums.txt'                    , emit: checksums
-    path 'versions.yml'                     , emit: versions
+    path "chembl_${chembl_version}_chemreps.txt.gz" , emit: chembl_chemreps
+    path 'chembl_uniprot_mapping.txt.gz'            , emit: chembl_uniprot_mapping
+    //path 'chembl_31_sqlite.tar.gz'                , emit: chembl_sqlite
+    path "chembl_${chembl_version}.fa.gz"           , emit: chembl_fa
+    path "chembl_${chembl_version}_bio.fa.gz"       , emit: chembl_bio_fa
+    path "chembl_${chembl_version}.fps.gz"          , emit: chembl_fps
+    path 'checksums.txt'                            , emit: checksums
+    path 'versions.yml'                             , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

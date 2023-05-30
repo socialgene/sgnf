@@ -39,7 +39,7 @@ docker build . -t chasemc2/socialgene-nf:0.0.1
 popd
 
 pushd minimal
-docker build . -t chasemc2/socialgene-small:0.0.1
+docker build . -t chasemc2/socialgene-minimal:0.0.1
 popd
 
 pushd hmmer
@@ -54,7 +54,7 @@ popd
 if [[ $UPLOAD == true ]]; then
     docker push chasemc2/socialgene-antismash:6.1.1
     docker push chasemc2/socialgene-nf:0.0.1
-    docker push chasemc2/socialgene-small:0.0.1
+    docker push chasemc2/socialgene-minimal:0.0.1
     docker push chasemc2/socialgene-hmmer:3.3.2
     docker push chasemc2/socialgene-hmmer_plus:3.3.2
 fi

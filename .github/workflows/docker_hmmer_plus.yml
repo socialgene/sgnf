@@ -12,6 +12,8 @@ name: Publish Docker image
 on:
   release:
     types: [published]
+    paths:
+      - "dockerfiles/hmmer_plus/**"
     tags:
       - "v*.*.*"
   workflow_dispatch:
@@ -28,7 +30,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            chasemc2/socialgene-minimal
+            chasemc2/sgnf-hmmer_plus
           tags: |
             type=ref,event=branch
             type=ref,event=pr
@@ -46,8 +48,8 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           platforms: linux/amd64,linux/arm64,linux/arm/v7
-          context: ./dockerfiles/minimal
-          file: ./dockerfiles/minimal/Dockerfile
+          context: ./dockerfiles/hmmer_plus
+          file: ./dockerfiles/hmmer_plus/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

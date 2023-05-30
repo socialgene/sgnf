@@ -31,30 +31,30 @@ while [ "$1" != "" ]; do
 done
 
 pushd antismash
-docker build . -t chasemc2/socialgene-antismash:6.1.1
+docker build . -t chasemc2/sgnf-antismash:6.1.1
 popd
 
-pushd socialgene
-docker build . -t chasemc2/socialgene-nf:0.0.1
+pushd sgpy
+docker build . -t chasemc2/sgnf-sgpy:0.0.1
 popd
 
 pushd minimal
-docker build . -t chasemc2/socialgene-minimal:0.0.1
+docker build . -t chasemc2/sgnf-minimal:0.0.1
 popd
 
 pushd hmmer
-docker build . -t chasemc2/socialgene-hmmer:3.3.2
+docker build . -t chasemc2/sgnf-hmmer:3.3.2
 popd
 
 pushd hmmer_plus
-docker build . -t chasemc2/socialgene-hmmer_plus:3.3.2
+docker build . -t chasemc2/sgnf-hmmer_plus:3.3.2
 popd
 
 
 if [[ $UPLOAD == true ]]; then
-    docker push chasemc2/socialgene-antismash:6.1.1
-    docker push chasemc2/socialgene-nf:0.0.1
-    docker push chasemc2/socialgene-minimal:0.0.1
-    docker push chasemc2/socialgene-hmmer:3.3.2
-    docker push chasemc2/socialgene-hmmer_plus:3.3.2
+    docker push chasemc2/sgnf-antismash:6.1.1
+    docker push chasemc2/sgnf-sgpy:0.0.1
+    docker push chasemc2/sgnf-minimal:0.0.1
+    docker push chasemc2/sgnf-hmmer:3.3.2
+    docker push chasemc2/sgnf-hmmer_plus:3.3.2
 fi

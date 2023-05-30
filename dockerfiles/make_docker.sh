@@ -3,9 +3,10 @@
 function usage() {
     cat <<USAGE
 
-    Usage: [--upload]
+    Usage: [--version --upload]
 
     Options:
+        --version: sets the version tag for all the images
         --upload:  ignore/don't use, this is for uploading to DockerHub
 USAGE
     exit 1
@@ -28,7 +29,6 @@ while [ "$1" != "" ]; do
     esac
     shift
 done
-
 
 pushd antismash
 docker build . -t chasemc2/socialgene-antismash:6.1.1

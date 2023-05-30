@@ -66,10 +66,10 @@ include { HMM_PREP                  } from '../subworkflows/local/hmm_prep'
     IMPORT NF-CORE MODULES/SUBWORKFLOWS
 ========================================================================================
 */
-include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/nf-core/custom/dumpsoftwareversions/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/local/custom/dumpsoftwareversions/main'
 include { DIAMOND_BLASTP                } from '../modules/local/diamond/blastp/main'
 include { DIAMOND_MAKEDB                } from '../modules/local/diamond/makedb/main'
-include { MULTIQC                       } from '../modules/nf-core/multiqc/main'
+include { MULTIQC                       } from '../modules/local/multiqc/main'
 
 /*
 ========================================================================================

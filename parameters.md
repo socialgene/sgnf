@@ -1,6 +1,6 @@
 #socialgene/sgnf pipeline parameters
 
-Create a SocialGene Database
+Scalable genome mining with SocialGene knowledge graphs
 
 ## SocialGene parameters
 

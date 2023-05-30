@@ -8,7 +8,7 @@ process TIGRFAM_TO_GO {
     output:
     path "*.tigrfam_to_go.gz", emit: tigrfam_to_go
     path "*.goterm.gz", emit: goterm
-
+    path 'versions.yml' , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

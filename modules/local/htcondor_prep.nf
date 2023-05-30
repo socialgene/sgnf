@@ -1,6 +1,6 @@
 
 process HTCONDOR_PREP {
-    label 'process_really_low'
+    label 'process_single'
 
     input:
     path hmms

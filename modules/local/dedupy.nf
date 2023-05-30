@@ -1,5 +1,7 @@
 
 process DEDUPY {
+    label 'process_low'
+
     tag "$x"
 
     input:
@@ -7,14 +9,13 @@ process DEDUPY {
 
     output:
     path "*.gz" , emit: deduped
+    path 'versions.yml' , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
-
     """
-
     zcat 'input_file' |\
         sort |\
         uniq |
@@ -22,5 +23,8 @@ process DEDUPY {
 
     md5_as_filename.sh "${x}" "${x}.gz"
 
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+    END_VERSIONS
     """
 }

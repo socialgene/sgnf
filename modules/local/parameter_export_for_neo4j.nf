@@ -1,8 +1,9 @@
 process PARAMETER_EXPORT_FOR_NEO4J {
-    label 'process_really_low'
+    label 'process_single'
 
     output:
     path "*.socialgene_parameters.gz", emit: parameters
+    path 'versions.yml' , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

@@ -4,8 +4,6 @@
 ========================================================================================
 */
 
-
-
 def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 
 
@@ -128,43 +126,45 @@ workflow SOCIALGENE {
     ////////////////////////
     */
 
-        if (params.chembl) {
-            // chembl has fasta we need to process, so download here and pass fasta along
-            DOWNLOAD_CHEMBL_DATA()
-            chembl_fasta_ch = DOWNLOAD_CHEMBL_DATA.out.chembl_31_fa
-        } else {SG_MODULES
-            chembl_fasta_ch = Channel.empty()
-        }
 
-        if (params.local_fasta){
-            local_fasta_ch = Channel.fromPath(params.local_fasta)
-        } else {
-            local_fasta_ch = Channel.empty()
+    if (params.chembl) {
+        // chembl has fasta we need to process, so download here and pass fasta along
+        DOWNLOAD_CHEMBL_DATA()
+        chembl_fasta_ch = DOWNLOAD_CHEMBL_DATA.out.chembl_fa
+        ch_versions = ch_versions.mix(DOWNLOAD_CHEMBL_DATA.out.ch_versions)
+    } else {
+        chembl_fasta_ch = Channel.empty()
+    }
 
-        }
-        input_fasta_ch = chembl_fasta_ch.mix(local_fasta_ch)
+    if (params.local_fasta){
+        local_fasta_ch = Channel.fromPath(params.local_fasta)
+    } else {
+        local_fasta_ch = Channel.empty()
+    }
 
-        GENOME_HANDLING(input_fasta_ch)
-        GENOME_HANDLING.out.ch_fasta.set{ch_fasta}
-        ch_versions = ch_versions.mix(GENOME_HANDLING.out.ch_versions)
+    input_fasta_ch = chembl_fasta_ch.mix(local_fasta_ch)
 
-        // TODO: just pass this straight to DEDUPLICATE_AND_INDEX_FASTA, dont' create a collected_fasta.faa.gz
-        GENOME_HANDLING.out.ch_fasta.collect().set{ fasta_to_dedup}
-        DEDUPLICATE_AND_INDEX_FASTA(fasta_to_dedup)
-        DEDUPLICATE_AND_INDEX_FASTA.out
+    GENOME_HANDLING(input_fasta_ch)
+    GENOME_HANDLING.out.ch_fasta.set{ch_fasta}
+    ch_versions = ch_versions.mix(GENOME_HANDLING.out.ch_versions)
+
+    // TODO: just pass this straight to DEDUPLICATE_AND_INDEX_FASTA, dont' create a collected_fasta.faa.gz
+    GENOME_HANDLING.out.ch_fasta.collect().set{ fasta_to_dedup}
+    DEDUPLICATE_AND_INDEX_FASTA(fasta_to_dedup)
+    DEDUPLICATE_AND_INDEX_FASTA.out
+        .fasta
+        .set{ch_nr_fasta}
+
+    if (params.sort_fasta) {
+        // If testing, sort the FASTA file to get consistent output, otherwise skip
+        // Use seqkit to remove redundant sequences, based on sequence id because they are already the sequence hash
+        SEQKIT_SORT(ch_nr_fasta)
+        SEQKIT_SORT.out
             .fasta
-            .set{ch_nr_fasta}
-
-        if (params.sort_fasta) {
-            // If testing, sort the FASTA file to get consistent output, otherwise skip
-            // Use seqkit to remove redundant sequences, based on sequence id because they are already the sequence hash
-            SEQKIT_SORT(ch_nr_fasta)
-            SEQKIT_SORT.out
-                .fasta
-                .set{single_ch_fasta}
-        } else {
-            single_ch_fasta = ch_nr_fasta
-        }
+            .set{single_ch_fasta}
+    } else {
+        single_ch_fasta = ch_nr_fasta
+    }
 
     /*
     ////////////////////////
@@ -248,7 +248,8 @@ workflow SOCIALGENE {
     ////////////////////////
     */
     if (run_antismash){
-        ANTISMASH(GENOME_HANDLING.out.ch_gbk)
+        println GENOME_HANDLING.out.ch_non_mibig_gbk_file
+        ANTISMASH(GENOME_HANDLING.out.ch_non_mibig_gbk_file)
         ANTISMASH_GBK_TO_TABLE(ANTISMASH.out.regions_gbk.collect())
     }
     /*

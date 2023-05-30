@@ -10,7 +10,7 @@ process DEDUPLICATE_AND_INDEX_FASTA {
     path "nr.faa.bgz"   , emit: fasta
     path "*.fai"        , emit: fai
     path "*.gzi"        , emit: gzi, optional: true
-    path 'versions.yml' , emit: version
+    path 'versions.yml' , emit: versions
 
 
     when:

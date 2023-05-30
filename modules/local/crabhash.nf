@@ -1,7 +1,6 @@
 
 process CRABHASH {
     label 'process_high'
-    label 'process_high_memory'
 
     container 'chasemc2/crabhash:0.1.0'
 
@@ -11,7 +10,7 @@ process CRABHASH {
     output:
     path "*.faa.gz"          , emit: fasta
     path "*.protein_info.gz" , emit: protein_info
-
+    path 'versions.yml'      , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

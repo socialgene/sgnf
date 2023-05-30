@@ -48,6 +48,11 @@ process MMSEQS2_CLUSTER {
         "${task.process}":
             mmseqs: \$(mmseqs | grep 'Version' | sed 's/MMseqs2 Version: //')
         END_VERSIONS
+
+        cat <<-END_CITATIONS > citations.yml
+        "${task.process}":
+            mmseqs: Hauser M, Steinegger M, Söding J. MMseqs software suite for fast and deep clustering and searching of large protein sequence sets. Bioinformatics. 2016 May 1;32(9):1323-30. doi: 10.1093/bioinformatics/btw006. Epub 2016 Jan 6. PMID: 26743509.
+        END_VERSIONS
         """
     else
         """

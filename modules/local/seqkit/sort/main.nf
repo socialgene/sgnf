@@ -11,7 +11,7 @@ process SEQKIT_SORT {
 
     output:
     path "sorted_nr.faa.gz"  , emit: fasta
-    path 'versions.yml'     , emit: version
+    path 'versions.yml'     , emit: versions
 
 
     when:

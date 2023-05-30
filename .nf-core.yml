@@ -1,5 +1,7 @@
 repository_type: pipeline
 lint:
+  files_unchanged:
+    - assets/email_template.html
   files_exist:
     - CODE_OF_CONDUCT.md
     - assets/nf-core-sgnf_logo_light.png

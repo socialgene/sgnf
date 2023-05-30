@@ -1,7 +1,7 @@
 process DOWNLOAD_NCBI {
-    label 'process_really_low'
+    label 'process_single'
 
-    conda "hcc::aspera-cli bioconda::entrez-direct"
+    conda "hcc::aspera-cli=3.9.6 bioconda::entrez-direct=16.2"
 
     input:
     val input_taxon
@@ -16,7 +16,7 @@ process DOWNLOAD_NCBI {
     when:
     task.ext.when == null || task.ext.when
 
-    shell:
+    script:
     """
     mkdir fasta features
 

@@ -52,7 +52,6 @@ process NEO4J_ADMIN_IMPORT {
     touch import.report
     NEO4J_BASE_DIR='/opt/conda/bin/neo4j'
 
-
     sg_create_neo4j_db \\
     --neo4j_top_dir . \\
     --cpus ${task.cpus} \\

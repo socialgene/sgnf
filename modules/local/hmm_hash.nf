@@ -8,7 +8,6 @@ process HMM_HASH {
         container "chasemc2/sgnf-sgpy:${workflow.manifest.version}"
     }
 
-
     input:
     path hmm_directory
     val hmm_splits

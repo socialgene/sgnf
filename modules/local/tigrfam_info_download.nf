@@ -1,6 +1,12 @@
 process TIGRFAM_INFO_DOWNLOAD {
     label 'process_low'
 
+    if (params.sgnf_minimal_dockerimage) {
+        container "chasemc2/sgnf-minimal:${params.sgnf_minimal_dockerimage}"
+    } else {
+        container "chasemc2/sgnf-minimal:${workflow.manifest.version}"
+    }
+
     output:
     path "*.TIGRFAMS_GO_LINK.gz", emit: tigerfam_to_go
     path "versions.yml" , emit: versions

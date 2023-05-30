@@ -2,6 +2,12 @@
 process TIGRFAM_TO_ROLE {
     label 'process_single'
 
+    if (params.sgnf_minimal_dockerimage) {
+        container "chasemc2/sgnf-minimal:${params.sgnf_minimal_dockerimage}"
+    } else {
+        container "chasemc2/sgnf-minimal:${workflow.manifest.version}"
+    }
+
     output:
     path "*.tigrfam_to_role.gz", emit: tigrfam_to_role
     path "versions.yml" , emit: versions

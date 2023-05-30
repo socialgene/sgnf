@@ -1,7 +1,11 @@
 process DOWNLOAD_NCBI {
     label 'process_single'
 
-    conda "hcc::aspera-cli=3.9.6 bioconda::entrez-direct=16.2"
+    if (params.sgnf_sgpy_dockerimage) {
+        container "chasemc2/sgnf-sgpy:${params.sgnf_sgpy_dockerimage}"
+    } else {
+        container "chasemc2/sgnf-sgpy:${workflow.manifest.version}"
+    }
 
     input:
     val input_taxon

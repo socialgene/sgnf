@@ -1,10 +1,11 @@
 process MMSEQS2_CREATEDB {
     label 'process_high'
 
-    conda "bioconda::mmseqs2=14.7e284"
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/mmseqs2:14.7e284--pl5321hf1761c0_0':
-        'quay.io/biocontainers/mmseqs2:14.7e284--pl5321hf1761c0_0' }"
+    if (params.sgnf_sgpy_dockerimage) {
+        container "chasemc2/sgnf-sgpy:${params.sgnf_sgpy_dockerimage}"
+    } else {
+        container "chasemc2/sgnf-sgpy:${workflow.manifest.version}"
+    }
 
     input:
     path(fasta)
@@ -31,7 +32,6 @@ process MMSEQS2_CREATEDB {
         --write-lookup 1 \\
         --dbtype 1 \\
         $args
-
 
     mmseqs createindex \
         mmseqs2_database \

@@ -12,8 +12,6 @@ name: Publish sgnf-antismash Docker image
 on:
   release:
     types: [published]
-    paths:
-      - "dockerfiles/minimal/**"
     tags:
       - "v*.*.*"
   workflow_dispatch:

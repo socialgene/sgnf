@@ -12,8 +12,6 @@ name: Publish hmmer Docker image
 on:
   release:
     types: [published]
-    paths:
-      - "dockerfiles/hmmer/**"
     tags:
       - "v*.*.*"
   workflow_dispatch:

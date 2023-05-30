@@ -18,28 +18,31 @@ workflow GENOME_HANDLING {
         fasta_ch
 
     main:
-        ch_versions     = Channel.empty()
-        gbk_file_ch     = Channel.empty()
-        info_ch         = Channel.empty()
+        ch_versions             = Channel.empty()
+        ch_gbk_file             = Channel.empty()
+        ch_non_mibig_gbk_file   = Channel.empty()
+        info_ch                 = Channel.empty()
 
         // Create a channel to mix inputs from different sources
         ch_read = Channel.empty()
 
         if (params.mibig){
             MIBIG_DOWNLOAD()
-            gbk_file_ch = gbk_file_ch.mix(MIBIG_DOWNLOAD.out.genbank)
+            ch_gbk_file = ch_gbk_file.mix(MIBIG_DOWNLOAD.out.genbank)
             ch_versions = ch_versions.mix(MIBIG_DOWNLOAD.out.versions)
         }
 
         if (params.ncbi_genome_download_command){
             NCBI_GENOME_DOWNLOAD(params.ncbi_genome_download_command)
-            gbk_file_ch = gbk_file_ch.mix(NCBI_GENOME_DOWNLOAD.out.gbff_files)
+            ch_gbk_file = ch_gbk_file.mix(NCBI_GENOME_DOWNLOAD.out.gbff_files)
+            ch_non_mibig_gbk_file = ch_non_mibig_gbk_file.mix(NCBI_GENOME_DOWNLOAD.out.gbff_files)
             ch_versions = ch_versions.mix(NCBI_GENOME_DOWNLOAD.out.versions)
         }
 
         if (params.local_genbank) {
             temp_file_ch = Channel.fromPath( params.local_genbank )
-            gbk_file_ch= gbk_file_ch.mix(temp_file_ch)
+            ch_gbk_file= ch_gbk_file.mix(temp_file_ch)
+            ch_non_mibig_gbk_file = ch_non_mibig_gbk_file.mix(temp_file_ch)
         }
 
         if (params.ncbi_datasets_command){
@@ -52,12 +55,13 @@ workflow GENOME_HANDLING {
             }
 
             NCBI_DATASETS_DOWNLOAD(params.ncbi_datasets_command, ch_opt_input_file)
-            gbk_file_ch= gbk_file_ch.mix(NCBI_DATASETS_DOWNLOAD.out.gbff_files)
+            ch_gbk_file= ch_gbk_file.mix(NCBI_DATASETS_DOWNLOAD.out.gbff_files)
+            ch_non_mibig_gbk_file= ch_non_mibig_gbk_file.mix(NCBI_DATASETS_DOWNLOAD.out.gbff_files)
             ch_versions = ch_versions.mix(NCBI_DATASETS_DOWNLOAD.out.versions)
         }
 
         if (fasta_ch) {
-            gbk_and_fasta_ch = gbk_file_ch.mix(fasta_ch)
+            gbk_and_fasta_ch = ch_gbk_file.mix(fasta_ch)
         }
 
         PROCESS_GENBANK_FILES(
@@ -116,9 +120,10 @@ workflow GENOME_HANDLING {
     emit:
         ch_genome_info  = DEDUPLICATE_GENOMIC_INFO.out.deduped.collect()
         ch_protein_info = DEDUPLICATE_PROTEIN_INFO.out.deduped.collect()
-        ch_gbk          = gbk_file_ch.flatten().toSortedList().flatten()
+        ch_gbk          = ch_gbk_file.flatten().toSortedList().flatten()
         ch_fasta        = ch_fasta_out
         ch_versions     = ch_versions
+        ch_non_mibig_gbk_file = ch_non_mibig_gbk_file.flatten().toSortedList().flatten()
 
 
 }

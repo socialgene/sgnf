@@ -248,7 +248,8 @@ workflow SOCIALGENE {
     ////////////////////////
     */
     if (run_antismash){
-        ANTISMASH(GENOME_HANDLING.out.ch_gbk)
+        println GENOME_HANDLING.out.ch_non_mibig_gbk_file
+        ANTISMASH(GENOME_HANDLING.out.ch_non_mibig_gbk_file)
         ANTISMASH_GBK_TO_TABLE(ANTISMASH.out.regions_gbk.collect())
     }
     /*

@@ -14,7 +14,7 @@ USAGE
 
 
 SKIP_VERIFICATION=false
-while [ "$1" != "" ]; do
+while [ "$2" != "" ]; do
     case $1 in
     --upload)
         UPLOAD=true
@@ -31,30 +31,30 @@ while [ "$1" != "" ]; do
 done
 
 pushd antismash
-docker build . -t chasemc2/sgnf-antismash:6.1.1
+docker build . -t chasemc2/sgnf-antismash:semver
 popd
 
 pushd sgpy
-docker build . -t chasemc2/sgnf-sgpy:0.0.1
+docker build . -t chasemc2/sgnf-sgpy:semver
 popd
 
 pushd minimal
-docker build . -t chasemc2/sgnf-minimal:0.0.1
+docker build . -t chasemc2/sgnf-minimal:semver
 popd
 
 pushd hmmer
-docker build . -t chasemc2/sgnf-hmmer:3.3.2
+docker build . -t chasemc2/sgnf-hmmer:semver
 popd
 
 pushd hmmer_plus
-docker build . -t chasemc2/sgnf-hmmer_plus:3.3.2
+docker build . -t chasemc2/sgnf-hmmer_plus:semver
 popd
 
 
 if [[ $UPLOAD == true ]]; then
-    docker push chasemc2/sgnf-antismash:6.1.1
-    docker push chasemc2/sgnf-sgpy:0.0.1
-    docker push chasemc2/sgnf-minimal:0.0.1
-    docker push chasemc2/sgnf-hmmer:3.3.2
-    docker push chasemc2/sgnf-hmmer_plus:3.3.2
+    docker push chasemc2/sgnf-antismash:semver
+    docker push chasemc2/sgnf-sgpy:semver
+    docker push chasemc2/sgnf-minimal:semver
+    docker push chasemc2/sgnf-hmmer:semver
+    docker push chasemc2/sgnf-hmmer_plus:semver
 fi

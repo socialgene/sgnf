@@ -1,12 +1,13 @@
 
 process PFAM_TO_PFAMCLAN {
-    label 'process_really_low'
+    label 'process_single'
 
     input:
     path x
 
     output:
     path "*.pfam_to_pfamclan.gz", emit: pfam_to_pfamclan
+    path 'versions.yml' , emit: versions
 
 
     when:
@@ -28,5 +29,9 @@ process PFAM_TO_PFAMCLAN {
             uniq > pfamclan.tsv
 
     md5_as_filename_after_gzip.sh "pfamclan.tsv" "pfamclan"
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+    END_VERSIONS
     """
 }

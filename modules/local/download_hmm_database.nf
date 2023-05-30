@@ -5,7 +5,7 @@ process DOWNLOAD_HMM_DATABASE {
     errorStrategy 'retry'
     maxErrors 2
 
-    container 'chasemc2/sgnf-hmmer_plus:3.3.2'
+    container "chasemc2/sgnf-hmmer_plus:${params.sgnf_hmmer_plus_dockerimage}"
     conda "$projectDir/dockerfiles/hmmer_plus/environment.yaml"
 
     input:

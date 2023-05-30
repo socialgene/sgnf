@@ -1,7 +1,7 @@
 process DOWNLOAD_CHEMBL_DATA {
     label 'process_single'
 
-    container 'chasemc2/sgnf-minimal:0.0.1'
+    container "chasemc2/sgnf-minimal:${params.sgnf_minimal_dockerimage}"
     conda 'conda-forge::sha256 conda-forge::sha256'
 
     println '\033[0;34m This ChEMBL data is <5GB but can take a long time to download if you are not downloading from Europe. \033[0m'

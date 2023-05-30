@@ -1,8 +1,13 @@
 
 process DEDUPY {
     label 'process_low'
-
     tag "$x"
+
+    if (params.sgnf_sgpy_dockerimage) {
+        container "chasemc2/sgnf-sgpy:${params.sgnf_sgpy_dockerimage}"
+    } else {
+        container "chasemc2/sgnf-sgpy:${workflow.manifest.version}"
+    }
 
     input:
     tuple val(x), path('input_file')

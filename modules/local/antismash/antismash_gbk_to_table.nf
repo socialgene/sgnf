@@ -1,6 +1,12 @@
 process ANTISMASH_GBK_TO_TABLE {
     cpus 1
 
+    if (params.sgnf_sgpy_dockerimage) {
+        container "chasemc2/sgnf-sgpy:${params.sgnf_sgpy_dockerimage}"
+    } else {
+        container "chasemc2/sgnf-sgpy:${workflow.manifest.version}"
+    }
+
     input:
     path 'file??.regions.gbk.gz'
 

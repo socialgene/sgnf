@@ -1,9 +1,15 @@
 process NEO4J_HEADERS {
     label 'process_single'
 
+    if (params.sgnf_sgpy_dockerimage) {
+        container "chasemc2/sgnf-sgpy:${params.sgnf_sgpy_dockerimage}"
+    } else {
+        container "chasemc2/sgnf-sgpy:${workflow.manifest.version}"
+    }
+
     input:
-        val sg_modules
-        val hmmlist
+    val sg_modules
+    val hmmlist
 
     output:
     path "*", emit: headers

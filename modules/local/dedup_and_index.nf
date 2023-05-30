@@ -1,7 +1,13 @@
 process DEDUPLICATE_AND_INDEX_FASTA {
     label 'process_medium'
 
-    //  conda 'bioconda::seqkit>=2.3.0 bioconda::samtools>=1.16.1 tabix coreutils'
+    if (params.sgnf_sgpy_dockerimage) {
+        container "chasemc2/sgnf-sgpy:${params.sgnf_sgpy_dockerimage}"
+    } else {
+        container "chasemc2/sgnf-sgpy:${workflow.manifest.version}"
+    }
+
+    conda 'bioconda::seqkit>=2.3.0 bioconda::samtools>=1.16.1 tabix coreutils'
 
     input:
     path 'file??.gz'

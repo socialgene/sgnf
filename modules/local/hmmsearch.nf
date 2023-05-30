@@ -1,8 +1,13 @@
 process HMMER_HMMSEARCH {
     label 'process_low'
 
-    container 'chasemc2/sgnf-hmmer:0.0.1'
-    conda 'conda-forge::sha256 conda-forge::sha256'
+    if (params.sgnf_hmmer_dockerimage) {
+        container "chasemc2/sgnf-hmmer:${params.sgnf_hmmer_dockerimage}"
+    } else {
+        container "chasemc2/sgnf-hmmer:${workflow.manifest.version}"
+    }
+
+    conda 'bioconda::hmmer=3.3.2 conda-forge::sha256'
 
     input:
     tuple val(has_cutoff), path(hmm), path(fasta)

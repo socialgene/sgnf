@@ -2,6 +2,12 @@ process NEO4J_ADMIN_IMPORT_DRYRUN {
     tag 'Building Neo4j database'
     label 'process_low'
 
+    if (params.sgnf_sgpy_dockerimage) {
+        container "chasemc2/sgnf-sgpy:${params.sgnf_sgpy_dockerimage}"
+    } else {
+        container "chasemc2/sgnf-sgpy:${workflow.manifest.version}"
+    }
+
     input:
     val sg_modules
 

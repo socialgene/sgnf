@@ -3,6 +3,12 @@ process PROCESS_GENBANK_FILES {
     // makes linter happy but actually resources are set in conf/base.config
     label 'process_medium'
 
+    if (params.sgnf_sgpy_dockerimage) {
+        container "chasemc2/sgnf-sgpy:${params.sgnf_sgpy_dockerimage}"
+    } else {
+        container "chasemc2/sgnf-sgpy:${workflow.manifest.version}"
+    }
+
     input:
     path "file?.input_genome"
 

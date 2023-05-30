@@ -2,10 +2,11 @@ process DIAMOND_MAKEDB {
     tag "$fasta"
     label 'process_medium'
 
-    // conda "bioconda::diamond==2.0.15"
-    // container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-    //     'https://depot.galaxyproject.org/singularity/diamond:2.0.15--hb97b32f_0' :
-    //     'quay.io/biocontainers/diamond:2.0.15--hb97b32f_0' }"
+    if (params.sgnf_sgpy_dockerimage) {
+        container "chasemc2/sgnf-sgpy:${params.sgnf_sgpy_dockerimage}"
+    } else {
+        container "chasemc2/sgnf-sgpy:${workflow.manifest.version}"
+    }
 
     input:
     path fasta

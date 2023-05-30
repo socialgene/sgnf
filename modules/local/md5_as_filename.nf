@@ -1,6 +1,13 @@
 
 process MD5_AS_FILENAME {
     label 'process_single'
+
+    if (params.sgnf_minimal_dockerimage) {
+        container "chasemc2/sgnf-minimal:${params.sgnf_minimal_dockerimage}"
+    } else {
+        container "chasemc2/sgnf-minimal:${workflow.manifest.version}"
+    }
+
     input:
     path x
 

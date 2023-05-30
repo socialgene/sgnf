@@ -1,6 +1,12 @@
 process PARAMETER_EXPORT_FOR_NEO4J {
     label 'process_single'
 
+    if (params.sgnf_sgpy_dockerimage) {
+        container "chasemc2/sgnf-sgpy:${params.sgnf_sgpy_dockerimage}"
+    } else {
+        container "chasemc2/sgnf-sgpy:${workflow.manifest.version}"
+    }
+
     output:
     path "*.socialgene_parameters.gz", emit: parameters
     path 'versions.yml' , emit: versions

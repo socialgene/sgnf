@@ -21,7 +21,10 @@ RUN /opt/conda/bin/wget -q https://neo4j.com/artifact.php?name=neo4j-community-5
 
 ARG MAMBA_DOCKERFILE_ACTIVATE=1  # (otherwise python will not be found)
 
+RUN /opt/conda/bin/pip install git+https://github.com/socialgene/sgpy.git@b5008b512d081f23fa5bf7e889e06b5c04ee4bc1
+
 ENV PATH="/opt/conda/bin/neo4j/bin:$PATH:/opt/conda/condabin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 ENV NEO4J_HOME='/opt/conda/bin/neo4j'
 
 WORKDIR $NEO4J_HOME
+

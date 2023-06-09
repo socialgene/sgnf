@@ -1,4 +1,4 @@
-FROM mambaorg/micromamba:1.1.0
+FROM mambaorg/micromamba:1.4.3
 
 COPY environment.yaml /tmp/env.yaml
 

@@ -4,7 +4,6 @@ This is the subworkflow that controls downloading info about the TIGRFAM hmm mod
 ========================================================================================
 */
 
-include { TIGRFAM_INFO_DOWNLOAD             } from './../../modules/local/tigrfam_info_download.nf'
 include { TIGRFAM_ROLES                     } from './../../modules/local/tigrfam_roles.nf'
 include { TIGRFAM_TO_GO                     } from './../../modules/local/tigrfam_to_go.nf'
 include { TIGRFAM_TO_ROLE                   } from './../../modules/local/tigrfam_to_role.nf'
@@ -16,10 +15,7 @@ workflow TIGRFAM_INFO {
         ch_versions = Channel.empty()
         internal_tigr_ch = Channel.fromPath("${baseDir}/assets/EMPTY_FILE")
 
-        TIGRFAM_INFO_DOWNLOAD()
-        TIGRFAM_TO_GO(
-            TIGRFAM_INFO_DOWNLOAD.out.tigerfam_to_go
-        )
+        TIGRFAM_TO_GO()
         TIGRFAM_ROLES()
         TIGRFAM_TO_ROLE()
 

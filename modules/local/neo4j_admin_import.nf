@@ -31,6 +31,7 @@ process NEO4J_ADMIN_IMPORT {
     path "import/parameters/*"
     path "import/genomic_info/*"
     path "import/protein_info/*"
+    path "import/goterms/*"
 
     output:
     path 'data/*'                               , emit: data

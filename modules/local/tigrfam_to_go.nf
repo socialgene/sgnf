@@ -8,9 +8,6 @@ process TIGRFAM_TO_GO {
         container "chasemc2/sgnf-minimal:${workflow.manifest.version}"
     }
 
-    input:
-    path x
-
     output:
     path "*.tigrfam_to_go.gz", emit: tigrfam_to_go
     path "*.goterm.gz", emit: goterm
@@ -21,6 +18,9 @@ process TIGRFAM_TO_GO {
 
     script:
     """
+    wget "https://ftp.ncbi.nlm.nih.gov/hmm/TIGRFAMs/release_15.0/TIGRFAMS_GO_LINK"
+    sed -i 's/GO://g' TIGRFAMS_GO_LINK
+
     zcat $x |\\
     awk -F"\t" 'BEGIN{OFS="\t";} {print \$1,\$2}' > tigrfam_to_go.tsv
 

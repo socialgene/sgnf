@@ -1,13 +1,14 @@
 process TAXDUMP_PROCESS {
     label 'process_high'
-    input:
-    path taxdump
 
     if (params.sgnf_sgpy_dockerimage) {
         container "chasemc2/sgnf-sgpy:${params.sgnf_sgpy_dockerimage}"
     } else {
         container "chasemc2/sgnf-sgpy:${workflow.manifest.version}"
     }
+
+    input:
+    path taxdump
 
     output:
     path '*.nodes_taxid.gz'      , emit: nodes_taxid

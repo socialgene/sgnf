@@ -3,6 +3,7 @@ lint:
   files_unchanged:
     - assets/email_template.html
     - modules/nf-core/custom/dumpsoftwareversions/main.nf
+    - .github/workflows/linting.yml
   files_exist:
     - CODE_OF_CONDUCT.md
     - assets/nf-core-sgnf_logo_light.png

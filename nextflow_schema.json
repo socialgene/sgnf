@@ -193,6 +193,10 @@
                     "type": "boolean",
                     "description": "Not yet implemented",
                     "hidden": true
+                },
+                "goterms": {
+                    "type": "boolean",
+                    "description": "Download and process go term ontology"
                 }
             }
         },
@@ -309,13 +313,13 @@
                 },
                 "HMMSEARCH_E": {
                     "type": "number",
-                    "default": 10,
+                    "default": 10.0,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 },
                 "HMMSEARCH_DOME": {
                     "type": "number",
-                    "default": 10,
+                    "default": 10.0,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 },

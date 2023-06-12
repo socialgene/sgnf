@@ -192,6 +192,12 @@ parameter_documentation:
 	nf-core schema docs > parameters.md
 
 
+ci2:
+    # npm install -g editorconfig-checker
+    # checker -exclude README.md $(find . -type f | grep -v '.git\|.py\|.md\|json\|yml\|yaml\|html\|css\|work\|.nextflow\|build\|nf_core.egg-info\|log.txt\|Makefile')
+	prettier --check .
+	black .
+	nf-core -l lint_log.txt lint --dir . --markdown lint_results.md
 
 
 # https://stackoverflow.com/a/6273809/1826109

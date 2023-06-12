@@ -2,11 +2,14 @@ process NEO4J_ADMIN_IMPORT {
     tag 'Building Neo4j database'
     label 'process_high'
 
+
     if (params.sgnf_sgpy_dockerimage) {
-        container "chasemc2/sgnf-sgpy:${params.sgnf_sgpy_dockerimage}"
+        docker_version = ${params.sgnf_sgpy_dockerimage}
     } else {
-        container "chasemc2/sgnf-sgpy:${workflow.manifest.version}"
+        docker_version = ${workflow.manifest.version}
     }
+
+    container "chasemc2/sgnf-sgpy:${docker_version}"
 
     beforeScript 'mkdir -p import data logs plugins conf'
     stageInMode 'symlink'
@@ -57,6 +60,7 @@ process NEO4J_ADMIN_IMPORT {
     --neo4j_top_dir . \\
     --cpus ${task.cpus} \\
     --additional_args "" \\
+    --docker_version ${docker_version} \\
     --uid None \\
     --docker \\
     --gid None \\
@@ -67,6 +71,7 @@ process NEO4J_ADMIN_IMPORT {
     sg_create_neo4j_db \\
     --neo4j_top_dir . \\
     --cpus ${task.cpus} \\
+    --docker_version ${docker_version} \\
     --additional_args "" \\
     --uid None \\
     --gid None \\

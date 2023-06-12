@@ -28,7 +28,7 @@ dependencies:
   - conda-forge::git
   - conda-forge::pigz>=2.6
   - conda-forge::gzip >=1.12
-  - conda-forge::openjdk # required by neo4j
+  - conda-forge::openjdk=17 # required by neo4j
   - procps-ng # required by nextflow
   - zip
 

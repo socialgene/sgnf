@@ -6,7 +6,11 @@ process ANTISMASH {
     maxRetries 3
 
     // println '\033[0;34m The first time antismash is run it may take some time to download/build the conda environment or docker image. Keep calm, don\'t panic, it may look like nothing is happening.\033[0m'
-container 'biocontainers/antismash:6.1.1--pyhdfd78af_0'
+    if (params.sgnf_sgpy_dockerimage) {
+        container "chasemc2/sgnf-antismash:${params.sgnf_antismash_dockerimage}"
+    } else {
+        container "chasemc2/sgnf-antismash:${workflow.manifest.version}"
+    }
     conda "$projectDir/dockerfiles/antismash/environment.yml"
 
     input:

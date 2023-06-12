@@ -249,7 +249,6 @@ workflow SOCIALGENE {
     ////////////////////////
     */
     if (run_antismash){
-        println GENOME_HANDLING.out.ch_non_mibig_gbk_file
         ANTISMASH(GENOME_HANDLING.out.ch_non_mibig_gbk_file)
         ANTISMASH_GBK_TO_TABLE(ANTISMASH.out.regions_gbk.collect())
     }
@@ -318,7 +317,7 @@ workflow SOCIALGENE {
     ////////////////////////
     */
 
-    if (NEO4J_HEADERS.out.sg_modules.contains("go")) {
+    if (sg_modules.contains("go")) {
         DOWNLOAD_GOTERMS()
         goterms_ch = DOWNLOAD_GOTERMS.out.goterm_nodes_edges
     } else {

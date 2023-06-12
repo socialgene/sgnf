@@ -19,14 +19,12 @@ workflow TIGRFAM_INFO {
         TIGRFAM_ROLES()
         TIGRFAM_TO_ROLE()
 
-        ch_versions = ch_versions.mix(TIGRFAM_INFO_DOWNLOAD.out.versions)
         ch_versions = ch_versions.mix(TIGRFAM_TO_GO.out.versions)
         ch_versions = ch_versions.mix(TIGRFAM_ROLES.out.versions)
         ch_versions = ch_versions.mix(TIGRFAM_TO_ROLE.out.versions)
 
         tigr_ch = internal_tigr_ch.mix(
             TIGRFAM_TO_GO.out.tigrfam_to_go,
-            TIGRFAM_TO_GO.out.goterm,
             TIGRFAM_ROLES.out.tigrfamrole_to_mainrole,
             TIGRFAM_ROLES.out.tigrfamrole_to_subrole,
             TIGRFAM_ROLES.out.tigrfam_mainrole,

@@ -28,6 +28,7 @@ process NEO4J_ADMIN_IMPORT_DRYRUN {
     --neo4j_top_dir . \\
     --cpus ${task.cpus} \\
     --additional_args "" \\
+    --docker_version ${docker_version} \\
     --uid None \\
     --docker \\
     --gid None \\

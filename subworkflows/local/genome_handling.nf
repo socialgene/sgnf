@@ -115,7 +115,9 @@ workflow GENOME_HANDLING {
         ch_loci,
         ch_assembly)
 
-    ch_protein_to_dedup = ch_protein_ids.mix(ch_protein_info,ch_protein_to_go)
+    //ch_protein_to_dedup = ch_protein_ids.mix(ch_protein_info,ch_protein_to_go)
+        ch_protein_to_dedup = ch_protein_ids.concat(ch_protein_info)
+
 
     DEDUPLICATE_GENOMIC_INFO(ch_genomic_to_dedup)
     DEDUPLICATE_PROTEIN_INFO(ch_protein_to_dedup)

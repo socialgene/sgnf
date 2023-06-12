@@ -321,8 +321,7 @@ workflow SOCIALGENE {
     if (NEO4J_HEADERS.out.sg_modules.contains("go")) {
         DOWNLOAD_GOTERMS()
         goterms_ch = DOWNLOAD_GOTERMS.out.goterm_nodes_edges
-    }
-    else {
+    } else {
         goterms_ch = file("${baseDir}/assets/EMPTY_FILE")
     }
 
@@ -360,7 +359,7 @@ if (run_build_database) {
                 parameters_ch,
                 GENOME_HANDLING.out.ch_genome_info,
                 GENOME_HANDLING.out.ch_protein_info,
-                DOWNLOAD_GOTERMS.out.goterm_nodes_edges
+                goterms_ch
             )
 
             ch_versions = ch_versions.mix(NEO4J_ADMIN_IMPORT.out.versions)

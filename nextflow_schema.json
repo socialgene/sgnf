@@ -427,24 +427,29 @@
             "properties": {
                 "multiqc_title": {
                     "type": "string",
-                    "description": "x"
+                    "description": "x",
+                    "hidden": true
                 },
                 "multiqc_logo": {
                     "type": "string",
-                    "description": "x"
+                    "description": "x",
+                    "hidden": true
                 },
                 "multiqc_config": {
                     "type": "string",
-                    "description": "x"
+                    "description": "x",
+                    "hidden": true
                 },
                 "max_multiqc_email_size": {
                     "type": "string",
                     "default": "25.MB",
-                    "description": "x"
+                    "description": "x",
+                    "hidden": true
                 },
                 "multiqc_methods_description": {
                     "type": "string",
-                    "description": "x"
+                    "description": "x",
+                    "hidden": true
                 }
             }
         },
@@ -588,6 +593,39 @@
                     "fa_icon": "fas fa-users-cog"
                 }
             }
+        },
+        "docker_images": {
+            "title": "Docker Images",
+            "type": "object",
+            "description": "Change the docker image tags (advanced, for developers)",
+            "default": "",
+            "properties": {
+                "sgnf_antismash_dockerimage": {
+                    "type": "string",
+                    "hidden": true,
+                    "description": "Specify which docker image tag to use (default is the version synced to pipeline version number)"
+                },
+                "sgnf_hmmer_dockerimage": {
+                    "type": "string",
+                    "hidden": true,
+                    "description": "Specify which docker image tag to use (default is the version synced to pipeline version number)"
+                },
+                "sgnf_hmmer_plus_dockerimage": {
+                    "type": "string",
+                    "hidden": true,
+                    "description": "Specify which docker image tag to use (default is the version synced to pipeline version number)"
+                },
+                "sgnf_sgpy_dockerimage": {
+                    "type": "string",
+                    "hidden": true,
+                    "description": "Specify which docker image tag to use (default is the version synced to pipeline version number)"
+                },
+                "sgnf_minimal_dockerimage": {
+                    "type": "string",
+                    "hidden": true,
+                    "description": "Specify which docker image tag to use (default is the version synced to pipeline version number)"
+                }
+            }
         }
     },
     "allOf": [
@@ -629,6 +667,9 @@
         },
         {
             "$ref": "#/definitions/institutional_config_options"
+        },
+        {
+            "$ref": "#/definitions/docker_images"
         }
     ]
 }

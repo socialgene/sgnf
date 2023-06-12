@@ -28,10 +28,9 @@ dependencies:
   - conda-forge::git
   - conda-forge::pigz>=2.6
   - conda-forge::gzip >=1.12
-  - conda-forge::openjdk # required by neo4j
+  - conda-forge::openjdk=17 # required by neo4j
   - procps-ng # required by nextflow
   - zip
 
   - pip:
-      - git+https://github.com/socialgene/sgpy.git@6ac9c3d66d81362b9ca19bb694c532e4c10c72e3
       - git+https://github.com/socialgene/antismash_gbk_to_table.git@e8d8b9f83eae0305550cd3b32e53c2a11f32c69e

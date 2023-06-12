@@ -3,10 +3,10 @@ process DEDUPY {
     label 'process_low'
     tag "$x"
 
-    if (params.sgnf_sgpy_dockerimage) {
-        container "chasemc2/sgnf-sgpy:${params.sgnf_sgpy_dockerimage}"
+    if (params.sgnf_minimal_dockerimage) {
+        container "chasemc2/sgnf-minimal:${params.sgnf_minimal_dockerimage}"
     } else {
-        container "chasemc2/sgnf-sgpy:${workflow.manifest.version}"
+        container "chasemc2/sgnf-minimal:${workflow.manifest.version}"
     }
 
     input:

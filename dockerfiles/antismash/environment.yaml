@@ -1,10 +1,12 @@
 name: antismash
 
 channels:
+  - anaconda
   - bioconda
   - conda-forge
   - defaults
 
 dependencies:
+  - python==3.10
   - antismash==6.1.1
   - procps-ng

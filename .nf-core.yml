@@ -2,6 +2,7 @@ repository_type: pipeline
 lint:
   files_unchanged:
     - assets/email_template.html
+    - modules/nf-core/custom/dumpsoftwareversions/main.nf
   files_exist:
     - CODE_OF_CONDUCT.md
     - assets/nf-core-sgnf_logo_light.png
@@ -15,3 +16,4 @@ lint:
     - manifest.homePage
   multiqc_config:
     - report_comment
+  template_strings:

@@ -4,6 +4,14 @@ process NCBI_DATASETS_DOWNLOAD {
     label 'process_low'
     maxForks 1
     errorStrategy 'ignore'
+
+
+    if (params.sgnf_minimal_dockerimage) {
+        container "chasemc2/sgnf-minimal:${params.sgnf_minimal_dockerimage}"
+    } else {
+        container "chasemc2/sgnf-minimal:${workflow.manifest.version}"
+    }
+
     input:
     val input_taxon
     path input_file

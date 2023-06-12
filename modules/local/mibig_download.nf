@@ -2,6 +2,12 @@
 process MIBIG_DOWNLOAD {
     label 'process_low'
 
+    if (params.sgnf_minimal_dockerimage) {
+        container "chasemc2/sgnf-minimal:${params.sgnf_minimal_dockerimage}"
+    } else {
+        container "chasemc2/sgnf-minimal:${workflow.manifest.version}"
+    }
+
     output:
     path "**/*.gbk"              , emit: genbank
     path "mibig_versions.yml"   , emit: versions

@@ -30,6 +30,7 @@ ch_multiqc_custom_methods_description = params.multiqc_methods_description ? fil
 */
 include { ANTISMASH                                     } from '../modules/local/antismash/main'
 include { ANTISMASH_GBK_TO_TABLE                        } from '../modules/local/antismash/antismash_gbk_to_table'
+include { DOWNLOAD_GOTERMS                              } from '../modules/local/download_goterms.nf'
 include { MMSEQS2_CLUSTER                               } from '../modules/local/mmseqs2_cluster'
 include { MMSEQS2_CREATEDB                              } from '../modules/local/mmseqs2_createdb'
 include { NEO4J_ADMIN_IMPORT                            } from '../modules/local/neo4j_admin_import'
@@ -66,10 +67,10 @@ include { HMM_PREP                  } from '../subworkflows/local/hmm_prep'
     IMPORT NF-CORE MODULES/SUBWORKFLOWS
 ========================================================================================
 */
-include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/nf-core/custom/dumpsoftwareversions/main'
+include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/local/custom/dumpsoftwareversions/main'
 include { DIAMOND_BLASTP                } from '../modules/local/diamond/blastp/main'
 include { DIAMOND_MAKEDB                } from '../modules/local/diamond/makedb/main'
-include { MULTIQC                       } from '../modules/nf-core/multiqc/main'
+include { MULTIQC                       } from '../modules/local/multiqc/main'
 
 /*
 ========================================================================================
@@ -248,10 +249,10 @@ workflow SOCIALGENE {
     ////////////////////////
     */
     if (run_antismash){
-        println GENOME_HANDLING.out.ch_non_mibig_gbk_file
         ANTISMASH(GENOME_HANDLING.out.ch_non_mibig_gbk_file)
         ANTISMASH_GBK_TO_TABLE(ANTISMASH.out.regions_gbk.collect())
     }
+
     /*
     ////////////////////////
     BLASTP
@@ -312,6 +313,20 @@ workflow SOCIALGENE {
 
     /*
     ////////////////////////
+    GOTERMS
+    ////////////////////////
+    */
+
+    if (sg_modules.contains("go")) {
+        DOWNLOAD_GOTERMS()
+        goterms_ch = DOWNLOAD_GOTERMS.out.goterm_nodes_edges
+    } else {
+        goterms_ch = file("${baseDir}/assets/EMPTY_FILE")
+    }
+
+
+    /*
+    ////////////////////////
     BUILD NEO4J DATABASE
     ////////////////////////
     */
@@ -342,7 +357,8 @@ if (run_build_database) {
                 tigrfam_ch,
                 parameters_ch,
                 GENOME_HANDLING.out.ch_genome_info,
-                GENOME_HANDLING.out.ch_protein_info
+                GENOME_HANDLING.out.ch_protein_info,
+                goterms_ch
             )
 
             ch_versions = ch_versions.mix(NEO4J_ADMIN_IMPORT.out.versions)

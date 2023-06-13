@@ -1,5 +1,5 @@
 # Couldn't get github actions to cache the docker builds so this starts from a sgpy_base image
-FROM chasemc/sgpy-base:1.0.0
+FROM chasemc2/sgpy-base:1.0.0
 
 ARG MAMBA_DOCKERFILE_ACTIVATE=1  # (otherwise python will not be found)
 

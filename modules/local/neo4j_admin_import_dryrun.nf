@@ -3,10 +3,12 @@ process NEO4J_ADMIN_IMPORT_DRYRUN {
     label 'process_low'
 
     if (params.sgnf_sgpy_dockerimage) {
-        container "chasemc2/sgnf-sgpy:${params.sgnf_sgpy_dockerimage}"
+        docker_version = ${params.sgnf_sgpy_dockerimage}
     } else {
-        container "chasemc2/sgnf-sgpy:${workflow.manifest.version}"
+        docker_version = "${workflow.manifest.version}"
     }
+
+    container "chasemc2/sgnf-sgpy:${docker_version}"
 
     input:
     val sg_modules
@@ -22,8 +24,13 @@ process NEO4J_ADMIN_IMPORT_DRYRUN {
 
     script:
     def sg_modules_delim = sg_modules ? sg_modules.join(' ') : '""'
-    """
+    if (params.sgnf_sgpy_dockerimage) {
+        docker_version=${params.sgnf_sgpy_dockerimage}
+    } else {
+        docker_version="${workflow.manifest.version}"
+    }
 
+    """
     sg_create_neo4j_db \\
     --neo4j_top_dir . \\
     --cpus ${task.cpus} \\

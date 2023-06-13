@@ -44,18 +44,13 @@ to nf-core here, in 15-20 seconds. For an example, see https://github.com/nf-cor
 > to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline)
 > with `-profile test` before running the workflow on actual data.
 
-<!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.
-    Explain what rows and columns represent. For instance (please edit as appropriate):
-
-Now, you can run the pipeline using:
-
-<!-- TODO nf-core: update the following command to include all required parameters for a minimal example -->
+Note that this pipeline can initiate significant number of compute processes. If you are running on a cloud service you alone are responsible for any costs.
 
 ```bash
-nextflow run socialgene/sgnf \
-  --input samplesheet.csv \
-  --outdir <OUTDIR>
-  -profile <docker/singularity/.../institute> \
+nextflow run  socialgene/sgnf \
+  -profile ultraquickstart,docker \
+  --outdir <OUTDIR> \
+  --outdir_download_cache <outdir_download_cache>
 ```
 
 > **Warning:**

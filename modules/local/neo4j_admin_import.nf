@@ -6,7 +6,7 @@ process NEO4J_ADMIN_IMPORT {
     if (params.sgnf_sgpy_dockerimage) {
         docker_version = ${params.sgnf_sgpy_dockerimage}
     } else {
-        docker_version = ${workflow.manifest.version}
+        docker_version = "${workflow.manifest.version}"
     }
 
     container "chasemc2/sgnf-sgpy:${docker_version}"
@@ -36,6 +36,7 @@ process NEO4J_ADMIN_IMPORT {
     path "import/protein_info/*"
     path "import/goterms/*"
 
+
     output:
     path 'data/*'                               , emit: data
     path 'logs/*'                               , emit: logs
@@ -49,9 +50,12 @@ process NEO4J_ADMIN_IMPORT {
 
     script:
     def sg_modules_delim = sg_modules ? sg_modules.join(' ') : '""'
-    def hmm_s_delim = hmmlist ? hmmlist.join(' ') : '""'
+    if (params.sgnf_sgpy_dockerimage) {
+        docker_version = ${params.sgnf_sgpy_dockerimage}
+    } else {
+        docker_version = "${workflow.manifest.version}"
+    }
     """
-
     # This is based on the Dockerfile (neo4j-admin writes into this directory)
     touch import.report
     NEO4J_BASE_DIR='/opt/conda/bin/neo4j'

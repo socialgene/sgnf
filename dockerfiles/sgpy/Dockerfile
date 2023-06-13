@@ -1,31 +1,12 @@
-FROM mambaorg/micromamba:1.1.0
-
-COPY environment.yaml /tmp/env.yaml
-
-RUN micromamba install -y -n base -f /tmp/env.yaml && \
-    micromamba clean --all --yes
-
-### Add Neo4j, remove then re-add the needed directories/files to avoid any potential permission issues
-# https://neo4j.com/docs/operations-manual/current/configuration/file-locations/
-RUN /opt/conda/bin/wget -q https://neo4j.com/artifact.php?name=neo4j-community-5.7.0-unix.tar.gz -O neo4j.tar.gz \
-    && tar -xf neo4j.tar.gz \
-    && rm neo4j.tar.gz \
-    && mv neo4j* neo4j \
-    && chmod -R 777 neo4j  \
-    && mkdir -p /opt/conda/bin/neo4j \
-    && mv neo4j  /opt/conda/bin/ \
-    && rm -rf /opt/conda/bin/neo4j/data /opt/conda/bin/neo4j/logs /opt/conda/bin/neo4j/import \
-    && mkdir -p /opt/conda/bin/neo4j/data /opt/conda/bin/neo4j/logs /opt/conda/bin/neo4j/import \
-    && touch /opt/conda/bin/neo4j/import.report \
-    && chmod -R 777 /opt/conda/bin/neo4j/data /opt/conda/bin/neo4j/logs /opt/conda/bin/neo4j/import /opt/conda/bin/neo4j/import.report
+# Couldn't get github actions to cache the docker builds so this starts from a sgpy_base image
+FROM chasemc/sgpy-base:1.0.0
 
 ARG MAMBA_DOCKERFILE_ACTIVATE=1  # (otherwise python will not be found)
 
-RUN /opt/conda/bin/pip install "socialgene[full] @ git+https://github.com/socialgene/sgpy.git@a591ffbd0401e8281db1efe5772205de398e496b"
+RUN /opt/conda/bin/pip install "socialgene[full] @ git+https://github.com/socialgene/sgpy.git@c0363fd37eff7fc48ea3237efa51b70de1cb08b3"
 
 ENV PATH="/opt/conda/bin/neo4j/bin:$PATH:/opt/conda/condabin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 ENV NEO4J_HOME='/opt/conda/bin/neo4j'
-
 ENV JAVA_HOME='/opt/conda'
 
 WORKDIR $NEO4J_HOME

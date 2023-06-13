@@ -344,6 +344,9 @@ if (run_build_database) {
     if (workflow.profile.contains("conda")){
         println '\033[0;34m The Neo4j database can only be built using the docker Nextflow profile, but you have used Conda. The Docker/Neo4j command to do build the database can be found at \n "$outdir/socialgene_neo4j/command_to_build_neo4j_database_with_docker.sh" \033[0m'
     } else if (workflow.profile.contains("docker")){
+
+            // TODO: this is not good/fragile, it really should be a single tuple input, but will have
+            // to recode admin import to not care about directory structure
             NEO4J_ADMIN_IMPORT(
                 sg_modules.collect(),
                 hmmlist.collect(),

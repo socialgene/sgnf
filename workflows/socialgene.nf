@@ -29,7 +29,6 @@ ch_multiqc_custom_methods_description = params.multiqc_methods_description ? fil
 ========================================================================================
 */
 include { ANTISMASH                                     } from '../modules/local/antismash/main'
-include { ANTISMASH_GBK_TO_TABLE                        } from '../modules/local/antismash/antismash_gbk_to_table'
 include { DOWNLOAD_GOTERMS                              } from '../modules/local/download_goterms.nf'
 include { MMSEQS2_CLUSTER                               } from '../modules/local/mmseqs2_cluster'
 include { MMSEQS2_CREATEDB                              } from '../modules/local/mmseqs2_createdb'
@@ -250,7 +249,6 @@ workflow SOCIALGENE {
     */
     if (run_antismash){
         ANTISMASH(GENOME_HANDLING.out.ch_non_mibig_gbk_file)
-        ANTISMASH_GBK_TO_TABLE(ANTISMASH.out.regions_gbk.collect())
     }
 
     /*

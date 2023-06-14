@@ -3,6 +3,13 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1](https://github.com/socialgene/sgnf/compare/v0.1.0...v0.1.1) (2023-06-14)
+
+
+### Bug Fixes
+
+* 1 ([205c07b](https://github.com/socialgene/sgnf/commit/205c07b7db3503ca49d04d08a29f3e161879f75f))
+
 ## 0.1.0 (2023-06-14)
 
 

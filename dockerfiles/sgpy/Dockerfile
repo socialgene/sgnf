@@ -1,6 +1,17 @@
 # Couldn't get github actions to cache the docker builds so this starts from a sgpy_base image
 FROM chasemc2/sgpy-base:1.0.0
+################## METADATA ######################
+LABEL software="socialgene"
+LABEL about.summary="Creating and interacting with graph databases of protein domains and their genome coordinates"
+LABEL about.home="https://socialgene.github.io"
+LABEL about.documentation="https://socialgene.github.io"
+LABEL about.license_file="https://github.com/socialgene/sgnf/blob/main/LICENSE"
+LABEL about.license="MIT"
+LABEL about.tags="Genomics"
+################## MAINTAINER ######################
+LABEL MAINTAINER "Chase M. Clark chasingmicrobes@gmail.com"
 
+################## INSTALLATION ######################
 ARG MAMBA_DOCKERFILE_ACTIVATE=1  # (otherwise python will not be found)
 
 RUN /opt/conda/bin/pip install -i https://test.pypi.org/simple/ socialgene[full] --extra-index-url https://pypi.org/simple

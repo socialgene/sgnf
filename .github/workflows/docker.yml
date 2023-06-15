@@ -14,7 +14,7 @@ jobs:
       contents: read
     strategy:
         matrix:
-          env:  [['chasemc2/sgnf-sgpy', 'dockerfiles/sgpy'],['chasemc2/sgnf-antismash', 'dockerfiles/antismash'],['chasemc2/sgnf-hmmer_plus', 'dockerfiles/hmmer_plus'],['chasemc2/sgnf-hmmer', 'dockerfiles/hmmer'],['chasemc2/sgnf-minimal', 'dockerfiles/minimal']]
+          env:  [['chasemc2/sgnf-sgpy', 'dockerfiles/sgpy'],['sgnf-antismash', 'dockerfiles/antismash'],['sgnf-hmmer_plus', 'dockerfiles/hmmer_plus'],['sgnf-hmmer', 'dockerfiles/hmmer'],['sgnf-minimal', 'dockerfiles/minimal']]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -36,7 +36,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            my-docker-hub-namespace/${{ matrix.env[0] }}
+            chasemc2/${{ matrix.env[0] }}
             ghcr.io/socialgene/${{ matrix.env[0] }}
           tags: |
             type=ref,event=branch

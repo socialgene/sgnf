@@ -1,30 +1,19 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
-# GitHub recommends pinning actions to a commit SHA.
-# To get a newer version, you will need to update the SHA.
-# You can also reference a tag or branch, but the action may change without warning.
-
-name: Publish sgpy Docker image to gch
+name: Publish sgpy Docker image
 
 on:
   release:
     types: [published]
   workflow_dispatch:
-
 env:
-  REGISTRY: ghcr.io
+  REGISTRY: ghcr.io/socialgene
   IMAGE_NAME: chasemc2/sgnf-sgpy
-
 jobs:
   push_to_registry:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
     permissions:
-      contents: read
       packages: write
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -57,4 +46,3 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-

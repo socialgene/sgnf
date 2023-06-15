@@ -1,5 +1,5 @@
 # Remove commented lines to also upload to github container registry
-name: Publish Docker images to DockerHUb and GitHub Container Registry
+name: Publish Docker images to DockerHub and GitHub Container Registry
 on:
   release:
     types: [published]

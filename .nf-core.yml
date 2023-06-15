@@ -4,6 +4,7 @@ lint:
     - assets/email_template.html
     - modules/nf-core/custom/dumpsoftwareversions/main.nf
     - .github/workflows/linting.yml
+    - .github/workflows/branch.yml
   files_exist:
     - CODE_OF_CONDUCT.md
     - assets/nf-core-sgnf_logo_light.png
@@ -12,6 +13,8 @@ lint:
     - .github/ISSUE_TEMPLATE/config.yml
     - .github/workflows/awstest.yml
     - .github/workflows/awsfulltest.yml
+    - conf/test.config
+    - conf/test_full.config
   nextflow_config:
     - manifest.name
     - manifest.homePage

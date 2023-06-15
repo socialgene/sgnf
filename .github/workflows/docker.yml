@@ -16,7 +16,7 @@ jobs:
       matrix:
         env:
           [
-            ["chasemc2/sgnf-sgpy", "dockerfiles/sgpy"],
+            ["sgnf-sgpy", "dockerfiles/sgpy"],
             ["sgnf-antismash", "dockerfiles/antismash"],
             ["sgnf-hmmer_plus", "dockerfiles/hmmer_plus"],
             ["sgnf-hmmer", "dockerfiles/hmmer"],

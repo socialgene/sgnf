@@ -1,7 +1,6 @@
 Note:  All releases may intorduce breaking changes until the release of v1.0.0
 
 [![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)
-
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A522.10.1-23aa62.svg)](https://www.nextflow.io/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
@@ -14,13 +13,26 @@ Note:  All releases may intorduce breaking changes until the release of v1.0.0
     alt="Run an example with Gitpod"
   />
 </a>
+<!-- [![GitHub Actions CI Status](https://github.com/socialgene/sgnf/workflows/nf-core%20CI/badge.svg)](https://github.com/socialgene/sgnf/actions?query=workflow%3A%22nf-core+CI%22)
+[![GitHub Actions Linting Status](https://github.com/socialgene/sgnf/workflows/nf-core%20linting/badge.svg)](https://github.com/socialgene/sgnf/actions?query=workflow%3A%22nf-core+linting%22) -->
 
-# socialgene/sgnf
+# Docker Images
 
-[![GitHub Actions CI Status](https://github.com/socialgene/sgnf/workflows/nf-core%20CI/badge.svg)](https://github.com/socialgene/sgnf/actions?query=workflow%3A%22nf-core+CI%22)
-[![GitHub Actions Linting Status](https://github.com/socialgene/sgnf/workflows/nf-core%20linting/badge.svg)](https://github.com/socialgene/sgnf/actions?query=workflow%3A%22nf-core+linting%22)
-[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/socialgene/results)
-[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)
+![DockerPulls](https://img.shields.io/static/v1?label=Docker&message=sgnf-hmmer&color=blue) ![DockerImageSize(latestbydate)](https://img.shields.io/docker/image-size/chasemc2/sgnf-hmmer) ![DockerImageVersion(latestsemver)](https://img.shields.io/docker/v/chasemc2/sgnf-hmmer) ![DockerPulls](https://img.shields.io/docker/pulls/chasemc2/sgnf-hmmer)
+
+
+![DockerPulls](https://img.shields.io/static/v1?label=Docker&message=sgnf-hmmer_plus&color=blue) ![DockerImageSize(latestbydate)](https://img.shields.io/docker/image-size/chasemc2/sgnf-hmmer_plus) ![DockerImageVersion(latestsemver)](https://img.shields.io/docker/v/chasemc2/sgnf-hmmer_plus) ![DockerPulls](https://img.shields.io/docker/pulls/chasemc2/sgnf-hmmer_plus)
+
+
+![DockerPulls](https://img.shields.io/static/v1?label=Docker&message=sgnf-sgpy&color=blue) ![DockerImageSize(latestbydate)](https://img.shields.io/docker/image-size/chasemc2/sgnf-sgpy) ![DockerImageVersion(latestsemver)](https://img.shields.io/docker/v/chasemc2/sgnf-sgpy) ![DockerPulls](https://img.shields.io/docker/pulls/chasemc2/sgnf-sgpy)
+
+![DockerPulls](https://img.shields.io/static/v1?label=Docker&message=sgnf-antismash&color=blue) ![DockerImageSize(latestbydate)](https://img.shields.io/docker/image-size/chasemc2/sgnf-antismash) ![DockerImageVersion(latestsemver)](https://img.shields.io/docker/v/chasemc2/sgnf-antismash) ![DockerPulls](https://img.shields.io/docker/pulls/chasemc2/sgnf-antismash)
+
+
+![DockerPulls](https://img.shields.io/static/v1?label=Docker&message=sgnf-minimal&color=blue) ![DockerImageSize(latestbydate)](https://img.shields.io/docker/image-size/chasemc2/sgnf-minimal) ![DockerImageVersion(latestsemver)](https://img.shields.io/docker/v/chasemc2/sgnf-minimal) ![DockerPulls](https://img.shields.io/docker/pulls/chasemc2/sgnf-minimal)
+
+
+
 
 ## Documentation
 

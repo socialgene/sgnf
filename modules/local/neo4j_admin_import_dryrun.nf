@@ -2,6 +2,14 @@ process NEO4J_ADMIN_IMPORT_DRYRUN {
     tag 'Building Neo4j database'
     label 'process_low'
 
+    if (params.sgnf_sgpy_dockerimage) {
+        docker_version = ${params.sgnf_sgpy_dockerimage}
+    } else {
+        docker_version = "${workflow.manifest.version}"
+    }
+
+    container "chasemc2/sgnf-sgpy:${docker_version}"
+
     input:
     val sg_modules
 
@@ -16,19 +24,24 @@ process NEO4J_ADMIN_IMPORT_DRYRUN {
 
     script:
     def sg_modules_delim = sg_modules ? sg_modules.join(' ') : '""'
-    """
+    if (params.sgnf_sgpy_dockerimage) {
+        docker_version=${params.sgnf_sgpy_dockerimage}
+    } else {
+        docker_version="${workflow.manifest.version}"
+    }
 
+    """
     sg_create_neo4j_db \\
     --neo4j_top_dir . \\
     --cpus ${task.cpus} \\
     --additional_args "" \\
+    --docker_version ${docker_version} \\
     --uid None \\
     --docker \\
     --gid None \\
     --sg_modules ${sg_modules_delim} \\
     --dryrun \\
     --dryrun_filepath "command_to_build_neo4j_database_with_docker.sh"
-
 
     sg_create_neo4j_db \\
     --neo4j_top_dir . \\
@@ -40,7 +53,6 @@ process NEO4J_ADMIN_IMPORT_DRYRUN {
     --sg_modules ${sg_modules_delim} \\
     --dryrun \\
     --dryrun_filepath "command_to_build_neo4j_database.sh"
-
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

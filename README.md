@@ -1,4 +1,5 @@
-Note: This is all pre-alpha stuff (i.e. being worked on extensively, there will be breaking changes, the repo may be burnt down and rebuilt at any time). Extensive documentation will be made available at a later date when this is ready for general use.
+Note:  All releases may intorduce breaking changes until the release of v1.0.0
+
 [![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)
 
 [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
@@ -21,67 +22,42 @@ Note: This is all pre-alpha stuff (i.e. being worked on extensively, there will 
 [![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/socialgene/results)
 [![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)
 
-## Introduction
+## Documentation
 
-**socialgene/sgnf** is a bioinformatics pipeline that ...
-
-<!-- TODO nf-core:
-  Complete this sentence with a 2-3 sentence summary of what types of data the pipeline ingests, a brief overview of the
-  major pipeline sections and the types of output it produces. You're giving an overview to someone new
-
--->
-
-to nf-core here, in 15-20 seconds. For an example, see https://github.com/nf-core/rnaseq/blob/master/README.md#introduction
-
-<!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core
-    workflows use the "tube map" design for that. See https://nf-co.re/docs/contributing/design_guidelines#examples for examples.   -->
-<!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->
+Can be found at https://socialgene.github.io
 
 ## Usage
 
 > **Note**
-> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how
+> If you are new to using Nextflow and nf-core pipelines, please refer to [this page](https://nf-co.re/docs/usage/installation) on how
 > to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline)
-> with `-profile test` before running the workflow on actual data.
+> using the example command below.
 
-<!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.
-    Explain what rows and columns represent. For instance (please edit as appropriate):
-
-Now, you can run the pipeline using:
-
-<!-- TODO nf-core: update the following command to include all required parameters for a minimal example -->
+Note that this pipeline can initiate significant number of compute processes. If you are running on a cloud service you alone are responsible for any costs.
 
 ```bash
-nextflow run socialgene/sgnf \
-  --input samplesheet.csv \
-  --outdir <OUTDIR>
-  -profile <docker/singularity/.../institute> \
+outdir="path_to_my/outdir"
+outdir_download_cache="path_to_my/outdir_download_cache"
+
+nextflow run  socialgene/sgnf \
+  -profile ultraquickstart,docker \
+  --outdir $outdir \
+  --outdir_download_cache $outdir_download_cache
 ```
 
-> **Warning:**
-> Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those
-> provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_;
-
-> see [docs](https://nf-co.re/usage/configuration#custom-configuration-files).
+> Unlike nf-core hosted pipelines, you should be able to use configuration files to run the pipeline. A number of examples are available https://github.com/socialgene/sgnf/tree/main/conf/examples
 
 ## Credits
 
 socialgene/sgnf was originally written by Chase M. Clark.
 
-We thank the following people for their extensive assistance in the development of this pipeline:
-
-<!-- TODO nf-core: If applicable, make list of people who have also contributed -->
-
 If you would like to contribute to this pipeline, please see the [contributing guidelines](.github/CONTRIBUTING.md).
 
 ## Contributions and Support
 
+Chase M. Clark (and thus this project) was supported by an NLM training grant to the Computation and Informatics in Biology and Medicine Training Program (NLM 5T15LM007359)
+
 ## Citations
-
-<!-- TODO nf-core: Add citation for pipeline after first release. Uncomment lines below and update Zenodo doi and badge at the top of this file. -->
-
-<!-- If you use  socialgene/sgnf for your analysis, please cite it using the following doi: [10.5281/zenodo.XXXXXX](https://doi.org/10.5281/zenodo.XXXXXX) -->
-<!-- TODO nf-core: Add bibliography of tools and data used in your pipeline -->
 
 An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
 

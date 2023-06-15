@@ -2,6 +2,12 @@
 process HMM_HASH {
     label 'process_medium'
 
+    if (params.sgnf_sgpy_dockerimage) {
+        container "chasemc2/sgnf-sgpy:${params.sgnf_sgpy_dockerimage}"
+    } else {
+        container "chasemc2/sgnf-sgpy:${workflow.manifest.version}"
+    }
+
     input:
     path hmm_directory
     val hmm_splits
@@ -28,7 +34,7 @@ process HMM_HASH {
     md5_as_filename_after_gzip.sh all.hmminfo all.hmminfo
     md5_as_filename_after_gzip.sh sg_hmm_nodes sg_hmm_nodes
 
-    gzip -n -6 socialgene_nr_hmms_file*
+    pigz --processes ${task.cpus} -n -6 socialgene_nr_hmms_file*
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

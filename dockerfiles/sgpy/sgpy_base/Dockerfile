@@ -24,4 +24,7 @@ ARG MAMBA_DOCKERFILE_ACTIVATE=1  # (otherwise python will not be found)
 ENV PATH="/opt/conda/bin/neo4j/bin:$PATH:/opt/conda/condabin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 ENV NEO4J_HOME='/opt/conda/bin/neo4j'
 
+ENV JAVA_HOME='/opt/conda'
+
 WORKDIR $NEO4J_HOME
+

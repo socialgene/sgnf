@@ -2,6 +2,12 @@
 process DOWNLOAD_LOCAL_HMM {
     label 'process_single'
 
+    if (params.sgnf_hmmer_plus_dockerimage) {
+        container "chasemc2/sgnf-hmmer_plus:${params.sgnf_hmmer_plus_dockerimage}"
+    } else {
+        container "chasemc2/sgnf-hmmer_plus:${workflow.manifest.version}"
+    }
+
     input:
     path x
 

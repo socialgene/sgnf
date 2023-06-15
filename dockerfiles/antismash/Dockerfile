@@ -1,15 +1,10 @@
-FROM mambaorg/micromamba:1.1.0
-
-COPY environment.yaml /tmp/env.yaml
-
-# Not running clusterblast, etc. So remove as many databases as possible without
-# breaking antismash (don't delete resfams db)
-RUN micromamba install -y -n base -f /tmp/env.yaml && \
-    micromamba clean --all --yes && \
-    rm -r /opt/conda/lib/python3.8/site-packages/antismash/databases/clusterblast && \
-    rm -r /opt/conda/lib/python3.8/site-packages/antismash/databases/clustercompare && \
-    rm -r /opt/conda/lib/python3.8/site-packages/antismash/databases/pfam && \
-    rm -r /opt/conda/lib/python3.8/site-packages/antismash/databases/tigrfam
+# Couldn't get github actions to cache the docker builds so this pulls from the same antismash image
+# which is just the conda installed antismash with some databases removed and procps added
+FROM chasemc2/antismash:6.1.1
 
 USER $MAMBA_USER
 ARG MAMBA_DOCKERFILE_ACTIVATE=1
+
+
+
+

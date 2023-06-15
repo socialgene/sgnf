@@ -2,7 +2,11 @@ process INDEX_FASTA {
     tag "$fasta"
     label 'process_single'
 
-    conda "bioconda::samtools=1.17 bioconda::tabix=1.11"
+    if (params.sgnf_sgpy_dockerimage) {
+        container "chasemc2/sgnf-sgpy:${params.sgnf_sgpy_dockerimage}"
+    } else {
+        container "chasemc2/sgnf-sgpy:${workflow.manifest.version}"
+    }
 
     input:
     path fasta

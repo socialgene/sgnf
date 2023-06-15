@@ -83,6 +83,10 @@ workflow GENOME_HANDLING {
         .collectFile(name:'protein_info.gz', sort: 'hash', cache: true)
         .map {[it.getSimpleName(), it]}
         .set{ch_protein_info}
+    PROCESS_GENBANK_FILES.out.protein_to_go
+        .collectFile(name:'protein_to_go.gz', sort: 'hash', cache: true)
+        .map {[it.getSimpleName(), it]}
+        .set{ch_protein_to_go}
     PROCESS_GENBANK_FILES.out.locus_to_protein
         .collectFile(name:'locus_to_protein.gz', sort: 'hash', cache: true)
         .map {[it.getSimpleName(), it]}
@@ -111,7 +115,9 @@ workflow GENOME_HANDLING {
         ch_loci,
         ch_assembly)
 
-    ch_protein_to_dedup = ch_protein_ids.concat(ch_protein_info)
+    ch_protein_to_dedup = ch_protein_ids.mix(ch_protein_info,ch_protein_to_go)
+
+
 
     DEDUPLICATE_GENOMIC_INFO(ch_genomic_to_dedup)
     DEDUPLICATE_PROTEIN_INFO(ch_protein_to_dedup)

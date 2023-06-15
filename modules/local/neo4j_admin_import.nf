@@ -2,6 +2,15 @@ process NEO4J_ADMIN_IMPORT {
     tag 'Building Neo4j database'
     label 'process_high'
 
+
+    if (params.sgnf_sgpy_dockerimage) {
+        docker_version = ${params.sgnf_sgpy_dockerimage}
+    } else {
+        docker_version = "${workflow.manifest.version}"
+    }
+
+    container "chasemc2/sgnf-sgpy:${docker_version}"
+
     beforeScript 'mkdir -p import data logs plugins conf'
     stageInMode 'symlink'
 
@@ -25,6 +34,8 @@ process NEO4J_ADMIN_IMPORT {
     path "import/parameters/*"
     path "import/genomic_info/*"
     path "import/protein_info/*"
+    path "import/goterms/*"
+
 
     output:
     path 'data/*'                               , emit: data
@@ -39,18 +50,21 @@ process NEO4J_ADMIN_IMPORT {
 
     script:
     def sg_modules_delim = sg_modules ? sg_modules.join(' ') : '""'
-    def hmm_s_delim = hmmlist ? hmmlist.join(' ') : '""'
+    if (params.sgnf_sgpy_dockerimage) {
+        docker_version = ${params.sgnf_sgpy_dockerimage}
+    } else {
+        docker_version = "${workflow.manifest.version}"
+    }
     """
-
     # This is based on the Dockerfile (neo4j-admin writes into this directory)
     touch import.report
     NEO4J_BASE_DIR='/opt/conda/bin/neo4j'
-
 
     sg_create_neo4j_db \\
     --neo4j_top_dir . \\
     --cpus ${task.cpus} \\
     --additional_args "" \\
+    --docker_version ${docker_version} \\
     --uid None \\
     --docker \\
     --gid None \\
@@ -61,6 +75,7 @@ process NEO4J_ADMIN_IMPORT {
     sg_create_neo4j_db \\
     --neo4j_top_dir . \\
     --cpus ${task.cpus} \\
+    --docker_version ${docker_version} \\
     --additional_args "" \\
     --uid None \\
     --gid None \\

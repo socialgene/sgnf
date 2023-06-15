@@ -35,7 +35,9 @@ workflow SG_MODULES {
     if (params.ncbi_taxonomy){
         sg_modules.add("ncbi_taxonomy")
     }
-
+    if (hmmlist.contains("tigrfam") || params.goterms ) {
+        sg_modules.add("go")
+    }
     emit:
         sg_modules = sg_modules.sort()
 

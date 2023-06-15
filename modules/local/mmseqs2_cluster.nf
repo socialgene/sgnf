@@ -1,6 +1,12 @@
 process MMSEQS2_CLUSTER {
     label 'process_high'
 
+    if (params.sgnf_sgpy_dockerimage) {
+        container "chasemc2/sgnf-sgpy:${params.sgnf_sgpy_dockerimage}"
+    } else {
+        container "chasemc2/sgnf-sgpy:${workflow.manifest.version}"
+    }
+
     input:
     path '*'
     path fasta

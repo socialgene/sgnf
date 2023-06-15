@@ -1,0 +1,10 @@
+local_genbank: "/home/chase/Downloads/micro/**/*.gz"
+genbank_input_buffer: 12
+antismash: false
+mibig: false
+mmseqs2: false
+blastp: false
+ncbi_taxonomy: true
+build_database: true
+hmmlist: []
+goterms: true

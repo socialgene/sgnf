@@ -1,10 +1,11 @@
 process DIAMOND_BLASTP {
     label 'process_high'
 
-    // conda "bioconda::diamond==2.0.15"
-    // container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-    //     'https://depot.galaxyproject.org/singularity/diamond:2.0.15--hb97b32f_0' :
-    //     'quay.io/biocontainers/diamond:2.0.15--hb97b32f_0' }"
+    if (params.sgnf_sgpy_dockerimage) {
+        container "chasemc2/sgnf-sgpy:${params.sgnf_sgpy_dockerimage}"
+    } else {
+        container "chasemc2/sgnf-sgpy:${workflow.manifest.version}"
+    }
 
     input:
     path(fasta)
@@ -33,6 +34,7 @@ process DIAMOND_BLASTP {
         --outfmt 6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qcovhsp \\
         $args $args2 \\
         --compress 1 \\
+        --no-self-hits \\
         --out blastp_all_vs_all.blast6.txt.gz
 
     md5_as_filename.sh "blastp_all_vs_all.blast6.txt.gz" "blast6.gz"

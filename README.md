@@ -1,4 +1,4 @@
-Note: All releases may intorduce breaking changes until the release of v1.0.0
+Note:  All releases may intorduce breaking changes until the release of v1.0.0
 
 [![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)
 

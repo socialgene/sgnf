@@ -6,8 +6,11 @@ LABEL about.summary="Creating and interacting with graph databases of protein do
 LABEL about.home="https://socialgene.github.io"
 LABEL about.documentation="https://socialgene.github.io"
 LABEL about.license_file="https://github.com/socialgene/sgnf/blob/main/LICENSE"
-LABEL about.license="MIT"
+LABEL about.license="SPDX:MIT"
 LABEL about.tags="Genomics"
+LABEL org.opencontainers.image.source="https://github.com/socialgene/sgnf"
+LABEL org.opencontainers.image.description="Creating and interacting with graph databases of protein domains and their genome coordinates"
+LABEL org.opencontainers.image.licenses="SPDX:MIT"
 ################## MAINTAINER ######################
 LABEL MAINTAINER "Chase M. Clark chasingmicrobes@gmail.com"
 

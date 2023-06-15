@@ -13,24 +13,25 @@ on:
   release:
     types: [published]
   workflow_dispatch:
+
 env:
+  REGISTRY: ghcr.io
   IMAGE_NAME: chasemc2/sgnf-sgpy
+
 jobs:
   push_to_registry:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
       - name: Check out the repo
         uses: actions/checkout@v3
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: |
-            chasemc2/sgnf-sgpy
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             type=ref,event=branch
             type=ref,event=pr
@@ -48,8 +49,8 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          context: ./dockerfiles/sgpy
-          file: ./dockerfiles/sgpy/Dockerfile
+          context: dockerfiles/sgpy
+          file: dockerfiles/sgpy/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

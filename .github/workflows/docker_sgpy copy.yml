@@ -4,7 +4,7 @@ on:
     types: [published]
   workflow_dispatch:
 env:
-  IMAGE_NAME: sgpy
+  IMAGE_NAME: chasemc2/sgnf-sgpy
 jobs:
   push_to_registry:
     name: Push Docker image to Docker Hub
@@ -16,7 +16,9 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Build image
-        run: docker build . --file Dockerfile --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
+        run: |
+          cd dockerfiles/sgpy
+          docker build . --file Dockerfile --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
 
       - name: Log in to registry
         # This is where you will update the personal access token to GITHUB_TOKEN

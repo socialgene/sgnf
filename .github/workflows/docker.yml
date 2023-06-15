@@ -14,7 +14,7 @@ jobs:
       contents: read
     strategy:
         matrix:
-          env:  [{image:'chasemc2/sgnf-sgpy', context:'dockerfiles/sgpy'},{image:'chasemc2/sgnf-antismash', context:'dockerfiles/antismash'},{image:'chasemc2/sgnf-hmmer_plus', context:'dockerfiles/hmmer_plus'},{image:'chasemc2/sgnf-hmmer', context:'dockerfiles/hmmer'},{image:'chasemc2/sgnf-minimal', context:'dockerfiles/minimal'}]    steps:
+          env:  [['chasemc2/sgnf-sgpy', 'dockerfiles/sgpy'],['chasemc2/sgnf-antismash', 'dockerfiles/antismash'],['chasemc2/sgnf-hmmer_plus', 'dockerfiles/hmmer_plus'],['chasemc2/sgnf-hmmer', 'dockerfiles/hmmer'],['chasemc2/sgnf-minimal', 'dockerfiles/minimal']]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -36,8 +36,8 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            my-docker-hub-namespace/${{ matrix.env.image }}
-            ghcr.io/socialgene/${{ matrix.env.image }}
+            my-docker-hub-namespace/${{ matrix.env[0] }}
+            ghcr.io/socialgene/${{ matrix.env[0] }}
           tags: |
             type=ref,event=branch
             type=ref,event=pr
@@ -49,7 +49,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          context: ${{ matrix.env.context }}
+          context: ${{ matrix.env[1] }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

@@ -12,8 +12,7 @@ name: Publish hmmer Docker image
 on:
   release:
     types: [published]
-    tags:
-      - "v*.*.*"
+
   workflow_dispatch:
 
 jobs:

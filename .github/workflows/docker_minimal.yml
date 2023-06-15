@@ -12,8 +12,7 @@ name: Publish minimal Docker image
 on:
   release:
     types: [published]
-    tags:
-      - "v*.*.*"
+
   workflow_dispatch:
 
 jobs:

@@ -12,8 +12,8 @@ name: Publish sgpy Docker image
 on:
   release:
     types: [published]
-    tags:
-      - "v*.*.*"
+  pull_request:
+    types: [opened, synchronize, reopened]
   workflow_dispatch:
 
 jobs:

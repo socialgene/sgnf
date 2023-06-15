@@ -1,5 +1,8 @@
 {
     "extra-files": [
-        "nextflow.config"
+        {
+            "type": "text",
+            "path": "nextflow.config"
+        }
     ]
 }

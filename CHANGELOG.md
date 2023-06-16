@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.0.2](https://github.com/socialgene/sgnf/compare/v0.0.1...v0.0.2) (2023-06-16)
+
+
+### Bug Fixes
+
+* change ncbi-genome-download docker ([295606b](https://github.com/socialgene/sgnf/commit/295606b66ee1ec861ba5eff6c71b6197b5ccdcd4))
+* loosen accessory version pins in sgpy base docker ([ca94c3e](https://github.com/socialgene/sgnf/commit/ca94c3ec0cda3556fab7eb7d4cbef58d5b8bfbe8))
+* ncbi-genome-download error ([f881373](https://github.com/socialgene/sgnf/commit/f881373cdd1bf3cf68c65cd2962e13e4b82a1834))
+* socialgene is now on PyPI ([82af357](https://github.com/socialgene/sgnf/commit/82af3575e07ca8ddd5949640672f6205f74a2402))
+
 ## 0.0.1 (2023-06-15)
 
 

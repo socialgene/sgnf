@@ -17,7 +17,6 @@ dependencies:
   - bioconda::mmseqs2==13.45111
   - bioconda::diamond==2.0.15
   - conda-forge::ncbi-datasets-cli==14.13.2
-  - bioconda::ncbi-genome-download==0.3.1
   - bioconda::tabix==1.11
   - bioconda::samtools==1.16.1
   - conda-forge::coreutils==9.3
@@ -31,3 +30,4 @@ dependencies:
   - conda-forge::openjdk==17 # required by neo4j
   - conda-forge::procps-ng==4.0.3 # required by nextflow
   - conda-forge::zip==3.0
+#  - bioconda::ncbi-genome-download==0.3.1 # removed until https://github.com/kblin/ncbi-genome-download/issues/209 is fixed

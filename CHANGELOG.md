@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.3](https://github.com/socialgene/sgnf/compare/v0.0.2...v0.0.3) (2023-06-17)
+
+
+### Bug Fixes
+
+* add curl to minimal docker image ([0c5d47b](https://github.com/socialgene/sgnf/commit/0c5d47b6fa449fed67d4ce74aada9e503556b591))
+* antismash docker call ([2abe262](https://github.com/socialgene/sgnf/commit/2abe262757a5040eebf8dc0c7f659f0f03a7ea7d))
+
 ## [0.0.2](https://github.com/socialgene/sgnf/compare/v0.0.1...v0.0.2) (2023-06-16)
 
 

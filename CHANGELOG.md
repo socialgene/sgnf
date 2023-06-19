@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.4](https://github.com/socialgene/sgnf/compare/v0.0.3...v0.0.4) (2023-06-19)
+
+
+### Bug Fixes
+
+* bump sgpy version ([6a35a77](https://github.com/socialgene/sgnf/commit/6a35a77ce012bd509476926e21609cba4323e698))
+* make default mmseqs id/cov the same as diamond ([003eff5](https://github.com/socialgene/sgnf/commit/003eff5d11febaab638d7997dbbb2c2c3f14871e))
+
 ## [0.0.3](https://github.com/socialgene/sgnf/compare/v0.0.2...v0.0.3) (2023-06-17)
 
 

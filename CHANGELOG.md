@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.5](https://github.com/socialgene/sgnf/compare/v0.0.4...v0.0.5) (2023-06-19)
+
+
+### Bug Fixes
+
+* bump ([48a2b96](https://github.com/socialgene/sgnf/commit/48a2b963cfb9b85975386952a2cf8431d9362f5c))
+
 ## [0.0.4](https://github.com/socialgene/sgnf/compare/v0.0.3...v0.0.4) (2023-06-19)
 
 

@@ -83,8 +83,20 @@
                     "description": "File path of a custom HMMER hmm file"
                 },
                 "hmmlist": {
-                    "type": "array",
-                    "description": "[\"all\"] or some combination of [\"antismash\",\"amrfinder\",\"bigslice\",\"classiphage\",\"pfam\",\"prism\",\"resfams\",\"tigrfam\",\"virus_orthologous_groups\"]"
+                    "type": "string",
+                    "description": "'all' or some combination of 'antismash', 'amrfinder', 'bigslice', 'classiphage','pfam', 'prism', 'resfams', 'tigrfam', 'virus_orthologous_groups'",
+                    "enum": [
+                        "all",
+                        "antismash",
+                        "amrfinder",
+                        "bigslice",
+                        "classiphage",
+                        "pfam",
+                        "prism",
+                        "resfams",
+                        "tigrfam",
+                        "virus_orthologous_groups"
+                    ]
                 },
                 "domtblout_path": {
                     "type": "string",

@@ -1,3 +1,5 @@
+
+import re
 software = {
     "antismash": {
         "publication": "Kai Blin and others, antiSMASH 6.0: improving cluster detection and comparison capabilities, Nucleic Acids Research, Volume 49, Issue W1, 2 July 2021, Pages W29-W35, 10.1093/nar/gkab335"
@@ -58,7 +60,12 @@ databases = {
         "license":"https://git.wageningenur.nl/bioinformatics/iPRESTO/-/blob/master/LICENSE",
         "website":"https://git.wageningenur.nl/bioinformatics/iPRESTO/"
     },
-    "pfam": {
+    "mibig": {
+        "publication": "Terlouw BR, Blin K, Navarro-Muñoz JC, Avalon NE, Chevrette MG, Egbert S, Lee S, Meijer D, Recchia MJJ, Reitz ZL, van Santen JA, Selem-Mojica N, Tørring T, Zaroubi L, Alanjary M, Aleti G, Aguilar C, Al-Salihi SAA, Augustijn HE, Avelar-Rivas JA, Avitia-Domínguez LA, Barona-Gómez F, Bernaldo-Agüero J, Bielinski VA, Biermann F, Booth TJ, Carrion Bravo VJ, Castelo-Branco R, Chagas FO, Cruz-Morales P, Du C, Duncan KR, Gavriilidou A, Gayrard D, Gutiérrez-García K, Haslinger K, Helfrich EJN, van der Hooft JJJ, Jati AP, Kalkreuter E, Kalyvas N, Kang KB, Kautsar S, Kim W, Kunjapur AM, Li YX, Lin GM, Loureiro C, Louwen JJR, Louwen NLL, Lund G, Parra J, Philmus B, Pourmohsenin B, Pronk LJU, Rego A, Rex DAB, Robinson S, Rosas-Becerra LR, Roxborough ET, Schorn MA, Scobie DJ, Singh KS, Sokolova N, Tang X, Udwary D, Vigneshwari A, Vind K, Vromans SPJM, Waschulin V, Williams SE, Winter JM, Witte TE, Xie H, Yang D, Yu J, Zdouc M, Zhong Z, Collemare J, Linington RG, Weber T, Medema MH. MIBiG 3.0: a community-driven effort to annotate experimentally validated biosynthetic gene clusters. Nucleic Acids Res. 2023 Jan 6;51(D1):D603-D610. doi: 10.1093/nar/gkac1049",
+        "website": "https://mibig.secondarymetabolites.org/",
+        "license":"Creative Commons Attribution 4.0 International License"
+    },
+        "pfam": {
         "publication": "Jaina Mistry and others, Pfam: The protein families database in 2021, Nucleic Acids Research, Volume 49, Issue D1, 8 January 2021, Pages D412-D419, 10.1093/nar/gkaa913",
         "website":"'Pfam is freely available under the Creative Commons Zero (“CC0”) licence.'; https://www.ebi.ac.uk/interpro/entry/pfam",
         "license": "https://pfam-docs.readthedocs.io/en/latest/"
@@ -69,12 +76,12 @@ databases = {
         "license": "No redistribution allowed",
     },
     "resfams": {
-        "publication": "Gibson MK, Forsberg KJ, Dantas G. Improved annotation of antibiotic resistance determinants reveals microbial resistomes cluster by ecology. ISME J. 2015 Jan;9(1):207-16. doi: 10.1038/ismej.2014.106. Epub 2014 Jul 8",
+        "publication": "Gibson MK, Forsberg KJ, Dantas G. Improved annotation of antibiotic resistance determinants reveals microbial resistomes cluster by ecology. ISME J. 2015 Jan;9(1):207-16. doi: 10.1038/ismej.2014.106",
         "license":"http://www.dantaslab.org/s/LICENSE.txt",
         "website":"http://www.dantaslab.org/resfams"
     },
     "tigrfam": {
-        "publication": "Haft DH, Selengut JD, White O. The TIGRFAMs database of protein families. Nucleic Acids Res. 2003 Jan 1;31(1):371-3. doi: 10.1093/nar/gkg128.",
+        "publication": "Haft DH, Selengut JD, White O. The TIGRFAMs database of protein families. Nucleic Acids Res. 2003 Jan 1;31(1):371-3. doi: 10.1093/nar/gkg128",
         "license":"https://creativecommons.org/licenses/by-sa/4.0/legalcode",
         "website":"'TIGRFAMs data are made available under a Creative Commons Attribution-ShareAlike 4.0 license.'; https://www.ncbi.nlm.nih.gov/genome/annotation_prok/tigrfams/"
     },
@@ -83,16 +90,43 @@ databases = {
               "website":"https://vogdb.org/"},
 }
 
+yaml_path="/home/chase/Documents/socialgene_data/mibig/socialgene_per_run/pipeline_info/software_versions.yml"
+with open(yaml_path, "r") as h:
+    a=h.read()
 
-"The non-redundant set of proteins created by socialgene was clustered by MMseqs2"
-"Using socialgene, the Diamond software was used to perform an all-vs-all BLASTp search of the non-redundant set of proteins."
-"A graph database was created using Neo4j version..."
+class Citation():
+    __slots__=["name", "publication", "license", "website"]
+    def __init__(self, name=None, publication=None, license=None, website=None, **kwargs) -> None:
+        self.name=name
+        self.publication=publication
+        self.license=license
+        self.website=website
+    def get(self):
+        out_str = ""
+        out_str = out_str + f"{self.name}:\n"
+        if self.publication:
+            out_str = out_str + f"  publication: '{self.publication}'\n"
+        if self.license:
+            out_str = out_str + f"  license: '{self.license}'\n"
+        if self.website:
+            out_str = out_str + f"  website: '{self.website}'\n"
+        out_str = out_str + "\n"
+        return out_str
+    def write(self, outpath, mode="a", **kwargs):
+        with open(outpath, mode=mode) as h:
+            h.write(self.get())
 
 
-to_cite = set()
 
-for i in versions_by_process.values():
-    for ii in i.keys():
-        to_cite.add(ii)
+z=[]
+for k,v in databases.items():
+    if re.search( k,a, re.IGNORECASE):
+        z=Citation(name=k, **v).write(yaml_path)
 
-to_cite = {i: citations[i] for i in to_cite if i in citations}
+
+
+z=[]
+for k,v in software.items():
+    if re.search( k,a, re.IGNORECASE):
+        Citation(name=k, **v).write(yaml_path)
+

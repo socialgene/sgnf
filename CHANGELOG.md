@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.0](https://github.com/socialgene/sgnf/compare/v0.0.6...v0.1.0) (2023-06-21)
+
+
+### Features
+
+* create antismash.jsonl ([#41](https://github.com/socialgene/sgnf/issues/41)) ([3087f13](https://github.com/socialgene/sgnf/commit/3087f138422414dd132483cb94b66f0f7129f320))
+
 ## [0.0.6](https://github.com/socialgene/sgnf/compare/v0.0.5...v0.0.6) (2023-06-21)
 
 ### Bug Fixes

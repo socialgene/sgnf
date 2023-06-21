@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/socialgene/sgnf/compare/v0.1.0...v0.1.1) (2023-06-21)
+
+
+### Bug Fixes
+
+* python code for antismash.jsonl ([b97d5a2](https://github.com/socialgene/sgnf/commit/b97d5a27fb2c0f88d9df36a9939597069c3b7d92))
+
 ## [0.1.0](https://github.com/socialgene/sgnf/compare/v0.0.6...v0.1.0) (2023-06-21)
 
 

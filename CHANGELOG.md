@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/socialgene/sgnf/compare/v0.1.1...v0.1.2) (2023-06-21)
+
+
+### Bug Fixes
+
+* change default cov id ([#44](https://github.com/socialgene/sgnf/issues/44)) ([b344521](https://github.com/socialgene/sgnf/commit/b34452195c4c30994f9f0197232c5d27a3f1d809))
+
 ## [0.1.1](https://github.com/socialgene/sgnf/compare/v0.1.0...v0.1.1) (2023-06-21)
 
 

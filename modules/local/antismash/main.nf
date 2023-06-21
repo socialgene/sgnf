@@ -15,7 +15,6 @@ process ANTISMASH {
         container "chasemc2/sgnf-antismash:${workflow.manifest.version}"
     }
 
-
     input:
     path(sequence_input)
 
@@ -23,6 +22,7 @@ process ANTISMASH {
     path("${prefix}_regions.gbk.gz")    , emit: regions_gbk, optional:true
     path("${prefix}_regions.js.gz")     , emit: regions_json, optional:true
     path("${prefix}.tgz")               , emit: all, optional:true
+    path("${prefix}.jsonl")             , emit: jsonl, optional:true
     path "versions.yml"                 , emit: versions
 
     when:
@@ -48,6 +48,8 @@ process ANTISMASH {
 
     tar -C ${prefix} -cf - . | gzip -n --rsyncable > ${prefix}.tgz
     rm -r ${prefix}
+
+    antismash_to_jsonl.py --input_dir . --outpath ${prefix}.jsonl --ncpus $task.cpus
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

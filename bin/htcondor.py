@@ -11,6 +11,7 @@ import glob
 
 sg_env = sg_env | dict(os.environ)
 
+
 # need a custom delimter to avoid messing with the bash substitution
 class CustomTemplate(Template):
     delimiter = "%$%"

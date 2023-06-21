@@ -41,6 +41,8 @@ def find_tgz(input_dir):
 
 
 def extract(records):
+    if not records:
+        return
     assembly = None
     try:
         for i in records[0].get("dbxrefs"):

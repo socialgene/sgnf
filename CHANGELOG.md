@@ -2,10 +2,9 @@
 
 ## [0.0.6](https://github.com/socialgene/sgnf/compare/v0.0.5...v0.0.6) (2023-06-21)
 
-
 ### Bug Fixes
 
-* linters ([#38](https://github.com/socialgene/sgnf/issues/38)) ([8cc0ceb](https://github.com/socialgene/sgnf/commit/8cc0ceb103a0ea20b2b32c8612df162a65a25eb2))
+- linters ([#38](https://github.com/socialgene/sgnf/issues/38)) ([8cc0ceb](https://github.com/socialgene/sgnf/commit/8cc0ceb103a0ea20b2b32c8612df162a65a25eb2))
 
 ## [0.0.5](https://github.com/socialgene/sgnf/compare/v0.0.4...v0.0.5) (2023-06-19)
 

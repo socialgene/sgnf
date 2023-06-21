@@ -50,17 +50,13 @@ def extract(records):
         pass
     return {
         "assembly": assembly,
-        "records": [
-            {
-                record.get("id"): record.get("areas")
-                for record in records
-                if record.get("areas")
-            }
-        ],
+        "records": [{record.get("id"): record.get("areas") for record in records if record.get("areas")}],
     }
+
 
 def outerfun(one_path):
     return extract(read_json(one_path))
+
 
 def main():
     args = parser.parse_args()

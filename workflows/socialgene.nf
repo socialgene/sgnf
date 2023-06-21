@@ -249,6 +249,8 @@ workflow SOCIALGENE {
     */
     if (run_antismash){
         ANTISMASH(GENOME_HANDLING.out.ch_non_mibig_gbk_file)
+        // python script that creates the jsonl adds newline at end
+        ANTISMASH.out.jsonl.collectFile(name:"${params.outdir_neo4j}/import/antismash_results.jsonl", sort: 'hash', cache: true, newLine:false)
     }
 
     /*

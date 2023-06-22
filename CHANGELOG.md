@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.5](https://github.com/socialgene/sgnf/compare/v0.1.4...v0.1.5) (2023-06-22)
+
+
+### Bug Fixes
+
+* antismash and numeric types ([#49](https://github.com/socialgene/sgnf/issues/49)) ([744d955](https://github.com/socialgene/sgnf/commit/744d9553cedb38a9ca0b695c9f38c112a63453aa))
+
 ## [0.1.4](https://github.com/socialgene/sgnf/compare/v0.1.3...v0.1.4) (2023-06-22)
 
 

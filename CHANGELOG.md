@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.4](https://github.com/socialgene/sgnf/compare/v0.1.3...v0.1.4) (2023-06-22)
+
+
+### Bug Fixes
+
+* antismash ([#47](https://github.com/socialgene/sgnf/issues/47)) ([8a22868](https://github.com/socialgene/sgnf/commit/8a22868360c9ac10994ef7d5649af25e5d829576))
+
 ## [0.1.3](https://github.com/socialgene/sgnf/compare/v0.1.2...v0.1.3) (2023-06-21)
 
 

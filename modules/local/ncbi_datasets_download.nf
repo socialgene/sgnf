@@ -3,7 +3,6 @@ process NCBI_DATASETS_DOWNLOAD {
     // https://www.ncbi.nlm.nih.gov/datasets/docs/v1/
     label 'process_low'
     maxForks 1
-    errorStrategy 'ignore'
 
 
     if (params.sgnf_minimal_dockerimage) {

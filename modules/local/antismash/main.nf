@@ -19,11 +19,9 @@ process ANTISMASH {
     path(sequence_input)
 
     output:
-    path("${prefix}_regions.gbk.gz")    , emit: regions_gbk, optional:true
-    path("${prefix}_regions.js.gz")     , emit: regions_json, optional:true
-    path("${prefix}.tgz")               , emit: all, optional:true
-    path("${prefix}.jsonl")             , emit: jsonl, optional:true
-    path "versions.yml"                 , emit: versions
+    path("${prefix}_antismash_results.tar") , emit: all, optional:true
+    path("${prefix}.jsonl")                 , emit: jsonl, optional:true
+    path "versions.yml"                     , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -41,12 +39,18 @@ process ANTISMASH {
         --logfile $prefix/${prefix}.log \\
         $sequence_input
 
-    # SocialGene doesn't care about a bunch of the output, just save the genbank files and json
+    # SocialGene doesn't care about a bunch of the output, just save the genbank files and json and minimal web things for interactive
     find ${prefix} -name "*region*gbk"  -exec gzip -n --stdout {} +  > ${prefix}_regions.gbk.gz
+    find ${prefix} -name "${prefix}*.json" -exec gzip -n --stdout {} + > ${prefix}.json.gz
+    tar --remove-files -cvf ${prefix}_antismash_results.tar \
+        ${prefix}_regions.gbk.gz \
+        ${prefix}.json.gz \
+        ${prefix}/css \
+        ${prefix}/js \
+        ${prefix}/svg \
+        ${prefix}/index.html \
+        ${prefix}/regions.js
 
-    gzip -n --stdout "${prefix}/regions.js" > "${prefix}_regions.js.gz"
-
-    tar -C ${prefix} -cf - . | gzip -n --rsyncable > ${prefix}.tgz
     rm -r ${prefix}
 
     antismash_to_jsonl.py --input_dir . --outpath ${prefix}.jsonl --ncpus $task.cpus

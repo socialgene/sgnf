@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
-import json
 import argparse
-from multiprocessing import Pool
+import gzip
+import json
 import tarfile
+from multiprocessing import Pool
 from pathlib import Path
 
 parser = argparse.ArgumentParser(description="Extract from antismash json")
@@ -31,18 +32,16 @@ parser.add_argument(
 def read_json(input_path):
     with tarfile.open(input_path, "r") as tar:
         for member in tar:
-            if member.name.endswith("_genomic.json"):
-                f = tar.extractfile(member)
+            if member.name.endswith(".json.gz"):
+                f = gzip.GzipFile(fileobj=tar.extractfile(member))
                 return json.load(f).get("records")
 
 
 def find_tgz(input_dir):
-    return Path(input_dir).glob("*.tgz")
+    return Path(input_dir).glob("*.tar")
 
 
 def extract(records):
-    if not records:
-        return
     assembly = None
     try:
         for i in records[0].get("dbxrefs"):

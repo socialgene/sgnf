@@ -4,12 +4,7 @@ process NCBI_DATASETS_DOWNLOAD {
     label 'process_low'
     maxForks 1
 
-
-    if (params.sgnf_minimal_dockerimage) {
-        container "chasemc2/sgnf-minimal:${params.sgnf_minimal_dockerimage}"
-    } else {
-        container "chasemc2/sgnf-minimal:${workflow.manifest.version}"
-    }
+    container 'staphb/ncbi-datasets:15.2.0'
 
     input:
     val input_taxon
@@ -40,10 +35,6 @@ process NCBI_DATASETS_DOWNLOAD {
     unzip ncbi_dataset.zip
     datasets rehydrate --gzip --directory .
     rm ncbi_dataset.zip
-
-    # These GBFF don't contain the assembly accession, so socialgene will use the filename
-    # change the filename here:
-    rename_ncbi_datasets_download_taxon.py
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

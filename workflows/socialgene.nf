@@ -86,7 +86,6 @@ workflow SOCIALGENE {
 
     println "Manifest's pipeline version: $workflow.profile"
     ch_versions = Channel.empty()
-    ch_citations = Channel.empty()
 
     def hmmlist = []
     // if not `null`, hmmlist needs to be a list
@@ -282,7 +281,6 @@ workflow SOCIALGENE {
             .collect()
             .set{mmseqs2_ch}
         ch_versions = ch_versions.mix(MMSEQS2_CLUSTER.out.versions)
-        ch_citations = ch_citations.mix(MMSEQS2_CLUSTER.out.citations)
     } else {
         mmseqs2_ch = file("${baseDir}/assets/EMPTY_FILE")
     }

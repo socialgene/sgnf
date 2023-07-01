@@ -11,7 +11,7 @@ process MMSEQS2_CREATEDB {
     path(fasta)
 
     output:
-    path('mmseqs2_database*') , emit: mmseqs_database
+    path('mmseqs_100') , emit: mmseqs_database
     path "versions.yml"       , emit: versions
 
     when:
@@ -21,12 +21,15 @@ process MMSEQS2_CREATEDB {
     def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
     """
-    # mmseqs doesn't expect bgz
-    ln -s ${fasta} myfasta.gz
 
+    # Unfortunately we have to modify all fasta ids until mmseqs is fixed:
+    # https://github.com/soedinglab/MMseqs2/issues/557
+
+    seqkit replace  -w 0 -p ^ -r _mmseqs2_ ${fasta} > myfasta.faa
+    mkdir mmseqs_100
     mmseqs createdb \\
-        myfasta.gz \\
-        mmseqs2_database \\
+        myfasta.faa \\
+        mmseqs_100/mmseqs_100 \\
         --compressed 0 \\
         --createdb-mode 1 \\
         --write-lookup 1 \\
@@ -34,7 +37,7 @@ process MMSEQS2_CREATEDB {
         $args
 
     mmseqs createindex \
-        mmseqs2_database \
+        mmseqs_100/mmseqs_100 \
         tmp1 \\
         $args
 

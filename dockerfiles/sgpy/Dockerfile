@@ -17,7 +17,8 @@ LABEL MAINTAINER "Chase M. Clark chasingmicrobes@gmail.com"
 ################## INSTALLATION ######################
 ARG MAMBA_DOCKERFILE_ACTIVATE=1  # (otherwise python will not be found)
 
-RUN /opt/conda/bin/pip install socialgene==0.1.8
+#RUN /opt/conda/bin/pip install socialgene==0.1.8
+RUN /opt/conda/bin/pip install git+https://github.com/socialgene/sgpy@f224df576c2a74ec4d04589c77569f794a6b4419
 
 # Install ncbi-genome-download from here until https://github.com/kblin/ncbi-genome-download/issues/209 is fixed
 RUN /opt/conda/bin/pip install git+https://github.com/chasemc/ncbi-genome-download@4c5c24e27aa8123c7995890046b17b815da3571b

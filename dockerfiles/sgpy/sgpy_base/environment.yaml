@@ -32,4 +32,5 @@ dependencies:
   - conda-forge::openjdk>=17 # required by neo4j
   - conda-forge::procps-ng>=4.0 # required by nextflow
   - conda-forge::zip>=3.0
+  - conda-forge::bc>=1.07.1
 #  - bioconda::ncbi-genome-download==0.3.1 # removed until https://github.com/kblin/ncbi-genome-download/issues/209 is fixed

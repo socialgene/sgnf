@@ -1,5 +1,5 @@
 # Couldn't get github actions to cache the docker builds so this starts from a sgpy_base image
-FROM chasemc2/sgpy-base:1.0.0
+FROM chasemc2/sgpy-base:1.0.1
 ################## METADATA ######################
 LABEL software="socialgene"
 LABEL about.summary="Creating and interacting with graph databases of protein domains and their genome coordinates"

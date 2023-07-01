@@ -27,19 +27,20 @@ process MMSEQS2_CREATEDB {
 
     seqkit replace  -w 0 -p ^ -r _mmseqs2_ ${fasta} > myfasta.faa
     mkdir mmseqs_100
+
     mmseqs createdb \\
         myfasta.faa \\
         mmseqs_100/mmseqs_100 \\
-        --compressed 0 \\
-        --createdb-mode 1 \\
-        --write-lookup 1 \\
-        --dbtype 1 \\
+        --compressed 1 \\
+        --shuffle 0
         $args
 
     mmseqs createindex \
         mmseqs_100/mmseqs_100 \
         tmp1 \\
         $args
+    
+    rm -rf tmp1
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

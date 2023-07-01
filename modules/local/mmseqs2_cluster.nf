@@ -67,7 +67,26 @@ process MMSEQS2_CLUSTER {
         # have to modify fasta until mmseqs is fixed:
         # https://github.com/soedinglab/MMseqs2/issues/557
 
-        echo "10 && 5" | bc
+        temp='mmseqs_100/mmseqs_100'
+       
+
+        for i in ${params.mmseqsnums}
+            do 
+                echo \$temp
+                # scale input eg 90 to 0.90
+                transformed_id=\$(bc <<< "scale=1;(\$i/100)")
+
+                mkdir  mmseqs_\${i} clu_\${i}
+                mmseqs cluster \$temp clu_\${i}/clu_\${i} tmp --threads ${task.cpus}  --min-seq-id 0\${transformed_id} -c 0.8 --cov-mode 0 --cluster-mode 2 --remove-tmp-files --compressed 1
+                rm -r tmp
+                mmseqs createsubdb --subdb-mode 0 clu_\${i}/clu_\${i} \$temp mmseqs_\$i/mmseqs_\$i
+                mmseqs createtsv \$temp \$temp clu_\$i/clu_\$i mmseqs2_results_cluster_\$i.tsv --threads ${task.cpus}
+                sed -i "s/\$/\\tMMSEQS_\$i/ ; s/_mmseqs2_//g" mmseqs2_results_cluster_\$i.tsv
+                # make this DB the target of the next DB
+                temp="mmseqs_\${i}/mmseqs_\${i}"
+            done
+
+        cat mmseqs2_results_cluster*  >> concat.tsv
 
         md5_as_filename_after_gzip.sh 'concat.tsv'    'mmseqs2_results_cluster.tsv.gz'
         cat <<-END_VERSIONS > versions.yml

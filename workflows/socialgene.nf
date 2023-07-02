@@ -105,7 +105,7 @@ workflow SOCIALGENE {
     }
 
     run_blastp = params.htcondor ? false : params.blastp
-    run_mmseqs2 = params.htcondor ? false : params.mmseqs2
+    run_mmseqs2 = params.htcondor ? false : params.mmseqs_steps
     run_ncbi_taxonomy = params.htcondor ? false : params.ncbi_taxonomy
     run_build_database = params.htcondor ? false : params.build_database
     run_antismash = params.htcondor ? false : params.antismash

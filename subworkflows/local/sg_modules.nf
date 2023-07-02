@@ -13,7 +13,7 @@ workflow SG_MODULES {
     // start with an empty sg_modules + parameters
     sg_modules = ["parameters"]
     println hmmlist
-    if (false){
+    if (hmmlist){
         sg_modules.add("base_hmm")
         if (hmmlist.contains("tigrfam")){
             // This is module handles the tigrfam dta apart from just the HMM
@@ -29,7 +29,7 @@ workflow SG_MODULES {
     if (params.blastp){
         sg_modules.add("blastp")
     }
-    if (params.mmseqs2){
+    if (params.mmseqs_steps){
         sg_modules.add("mmseqs")
     }
     if (params.ncbi_taxonomy){

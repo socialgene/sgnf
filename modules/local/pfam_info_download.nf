@@ -18,8 +18,7 @@ process PFAM_INFO_DOWNLOAD {
     script:
     """
     wget "ftp://ftp.ebi.ac.uk/pub/databases/Pfam/current_release/Pfam-A.clans.tsv.gz"
-    gunzip Pfam-A.clans.tsv
-    md5_as_filename_after_gzip.sh "pfam_info.tsv" "pfam_info"
+    md5_as_filename.sh "Pfam-A.clans.tsv.gz" "pfam_info"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

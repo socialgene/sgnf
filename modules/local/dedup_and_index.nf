@@ -1,5 +1,6 @@
 process DEDUPLICATE_AND_INDEX_FASTA {
     label 'process_medium'
+    label 'process_high_memory'
 
     if (params.sgnf_sgpy_dockerimage) {
         container "chasemc2/sgnf-sgpy:${params.sgnf_sgpy_dockerimage}"
@@ -38,7 +39,6 @@ process DEDUPLICATE_AND_INDEX_FASTA {
     samtools \\
         faidx \\
         nr.faa.bgz
-
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

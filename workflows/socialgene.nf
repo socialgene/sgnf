@@ -86,7 +86,6 @@ workflow SOCIALGENE {
 
     println "Manifest's pipeline version: $workflow.profile"
     ch_versions = Channel.empty()
-    ch_citations = Channel.empty()
 
     def hmmlist = []
     // if not `null`, hmmlist needs to be a list
@@ -106,7 +105,7 @@ workflow SOCIALGENE {
     }
 
     run_blastp = params.htcondor ? false : params.blastp
-    run_mmseqs2 = params.htcondor ? false : params.mmseqs2
+    run_mmseqs2 = params.htcondor ? false : params.mmseqs_steps
     run_ncbi_taxonomy = params.htcondor ? false : params.ncbi_taxonomy
     run_build_database = params.htcondor ? false : params.build_database
     run_antismash = params.htcondor ? false : params.antismash
@@ -251,6 +250,8 @@ workflow SOCIALGENE {
         ANTISMASH(GENOME_HANDLING.out.ch_non_mibig_gbk_file)
         // python script that creates the jsonl adds newline at end
         ANTISMASH.out.jsonl.collectFile(name:"${params.outdir_neo4j}/import/antismash_results.jsonl", sort: 'hash', cache: true, newLine:false)
+        ANTISMASH.out.all.collectFile(name:"${params.outdir_per_run}/antismash_results/antismash_results.tar", sort: 'hash', cache: true, newLine:false)
+
     }
 
     /*
@@ -282,7 +283,6 @@ workflow SOCIALGENE {
             .collect()
             .set{mmseqs2_ch}
         ch_versions = ch_versions.mix(MMSEQS2_CLUSTER.out.versions)
-        ch_citations = ch_citations.mix(MMSEQS2_CLUSTER.out.citations)
     } else {
         mmseqs2_ch = file("${baseDir}/assets/EMPTY_FILE")
     }

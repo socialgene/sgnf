@@ -127,12 +127,6 @@
                     "description": "Storage directory for downloaded genomes",
                     "fa_icon": "fas fa-folder-open",
                     "hidden": true
-                },
-                "outdir_mmseqs2_cache": {
-                    "type": "string",
-                    "default": "socialgene_results/socialgene_per_run/mmseqs2_cache",
-                    "description": "Directory to save MMSEQs results will be saved to",
-                    "hidden": true
                 }
             }
         },
@@ -167,14 +161,14 @@
                     "default": true,
                     "description": "Should the Neo4j databse be created?"
                 },
-                "mmseqs2": {
-                    "type": "boolean",
-                    "description": "Run MMseqs2 on the input proteins?",
-                    "help_text": "https://github.com/soedinglab/MMseqs2"
-                },
                 "blastp": {
                     "type": "boolean",
                     "description": "Should all vs all  BLASTp be run? DO NOT RUN ON LARGE INPUT DATA WITHOUT STRICT FILTERS"
+                },
+                "mmseqs_steps": {
+                    "type": "string",
+                    "default": "None",
+                    "description": "Descending, space-delimited string of levels to cluster to- e.g. '90 80 70''"
                 },
                 "ncbi_taxonomy": {
                     "type": "boolean",
@@ -313,13 +307,13 @@
                 },
                 "HMMSEARCH_E": {
                     "type": "number",
-                    "default": 10.0,
+                    "default": 10,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 },
                 "HMMSEARCH_DOME": {
                     "type": "number",
-                    "default": 10.0,
+                    "default": 10,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 },

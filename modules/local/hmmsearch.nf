@@ -24,7 +24,7 @@ process HMMER_HMMSEARCH {
 
     if (has_cutoff)
         """
-        # hmmsearch can'ts use or pipe in gzipped fasta
+        # hmmsearch can'ts use or pipe in gzipped fasta TODO: can accept /dev/stdin?
 
         zcat "${fasta}" > temp.fa
 

@@ -1,5 +1,5 @@
 # Couldn't get github actions to cache the docker builds so this starts from a sgpy_base image
-FROM chasemc2/sgpy-base:1.0.0
+FROM chasemc2/sgpy-base:1.0.1
 ################## METADATA ######################
 LABEL software="socialgene"
 LABEL about.summary="Creating and interacting with graph databases of protein domains and their genome coordinates"
@@ -17,7 +17,8 @@ LABEL MAINTAINER "Chase M. Clark chasingmicrobes@gmail.com"
 ################## INSTALLATION ######################
 ARG MAMBA_DOCKERFILE_ACTIVATE=1  # (otherwise python will not be found)
 
-RUN /opt/conda/bin/pip install socialgene==0.1.8
+RUN /opt/conda/bin/pip install socialgene==0.1.9
+#RUN /opt/conda/bin/pip install git+https://github.com/socialgene/sgpy@f224df576c2a74ec4d04589c77569f794a6b4419
 
 # Install ncbi-genome-download from here until https://github.com/kblin/ncbi-genome-download/issues/209 is fixed
 RUN /opt/conda/bin/pip install git+https://github.com/chasemc/ncbi-genome-download@4c5c24e27aa8123c7995890046b17b815da3571b

@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/socialgene/sgnf/compare/v0.2.1...v0.2.2) (2023-07-03)
+
+
+### Bug Fixes
+
+* remove unused protein_info_table ([be4cb0d](https://github.com/socialgene/sgnf/commit/be4cb0d78d870c3628fbf74f840d2ca5a2f23c90))
+
 ## [0.2.1](https://github.com/socialgene/sgnf/compare/v0.2.0...v0.2.1) (2023-07-03)
 
 

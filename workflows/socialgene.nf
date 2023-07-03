@@ -178,7 +178,9 @@ workflow SOCIALGENE {
     if (params.hmmlist || params.custom_hmm_file){
 
 
-        if (params.fasta_splits > 1){
+        if (params.fasta_splits == 0){
+            ch_split_fasta = single_ch_fasta
+        } else {
             SEQKIT_SPLIT(
                 single_ch_fasta
                 )
@@ -187,9 +189,6 @@ workflow SOCIALGENE {
                 .fasta
                 .flatten()
                 .set{ch_split_fasta}
-
-        } else {
-            ch_split_fasta = single_ch_fasta
         }
 
         HMM_PREP(hmmlist)

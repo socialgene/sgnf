@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.4](https://github.com/socialgene/sgnf/compare/v0.2.3...v0.2.4) (2023-07-03)
+
+
+### Bug Fixes
+
+* fix configs for nf-tower use ([364a40d](https://github.com/socialgene/sgnf/commit/364a40d485b34da5262232916a32786bf96dd3e1))
+
 ## [0.2.3](https://github.com/socialgene/sgnf/compare/v0.2.2...v0.2.3) (2023-07-03)
 
 

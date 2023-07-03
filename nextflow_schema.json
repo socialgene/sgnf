@@ -83,8 +83,9 @@
                     "description": "File path of a custom HMMER hmm file"
                 },
                 "hmmlist": {
-                    "type": "array",
-                    "description": "[\"all\"] or some combination of [\"antismash\",\"amrfinder\",\"bigslice\",\"classiphage\",\"pfam\",\"prism\",\"resfams\",\"tigrfam\",\"virus_orthologous_groups\"]"
+                    "type": "string",
+                    "description": "Comma-separated string (e.g. 'antismash,amrfinder) or 'all', see extended help for all options",
+                    "help_text": "available_hmms=[\"antismash\",\"amrfinder\",\"bigslice\",\"classiphage\", \"ipresto\",\"pfam\",\"prism\",\"resfams\",\"tigrfam\",\"virus_orthologous_groups\"]\n"
                 },
                 "domtblout_path": {
                     "type": "string",

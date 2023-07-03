@@ -90,7 +90,12 @@ workflow SOCIALGENE {
     def hmmlist = []
     // if not `null`, hmmlist needs to be a list
     if( params.hmmlist instanceof String ) {
-        hmmlist.addAll([params.hmmlist])
+        hmm_list=params.hmmlist.split(',')
+        bro= hmm_list*.replaceAll("\\s","")
+        if (!bro.every { available_hmms.contains(it) }){
+                throw new Exception("Input hmm argument must be 'all' or a comma-separted string of: ${available_hmms}")
+        }
+        hmmlist.addAll(bro)
     } else {
         hmmlist.addAll(params.hmmlist)
     }

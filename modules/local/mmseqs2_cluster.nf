@@ -1,6 +1,7 @@
 process MMSEQS2_CLUSTER {
     label 'process_high'
     label 'process_high_memory'
+    label 'process_long'
 
     if (params.sgnf_sgpy_dockerimage) {
         container "chasemc2/sgnf-sgpy:${params.sgnf_sgpy_dockerimage}"

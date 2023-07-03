@@ -90,7 +90,12 @@ workflow SOCIALGENE {
     def hmmlist = []
     // if not `null`, hmmlist needs to be a list
     if( params.hmmlist instanceof String ) {
-        hmmlist.addAll([params.hmmlist])
+        hmm_list=params.hmmlist.split(',')
+        temp_hmmlist= hmm_list*.replaceAll("\\s","")
+        if (!temp_hmmlist.every { available_hmms.contains(it) }){
+                throw new Exception("Input hmm argument must be 'all' or a comma-separted string of: ${available_hmms}")
+        }
+        hmmlist.addAll(temp_hmmlist)
     } else {
         hmmlist.addAll(params.hmmlist)
     }
@@ -173,7 +178,9 @@ workflow SOCIALGENE {
     if (params.hmmlist || params.custom_hmm_file){
 
 
-        if (params.fasta_splits > 1){
+        if (params.fasta_splits == 0){
+            ch_split_fasta = single_ch_fasta
+        } else {
             SEQKIT_SPLIT(
                 single_ch_fasta
                 )
@@ -182,9 +189,6 @@ workflow SOCIALGENE {
                 .fasta
                 .flatten()
                 .set{ch_split_fasta}
-
-        } else {
-            ch_split_fasta = single_ch_fasta
         }
 
         HMM_PREP(hmmlist)

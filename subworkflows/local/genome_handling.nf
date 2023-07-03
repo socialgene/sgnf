@@ -73,17 +73,11 @@ workflow GENOME_HANDLING {
 
         ch_versions = ch_versions.mix(PROCESS_GENBANK_FILES.out.versions)
 
-        PROCESS_GENBANK_FILES.out.protein_info.set{protein_info}
-
     // sort by hash is needed for caching to work
     PROCESS_GENBANK_FILES.out.protein_ids
         .collectFile(name:'protein_ids.gz', sort: 'hash', cache: true)
         .map {[it.getSimpleName(), it]}
         .set{ch_protein_ids}
-    PROCESS_GENBANK_FILES.out.protein_info
-        .collectFile(name:'protein_info.gz', sort: 'hash', cache: true)
-        .map {[it.getSimpleName(), it]}
-        .set{ch_protein_info}
     PROCESS_GENBANK_FILES.out.protein_to_go
         .collectFile(name:'protein_to_go.gz', sort: 'hash', cache: true)
         .map {[it.getSimpleName(), it]}
@@ -116,7 +110,7 @@ workflow GENOME_HANDLING {
         ch_loci,
         ch_assembly)
 
-    ch_protein_to_dedup = ch_protein_ids.mix(ch_protein_info,ch_protein_to_go)
+    ch_protein_to_dedup = ch_protein_ids.mix(ch_protein_to_go)
 
 
 

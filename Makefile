@@ -39,7 +39,6 @@ install_python:
 chai:
 	nextflow run nextflow -profile chicago --build_database true --mode dev -resume --enable_conda true
 
-# sudo chown -R $(id -u):$(id -g) '/home/chase/Documents/socialgene_outdir/neo4j'
 
 ## nextflow_example: Run the example nextflow pipeline
 run_nextflow_example:
@@ -161,7 +160,7 @@ memrec:
 
 ## testnf: Run the test nextflow pipeline
 testnf:
-	nextflow run nextflow -profile test --outdir_per_run "/home/chase/temp/socialgene/outdir_per_run" --outdir_neo4j "/home/chase/temp/socialgene/outdir_neo4j" --outdir_long_cache "/home/chase/temp/socialgene/outdir_long_cache" -resume --fasta_splits 100
+	nextflow run nextflow -profile test --outdir_per_run "/tmp/socialgene/outdir_per_run" --outdir_neo4j "/tmp/socialgene/outdir_neo4j" --outdir_long_cache "/tmp/socialgene/outdir_long_cache" -resume --fasta_splits 100
 
 ## pytest	:	Run Python pacakge unit tests
 pytest:

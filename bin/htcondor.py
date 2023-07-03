@@ -243,7 +243,7 @@ Note: make sure it's the correct submit server!
 
 
 username='cmclark8'
-htcondor_dir='/home/chase/Documents/socialgene_data/ultraquickstart/htcondor_cache'
+htcondor_dir='/tmp/socialgene_data/ultraquickstart/htcondor_cache'
 
 scp  ${htcondor_dir}/* ${username}@submit2.chtc.wisc.edu:~${username}
 

@@ -96,8 +96,6 @@ workflow SOCIALGENE {
                 throw new Exception("Input hmm argument must be 'all' or a comma-separted string of: ${available_hmms}")
         }
         hmmlist.addAll(temp_hmmlist)
-    } else {
-        hmmlist.addAll(params.hmmlist)
     }
 
     if (hmmlist.contains("all")) {

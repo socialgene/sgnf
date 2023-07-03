@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/socialgene/sgnf/compare/v0.2.0...v0.2.1) (2023-07-03)
+
+
+### Bug Fixes
+
+* bump sgpy version ([186c4b1](https://github.com/socialgene/sgnf/commit/186c4b11371762d6412f29589e336899ef4d0bb2))
+
 ## [0.2.0](https://github.com/socialgene/sgnf/compare/v0.1.7...v0.2.0) (2023-07-03)
 
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.3](https://github.com/socialgene/sgnf/compare/v0.2.2...v0.2.3) (2023-07-03)
+
+
+### Bug Fixes
+
+* null hmmlist ([e65d199](https://github.com/socialgene/sgnf/commit/e65d1997da40a4d6a9c395373c07aeffcc4bf11e))
+
 ## [0.2.2](https://github.com/socialgene/sgnf/compare/v0.2.1...v0.2.2) (2023-07-03)
 
 

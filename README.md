@@ -68,3 +68,9 @@ This pipeline uses code and infrastructure developed and maintained by the [nf-c
 # Skip Setup and Launch on...
 
 This pipeline can be launched directly from [![Launch on Nextflow Tower](https://img.shields.io/badge/Nextflow%20Tower-%234256e7)](https://tower.nf/launch?pipeline=https://github.com/socialgene/sgnf) or [![Run an example with Gitpod](https://img.shields.io/badge/Gitpod-908a85?logo=gitpod)](https://gitpod.io/#https://github.com/socialgene/sgnf)
+
+
+# Schema
+
+![image](https://github.com/socialgene/sgnf/assets/18691127/36bcf534-3996-4b13-ba5d-f746830ada47)
+

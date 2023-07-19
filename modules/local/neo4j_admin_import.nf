@@ -41,6 +41,7 @@ process NEO4J_ADMIN_IMPORT {
     path 'data/*'                               , emit: data
     path 'logs/*'                               , emit: logs
     path 'plugins/*'                            , emit: plugins
+    path 'conf/*'                               , emit: conf
     path 'import.report'                        , emit: import_report
     path "versions.yml"                         , emit: versions
     path "command_to_build_neo4j_database.sh"   , emit: command_to_build_neo4j_database
@@ -83,9 +84,11 @@ process NEO4J_ADMIN_IMPORT {
 
     mv \${NEO4J_BASE_DIR}/data/* ./data/
     mv \${NEO4J_BASE_DIR}/logs/* ./logs/
-
+    
+    # Make directories so that Docker won't make them root later if missing.
     touch ./plugins/emptyfile
-
+    mkdir -p conf
+    touch ./conf/emptyfile
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

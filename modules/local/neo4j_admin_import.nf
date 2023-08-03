@@ -14,10 +14,10 @@ process NEO4J_ADMIN_IMPORT {
     beforeScript 'mkdir -p import data logs plugins conf'
     stageInMode 'symlink'
 
-    containerOptions "-v /data:/opt/conda/bin/neo4j/data"
-    containerOptions "-v /import:/opt/conda/bin/neo4j/import"
-    containerOptions "-v /logs:/opt/conda/bin/neo4j/logs"
-    containerOptions "-v /plugins:/opt/conda/bin/neo4j/plugins"
+    containerOptions "-v $PWD/data:/opt/conda/bin/neo4j/data"
+    containerOptions "-v $PWD/import:/opt/conda/bin/neo4j/import"
+    containerOptions "-v $PWD/logs:/opt/conda/bin/neo4j/logs"
+    containerOptions "-v $PWD/plugins:/opt/conda/bin/neo4j/plugins"
 
 
     input:
@@ -84,7 +84,7 @@ process NEO4J_ADMIN_IMPORT {
 
     mv \${NEO4J_BASE_DIR}/data/* ./data/
     mv \${NEO4J_BASE_DIR}/logs/* ./logs/
-    
+
     # Make directories so that Docker won't make them root later if missing.
     touch ./plugins/emptyfile
     mkdir -p conf

@@ -54,10 +54,10 @@ include { MD5_AS_FILENAME as MERGE_PARSED_DOMTBLOUT   } from '../modules/local/m
 ========================================================================================
 */
 
-include { NCBI_TAXONOMY        } from '../subworkflows/local/ncbi_taxonomy'
-include { GENOME_HANDLING           } from '../subworkflows/local/genome_handling'
-include { SG_MODULES                } from '../subworkflows/local/sg_modules'
-include { HMM_PREP                  } from '../subworkflows/local/hmm_prep'
+include { NCBI_TAXONOMY               } from '../subworkflows/local/ncbi_taxonomy'
+include { GENOME_HANDLING             } from '../subworkflows/local/genome_handling'
+include { SG_MODULES                  } from '../subworkflows/local/sg_modules'
+include { HMM_PREP                    } from '../subworkflows/local/hmm_prep'
 //include { HMM_RUN                   } from '../subworkflows/local/hmm_run'
 //include { HMM_OUTSOURCED            } from '../subworkflows/local/hmm_outsourced'
 

@@ -15,7 +15,6 @@ process TAXDUMP_PROCESS {
     path '*.taxid_to_taxid.gz'   , emit: taxid_to_taxid
     path "versions.yml" , emit: versions
 
-
     when:
     task.ext.when == null || task.ext.when
 

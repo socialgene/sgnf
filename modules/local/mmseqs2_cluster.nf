@@ -33,15 +33,15 @@ process MMSEQS2_CLUSTER {
 
         temp='mmseqs_100/mmseqs_100'
 
-
-        for i in ${params.mmseqs_steps}
+        IFS=, read -ra values <<< ${params.mmseqs_steps}
+        for i in "\${values[@]}"
             do
                 echo \$temp
                 # scale input eg 90 to 0.90
                 transformed_id=\$(bc <<< "scale=1;(\$i/100)")
 
                 mkdir  mmseqs_\${i} clu_\${i}
-                mmseqs cluster \$temp clu_\${i}/clu_\${i} tmp --threads ${task.cpus}  --min-seq-id 0\${transformed_id} -c 0.8 --cov-mode 0 --cluster-mode 2 --remove-tmp-files --compressed 1
+                mmseqs cluster \$temp clu_\${i}/clu_\${i} tmp --threads ${task.cpus}  --min-seq-id 0\${transformed_id} $args --remove-tmp-files --compressed 1
                 rm -r tmp
                 mmseqs createsubdb --subdb-mode 0 clu_\${i}/clu_\${i} \$temp mmseqs_\$i/mmseqs_\$i
                 mmseqs createtsv \$temp \$temp clu_\$i/clu_\$i mmseqs2_results_cluster_\$i.tsv --threads ${task.cpus}

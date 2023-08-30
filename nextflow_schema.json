@@ -70,7 +70,10 @@
                     "default": "socialgene_downloads"
                 }
             },
-            "required": ["outdir", "outdir_download_cache"]
+            "required": [
+                "outdir",
+                "outdir_download_cache"
+            ]
         },
         "input_hmms": {
             "title": "Input HMMs",
@@ -169,7 +172,7 @@
                 "mmseqs_steps": {
                     "type": "string",
                     "default": "None",
-                    "description": "Descending, space-delimited string of levels to cluster to- e.g. '90 80 70''"
+                    "description": "Descending, comma-delimited string of levels to cluster to- e.g. '90,80,70''"
                 },
                 "ncbi_taxonomy": {
                     "type": "boolean",

@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.2.5](https://github.com/socialgene/sgnf/compare/v0.2.4...v0.2.5) (2023-08-30)
+
+
+### Bug Fixes
+
+* args in mmseqs and change to comma-delimited ([5963bc7](https://github.com/socialgene/sgnf/commit/5963bc78cee22d9cdedf83fd0f3dfffd1375de79))
+* mac compatibility ([e968c7b](https://github.com/socialgene/sgnf/commit/e968c7b3759471b90ec988867e4b78fce4be33b1))
+* output an empty conf directory ([dce91cc](https://github.com/socialgene/sgnf/commit/dce91cc55cbb0e4619905ed3907e26247bb55cd2))
+
 ## [0.2.4](https://github.com/socialgene/sgnf/compare/v0.2.3...v0.2.4) (2023-07-03)
 
 

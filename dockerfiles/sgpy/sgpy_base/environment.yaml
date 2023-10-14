@@ -14,7 +14,7 @@ dependencies:
   - bioconda::hmmer==3.3.2
   - bioconda::mmseqs2==13.45111
   - bioconda::diamond==2.0.15
-  - conda-forge::ncbi-datasets-cli==14.13.2
+  - conda-forge::ncbi-datasets-cli=15.24
   - bioconda::tabix==1.11
   - bioconda::samtools==1.16.1
   # Not strictly pinned versions

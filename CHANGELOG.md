@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.6](https://github.com/socialgene/sgnf/compare/v0.2.5...v0.2.6) (2023-10-14)
+
+
+### Bug Fixes
+
+* update ncbi dataset cli ([e3af2b8](https://github.com/socialgene/sgnf/commit/e3af2b876eabfd8d27ded5ea6fe8abf90097bba2))
+
 ## [0.2.5](https://github.com/socialgene/sgnf/compare/v0.2.4...v0.2.5) (2023-08-30)
 
 

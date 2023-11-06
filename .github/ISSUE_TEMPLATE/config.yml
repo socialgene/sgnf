@@ -2,6 +2,6 @@ contact_links:
   - name: Join nf-core
     url: https://nf-co.re/join
     about: Please join the nf-core community here
-  - name: "Slack #socialgene channel"
-    url: https://nfcore.slack.com/channels/socialgene
-    about: Discussion about thesocialgene/sgnf pipeline
+  - name: "Slack #socialgene/sgnf channel"
+    url: https://nfcore.slack.com/channels/socialgene/sgnf
+    about: Discussion about the socialgene/sgnf pipeline

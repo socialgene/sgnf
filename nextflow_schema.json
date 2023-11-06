@@ -76,7 +76,10 @@
                     "default": "socialgene_downloads"
                 }
             },
-            "required": ["outdir", "outdir_download_cache"]
+            "required": [
+                "outdir",
+                "outdir_download_cache"
+            ]
         },
         "input_hmms": {
             "title": "Input HMMs",
@@ -226,7 +229,7 @@
                     "description": "Maximum amount of time that can be requested for any single job.",
                     "default": "240.h",
                     "fa_icon": "far fa-clock",
-                    "pattern": "^(\\d+\\.?\\s*(s|m|h|day)\\s*)+$",
+                    "pattern": "^(\\d+\\.?\\s*(s|m|h|d|day)\\s*)+$",
                     "help_text": "Used to set an upper-limit for the amount of time any single process is allowed to run. Should be a string in the format integer-unit e.g. `--max_time '2.h'`\n\nhttps://www.nextflow.io/docs/latest/process.html#time"
                 },
                 "slurm_queue_size": {
@@ -502,7 +505,7 @@
                     "fa_icon": "fas fa-check-square",
                     "hidden": true
                 },
-                "show_hidden_params": {
+                "validationShowHiddenParams": {
                     "type": "boolean",
                     "fa_icon": "far fa-eye-slash",
                     "description": "Show all params when using `--help`",

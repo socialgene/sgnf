@@ -1,9 +1,9 @@
 # socialgene/sgnf: Contributing Guidelines
 
 Hi there!
-Many thanks for taking an interest in improving socialgene/sgnf.
+Many thanks for taking an interest in improving socialgene.
 
-We try to manage the required tasks for socialgene/sgnf using GitHub issues, you probably came to this page when creating one.
+We try to manage the required tasks for socialgene using GitHub issues, you probably came to this page when creating one.
 Please use the pre-filled template to save time.
 
 However, don't be put off by this template - other more general issues and suggestions are welcome!
@@ -50,9 +50,10 @@ These tests are run both with the latest available version of `Nextflow` and als
 - Fix the bug, and bump version (X.Y.Z+1).
 - A PR should be made on `master` from patch to directly this particular bug.
 
+
 ## Pipeline contribution conventions
 
-To make the socialgene/sgnf code and processing logic more understandable for new contributors and to ensure quality, we semi-standardise the way the code and other contributions are written.
+To make SocialGene's Nextflow code and processing logic more understandable for new contributors and to ensure quality, we semi-standardise the way the code and other contributions are written.
 
 ### Adding a new step
 
@@ -110,4 +111,3 @@ To get started:
 Devcontainer specs:
 
 - [DevContainer config](.devcontainer/devcontainer.json)
-- [Dockerfile](.devcontainer/Dockerfile)

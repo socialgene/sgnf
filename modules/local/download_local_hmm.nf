@@ -20,10 +20,10 @@ process DOWNLOAD_LOCAL_HMM {
 
     script:
     """
-    # hmmconvert_loop.sh requires the file to end with '.hmm'
-    hmmconvert ${x} > "${x}_socialgene"
-    mkdir local
-    mv "${x}_socialgene" ./local/"${x}_socialgene"
+    mkdir -p local
+    mv "${x}" ./local/"${x}"
+    hmmconvert_loop.sh local
+
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -1,10 +1,18 @@
+----------------------------------------------------
+                                        ,--./,-.
+        ___     __   __   __   ___     /,-._.--~\\
+  |\\ | |__  __ /  ` /  \\ |__) |__         }  {
+  | \\| |       \\__, \\__/ |  \\ |___     \\`-._,-`-,
+                                        `._,._,'
+  nf-core/socialgenebro v${version}
+----------------------------------------------------
 Run Name: $runName
 
 <% if (success){
-    out << "## socialgene/sgnf execution completed successfully! ##"
+    out << "## nf-core/socialgenebro execution completed successfully! ##"
 } else {
     out << """####################################################
-## socialgene/sgnf execution completed unsuccessfully! ##
+## nf-core/socialgenebro execution completed unsuccessfully! ##
 ####################################################
 The exit status of the task that caused the workflow execution to fail was: $exitStatus.
 The full error message was:
@@ -27,5 +35,5 @@ Pipeline Configuration:
 <% out << summary.collect{ k,v -> " - $k: $v" }.join("\n") %>
 
 --
-socialgene/sgnf
-https://github.com/socialgene/sgnf
+nf-core/socialgenebro
+https://github.com/nf-core/socialgenebro

@@ -42,7 +42,6 @@ include { SEQKIT_SPLIT                                  } from '../modules/local
 include { HTCONDOR_PREP                                 } from '../modules/local/htcondor_prep'
 include { HMMER_HMMSEARCH                               } from '../modules/local/hmmsearch'
 include { HMMSEARCH_PARSE                               } from '../modules/local/hmmsearch_parse'
-include { INDEX_FASTA                                   } from '../modules/local/index_fasta'
 include { DOWNLOAD_CHEMBL_DATA                          } from '../modules/local/download_chembl_data'
 include { MD5_AS_FILENAME as MERGE_PARSED_DOMTBLOUT   } from '../modules/local/md5_as_filename'
 

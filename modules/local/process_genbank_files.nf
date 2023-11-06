@@ -31,7 +31,8 @@ process PROCESS_GENBANK_FILES {
     sg_process_genbank \\
         --sequence_files_glob "*.input_genome" \\
         --outdir '.' \\
-        --n_fasta_splits 1
+        --n_fasta_splits 1 \\
+        --defline_magic $params.defline_magic
 
     md5_as_filename_after_gzip.sh "protein_ids" "protein_ids.gz"
     md5_as_filename_after_gzip.sh "protein_to_go" "protein_to_go.gz"

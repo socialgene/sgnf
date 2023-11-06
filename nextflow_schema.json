@@ -48,6 +48,12 @@
                     "default": 50,
                     "description": "How many genbank files will be processed in a single task",
                     "help_text": "Decides how many parallel processes  will be used for genbank parsing; number of spawned parse processes = (# of input genomes) / (genbank_input_buffer)"
+                },
+                "defline_magic": {
+                    "type": "boolean",
+                    "help_text": "set to true if input fasta files contain uniprot deflines (sp| or tr|) (e.g. from uniprot fasta downloads) named defline_magic because may expand to other defline formats in the future",
+                    "description": "set to true if input fasta files contain uniprot deflines (sp| or tr|)",
+                    "hidden": true
                 }
             }
         },
@@ -70,10 +76,7 @@
                     "default": "socialgene_downloads"
                 }
             },
-            "required": [
-                "outdir",
-                "outdir_download_cache"
-            ]
+            "required": ["outdir", "outdir_download_cache"]
         },
         "input_hmms": {
             "title": "Input HMMs",
@@ -92,7 +95,6 @@
                 },
                 "domtblout_path": {
                     "type": "string",
-                    "default": "false",
                     "description": "Use externally-generated domtblout files. Please read the long description before using",
                     "help_text": "Use externally-generated domtblout files.\nThe models have to have the same name (identifier) as SocialGene expects, which is a SocialGene-generated hash of the HMM model"
                 }
@@ -171,7 +173,6 @@
                 },
                 "mmseqs_steps": {
                     "type": "string",
-                    "default": "None",
                     "description": "Descending, comma-delimited string of levels to cluster to- e.g. '90,80,70''"
                 },
                 "ncbi_taxonomy": {
@@ -280,7 +281,6 @@
                 },
                 "chembl_version": {
                     "type": "string",
-                    "default": "None",
                     "description": "Set (e.g. 31 for chembl version 31) to incorporate chembl into the database"
                 }
             }
@@ -511,7 +511,6 @@
                 },
                 "hook_url": {
                     "type": "string",
-                    "default": "None",
                     "hidden": true,
                     "description": "x"
                 },

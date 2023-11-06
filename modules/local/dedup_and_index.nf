@@ -40,6 +40,9 @@ process DEDUPLICATE_AND_INDEX_FASTA {
         faidx \\
         nr.faa.bgz
 
+    seqkit fx2tab nr.faa.bgz | gzip >  nr.faa.tsv
+
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         seqkit: \$(echo \$(seqkit 2>&1) | sed 's/^.*Version: //; s/ .*\$//')

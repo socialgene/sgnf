@@ -2,7 +2,7 @@
 
 # --rsyncable isn't always available in gzip
 
-for i in `find . -type f -iname "*.hmm"`
+for i in `find . -type f -iname "*.hmm" -o -iname "*.hmm.gz"`;
 do
     basename="${i##*/}"
     filepath="$(dirname $i)"

@@ -27,8 +27,7 @@ workflow HMM_PREP {
         }
 
         HMM_HASH(
-            GATHER_HMMS.out.hmms,
-            params.hmm_splits
+            GATHER_HMMS.out.hmms
         )
 
     emit:

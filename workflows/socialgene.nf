@@ -17,7 +17,7 @@ def summary_params = paramsSummaryMap(workflow)
 // Print parameter summary log to screen
 log.info logo + paramsSummaryLog(workflow) + citation
 
-Workflowsocialgene/sgnf.initialise(params, log)
+WorkflowSocialgene.initialise(params, log)
 
 /*
 
@@ -116,11 +116,11 @@ workflow SOCIALGENE {
         hmmlist.addAll(["local"])
     }
 
-    run_blastp = params.htcondor ? false : params.blastp
-    run_mmseqs2 = params.htcondor ? false : params.mmseqs_steps
-    run_ncbi_taxonomy = params.htcondor ? false : params.ncbi_taxonomy
-    run_build_database = params.htcondor ? false : params.build_database
-    run_antismash = params.htcondor ? false : params.antismash
+    run_blastp = params.htcondor ? false: params.blastp
+    run_mmseqs2 = params.htcondor ? false: params.mmseqs_steps
+    run_ncbi_taxonomy = params.htcondor ? false: params.ncbi_taxonomy
+    run_build_database = params.htcondor ? false: params.build_database
+    run_antismash = params.htcondor ? false: params.antismash
 
     SG_MODULES(hmmlist)
 
@@ -396,10 +396,10 @@ if (run_build_database) {
     ////////////////////////
     */
 
-    workflow_summary    = WorkflowSgnf.paramsSummaryMultiqc(workflow, summary_params)
+    workflow_summary    = WorkflowSocialgene.paramsSummaryMultiqc(workflow, summary_params)
     ch_workflow_summary = Channel.value(workflow_summary)
 
-    methods_description    = WorkflowSgnf.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description)
+    methods_description    = WorkflowSocialgene.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
     ch_methods_description = Channel.value(methods_description)
 
     ch_multiqc_files = Channel.empty()

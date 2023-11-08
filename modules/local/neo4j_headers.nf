@@ -15,16 +15,19 @@ process NEO4J_HEADERS {
     path "*", emit: headers
     path "versions.yml" , emit: versions
 
-
-
     when:
     task.ext.when == null || task.ext.when
 
     script:
     def sg_modules_delim = sg_modules ? sg_modules.join(' ') : '""'
     def hmm_s_delim = hmmlist ? hmmlist.join(' ') : '""'
+    def include_sequences = params.include_sequences ? "--include_sequences" : ""
     """
-    sg_export_neo4j_headers --outdir . --sg_modules ${sg_modules_delim}
+
+    sg_export_neo4j_headers \\
+        --outdir . \\
+        --sg_modules ${sg_modules_delim} \\
+        $include_sequences
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

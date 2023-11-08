@@ -10,7 +10,6 @@ process HMM_HASH {
 
     input:
     path hmm_directory
-    val hmm_splits
 
     output:
     path '*.hmminfo'                                    , emit: hmminfo
@@ -27,9 +26,7 @@ process HMM_HASH {
     """
     sg_clean_hmm \
         --input_dir . \
-        --outdir . \
-        --numoutfiles ${hmm_splits} \\
-        --splitcutoffs
+        --outdir .
 
     md5_as_filename_after_gzip.sh all.hmminfo all.hmminfo
     md5_as_filename_after_gzip.sh sg_hmm_nodes sg_hmm_nodes

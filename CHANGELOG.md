@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/socialgene/sgnf/compare/v0.2.6...v0.3.0) (2023-11-08)
+
+
+### Features
+
+* new release ([#69](https://github.com/socialgene/sgnf/issues/69)) ([2ae0668](https://github.com/socialgene/sgnf/commit/2ae0668921ac0987b54ae5bd5c710d9f2df6ca5c))
+
 ## [0.2.6](https://github.com/socialgene/sgnf/compare/v0.2.5...v0.2.6) (2023-10-14)
 
 

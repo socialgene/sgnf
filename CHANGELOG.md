@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.2](https://github.com/socialgene/sgnf/compare/v0.3.1...v0.3.2) (2023-11-08)
+
+
+### Bug Fixes
+
+* release-please ([682a161](https://github.com/socialgene/sgnf/commit/682a1612dbc4d6cfed6d3de082eb0db0f5e389c8))
+
+
+### Miscellaneous Chores
+
+* release 0.3.2 ([53f839f](https://github.com/socialgene/sgnf/commit/53f839faee7eb53ed786f9809df2250015d4c32b))
+
 ## [0.3.1](https://github.com/socialgene/sgnf/compare/v0.3.0...v0.3.1) (2023-11-08)
 
 

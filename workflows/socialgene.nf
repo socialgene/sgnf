@@ -4,12 +4,22 @@
 ========================================================================================
 */
 
-def summary_params = NfcoreSchema.paramsSummaryMap(workflow, params)
 
 
 
-// Validate input parameters
+
+include { paramsSummaryLog; paramsSummaryMap } from 'plugin/nf-validation'
+
+def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
+def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
+def summary_params = paramsSummaryMap(workflow)
+
+// Print parameter summary log to screen
+log.info logo + paramsSummaryLog(workflow) + citation
+
 WorkflowSocialgene.initialise(params, log)
+
+/*
 
 
 /*
@@ -42,7 +52,6 @@ include { SEQKIT_SPLIT                                  } from '../modules/local
 include { HTCONDOR_PREP                                 } from '../modules/local/htcondor_prep'
 include { HMMER_HMMSEARCH                               } from '../modules/local/hmmsearch'
 include { HMMSEARCH_PARSE                               } from '../modules/local/hmmsearch_parse'
-include { INDEX_FASTA                                   } from '../modules/local/index_fasta'
 include { DOWNLOAD_CHEMBL_DATA                          } from '../modules/local/download_chembl_data'
 include { MD5_AS_FILENAME as MERGE_PARSED_DOMTBLOUT   } from '../modules/local/md5_as_filename'
 
@@ -107,11 +116,11 @@ workflow SOCIALGENE {
         hmmlist.addAll(["local"])
     }
 
-    run_blastp = params.htcondor ? false : params.blastp
-    run_mmseqs2 = params.htcondor ? false : params.mmseqs_steps
-    run_ncbi_taxonomy = params.htcondor ? false : params.ncbi_taxonomy
-    run_build_database = params.htcondor ? false : params.build_database
-    run_antismash = params.htcondor ? false : params.antismash
+    run_blastp = params.htcondor ? false: params.blastp
+    run_mmseqs2 = params.htcondor ? false: params.mmseqs_steps
+    run_ncbi_taxonomy = params.htcondor ? false: params.ncbi_taxonomy
+    run_build_database = params.htcondor ? false: params.build_database
+    run_antismash = params.htcondor ? false: params.antismash
 
     SG_MODULES(hmmlist)
 
@@ -387,10 +396,10 @@ if (run_build_database) {
     ////////////////////////
     */
 
-    workflow_summary    = WorkflowSgnf.paramsSummaryMultiqc(workflow, summary_params)
+    workflow_summary    = WorkflowSocialgene.paramsSummaryMultiqc(workflow, summary_params)
     ch_workflow_summary = Channel.value(workflow_summary)
 
-    methods_description    = WorkflowSgnf.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description)
+    methods_description    = WorkflowSocialgene.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
     ch_methods_description = Channel.value(methods_description)
 
     ch_multiqc_files = Channel.empty()
@@ -418,6 +427,7 @@ workflow.onComplete {
     if (params.email || params.email_on_fail) {
         NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report)
     }
+    NfcoreTemplate.dump_parameters(workflow, params)
     NfcoreTemplate.summary(workflow, params, log)
     if (params.hook_url) {
         NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log)

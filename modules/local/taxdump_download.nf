@@ -11,11 +11,12 @@ process TAXDUMP_DOWNLOAD {
 
     script:
     """
-    rsync -a \
-        rsync://ftp.ncbi.nih.gov/pub/taxonomy/taxdump.tar.gz \
+    rsync -a \\
+        rsync://ftp.ncbi.nih.gov/pub/taxonomy/taxdump.tar.gz \\
         ./
-    rsync -a \
-        rsync://ftp.ncbi.nih.gov/pub/taxonomy/taxdump.tar.gz.md5 \
+
+    rsync -a \\
+        rsync://ftp.ncbi.nih.gov/pub/taxonomy/taxdump.tar.gz.md5 \\
         ./
 
     md5sum -c  taxdump.tar.gz.md5

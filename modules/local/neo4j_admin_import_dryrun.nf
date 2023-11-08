@@ -36,9 +36,7 @@ process NEO4J_ADMIN_IMPORT_DRYRUN {
     --cpus ${task.cpus} \\
     --additional_args "" \\
     --docker_version ${docker_version} \\
-    --uid None \\
     --docker \\
-    --gid None \\
     --sg_modules ${sg_modules_delim} \\
     --dryrun \\
     --dryrun_filepath "command_to_build_neo4j_database_with_docker.sh"
@@ -47,9 +45,7 @@ process NEO4J_ADMIN_IMPORT_DRYRUN {
     --neo4j_top_dir . \\
     --cpus ${task.cpus} \\
     --additional_args "" \\
-    --uid None \\
     --docker \\
-    --gid None \\
     --sg_modules ${sg_modules_delim} \\
     --dryrun \\
     --dryrun_filepath "command_to_build_neo4j_database.sh"

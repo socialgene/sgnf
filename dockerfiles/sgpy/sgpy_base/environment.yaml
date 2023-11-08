@@ -7,16 +7,16 @@ channels:
 
 dependencies:
   # Strictly pinned versions
-  - conda-forge::python==3.10
-  - bioconda::seqkit==2.3.0
+  - conda-forge::python==3.11
+  - bioconda::seqkit==2.5.1
   - hcc::aspera-cli==3.9.6 # bin/download_ncbi_taxon.sh
   - bioconda::entrez-direct==16.2 # bin/download_ncbi_taxon.sh
   - bioconda::hmmer==3.3.2
-  - bioconda::mmseqs2==13.45111
-  - bioconda::diamond==2.0.15
-  - conda-forge::ncbi-datasets-cli=15.24
+  - bioconda::mmseqs2==15.6f452
+  - bioconda::diamond==2.1.8
+  - conda-forge::ncbi-datasets-cli=15.27
   - bioconda::tabix==1.11
-  - bioconda::samtools==1.16.1
+  - bioconda::samtools==1.18
   # Not strictly pinned versions
   - conda-forge::pip>=23.1.2
   - conda-forge::biopython>=1.79
@@ -33,4 +33,4 @@ dependencies:
   - conda-forge::procps-ng>=4.0 # required by nextflow
   - conda-forge::zip>=3.0
   - conda-forge::bc>=1.07.1
-#  - bioconda::ncbi-genome-download==0.3.1 # removed until https://github.com/kblin/ncbi-genome-download/issues/209 is fixed
+  - bioconda::ncbi-genome-download>=0.3.3

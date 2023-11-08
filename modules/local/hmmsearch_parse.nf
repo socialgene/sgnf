@@ -20,14 +20,11 @@ process HMMSEARCH_PARSE {
     script:
     if (workflow.profile.contains("test"))
         """
-        for i in `find -L . -type f -iname "*.domtblout.gz"`
-        # note: sg_process_domtblout appends to the outpath file
-        # args is to provide "sort", for testing
-        do
-            sg_process_domtblout \\
-                --domtblout_file "\${i}" \\
-                --outpath "parseddomtblout_unsorted"
-        done
+        sg_process_domtblout \\
+                --input '.' \\
+                --glob '*.domtblout.gz' \\
+                --outpath "parseddomtblout_unsorted" \\
+                --cpus ${task.cpus}
 
         # sort so consistent for testing
         sort parseddomtblout_unsorted > parseddomtblout
@@ -44,14 +41,11 @@ process HMMSEARCH_PARSE {
         """
     else
         """
-        for i in `find -L . -type f -iname "*.domtblout.gz"`
-        # note: sg_process_domtblout appends to the outpath file
-        # args is to provide "sort", for testing
-        do
-            sg_process_domtblout \\
-                --domtblout_file "\${i}" \\
-                --outpath "parseddomtblout"
-        done
+        sg_process_domtblout \\
+            --input '.' \\
+            --glob '*.domtblout.gz' \\
+            --outpath "parseddomtblout" \\
+            --cpus ${task.cpus}
         md5_as_filename_after_gzip.sh "parseddomtblout" "parseddomtblout.gz"
 
         # remove empty files, which hash to -> 7029066c27ac6f5ef18d660d5741979a.parseddomtblout.gz

@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.3](https://github.com/socialgene/sgnf/compare/v0.3.2...v0.3.3) (2023-11-09)
+
+
+### Bug Fixes
+
+* neo4j docker Java must be pinned to jdk 17 ([25c0f32](https://github.com/socialgene/sgnf/commit/25c0f32c87eed59373ee3af582b57cb07ac2e8a0))
+* rm datasets file input, and fix version output since it changed in v15 ([d2c4d90](https://github.com/socialgene/sgnf/commit/d2c4d9070d45d2841099ee86715cb9d013d80726))
+
 ## [0.3.2](https://github.com/socialgene/sgnf/compare/v0.3.1...v0.3.2) (2023-11-08)
 
 

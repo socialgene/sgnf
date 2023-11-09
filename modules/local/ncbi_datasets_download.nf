@@ -6,13 +6,8 @@ process NCBI_DATASETS_DOWNLOAD {
 
     container 'staphb/ncbi-datasets:15.2.0'
 
-    input:
-    val input_taxon
-    path input_file
-
     output:
     path "ncbi_dataset/data/assembly_data_report.jsonl" , emit: assembly_data_report
-    path "ncbi_dataset/data/*/sequence_report.jsonl.gz" , emit: sequence_report
     path "ncbi_dataset/data/dataset_catalog.json"       , emit: dataset_catalog
     path "**/*.gbff.gz"                                 , emit: gbff_files
     path "versions.yml"                                 , emit: versions
@@ -23,11 +18,10 @@ process NCBI_DATASETS_DOWNLOAD {
 
     script:
     def args = task.ext.args ?: ''
-    def opt_input_file = input_file.name != 'NO_FILE' ? "--inputfile $input_file" : ''
     """
     # download a taxon
     datasets download \\
-        $input_taxon \\
+        $params.ncbi_datasets_command \\
         --dehydrated \\
         $args
 
@@ -38,7 +32,7 @@ process NCBI_DATASETS_DOWNLOAD {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        ncbi_datasets: \$(datasets version | sed 's/^ *//g')
+        ncbi_datasets: \$(datasets version 2>&1) | sed 's/^.*version: //; s/ .*\$//')
     END_VERSIONS
     """
 }

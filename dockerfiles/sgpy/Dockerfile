@@ -28,7 +28,6 @@ ENV PATH="/opt/conda/bin/neo4j/bin:$PATH:/opt/conda/condabin:/usr/local/bin:/usr
 ENV NEO4J_HOME='/opt/conda/bin/neo4j'
 ENV JAVA_HOME='/opt/conda'
 
-# WORKDIR $NEO4J_HOME
-WORKDIR '/opt/conda/bin/neo4j'
+WORKDIR $NEO4J_HOME
 
 

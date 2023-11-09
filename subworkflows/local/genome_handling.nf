@@ -48,14 +48,14 @@ workflow GENOME_HANDLING {
 
         if (params.ncbi_datasets_command){
 
-            if (!params.ncbi_datasets_file){
-                ch_opt_input_file = file("NO_FILE")
-            } else {
-                opt_input_file = file(params.ncbi_datasets_file)
-                ch_opt_input_file = Channel.fromList(opt_input_file.splitText( by: 5000 , compress:false, file:true))
-            }
+            // if (!params.ncbi_datasets_file){
+            //     ch_opt_input_file = file("NO_FILE")
+            // } else {
+            //     opt_input_file = file(params.ncbi_datasets_file)
+            //     ch_opt_input_file = Channel.fromList(opt_input_file.splitText( by: 5000 , compress:false, file:true))
+            // }
 
-            NCBI_DATASETS_DOWNLOAD(params.ncbi_datasets_command, ch_opt_input_file)
+            NCBI_DATASETS_DOWNLOAD()
             ch_gbk_file= ch_gbk_file.mix(NCBI_DATASETS_DOWNLOAD.out.gbff_files)
             ch_non_mibig_gbk_file= ch_non_mibig_gbk_file.mix(NCBI_DATASETS_DOWNLOAD.out.gbff_files)
             ch_versions = ch_versions.mix(NCBI_DATASETS_DOWNLOAD.out.versions)

@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.8](https://github.com/socialgene/sgnf/compare/v0.3.7...v0.3.8) (2023-11-10)
+
+
+### Bug Fixes
+
+* add option to not store antismash tar ([63ab839](https://github.com/socialgene/sgnf/commit/63ab839a17db138274e8775ef0033918cefec4f4))
+
 ## [0.3.7](https://github.com/socialgene/sgnf/compare/v0.3.6...v0.3.7) (2023-11-10)
 
 

@@ -4,7 +4,11 @@ process NCBI_DATASETS_DOWNLOAD {
     label 'process_low'
     maxForks 1
 
-    container 'staphb/ncbi-datasets:15.2.0'
+    if (params.sgnf_sgpy_dockerimage) {
+        container "chasemc2/sgnf-sgpy:${params.sgnf_sgpy_dockerimage}"
+    } else {
+        container "chasemc2/sgnf-sgpy:${workflow.manifest.version}"
+    }
 
     output:
     path "ncbi_dataset/data/assembly_data_report.jsonl" , emit: assembly_data_report
@@ -32,7 +36,7 @@ process NCBI_DATASETS_DOWNLOAD {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        ncbi_datasets: \$(datasets version 2>&1) | sed 's/^.*version: //; s/ .*\$//')
+        ncbi_datasets: \$(datasets version 2>&1 | sed 's/^.*version: //; s/ .*\$//')
     END_VERSIONS
     """
 }

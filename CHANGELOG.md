@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.7](https://github.com/socialgene/sgnf/compare/v0.3.6...v0.3.7) (2023-11-10)
+
+
+### Bug Fixes
+
+* slurm overwrite in custom configs ([f13c77f](https://github.com/socialgene/sgnf/commit/f13c77f3971a708903342fbc2c29813cd4ed004a))
+
 ## [0.3.6](https://github.com/socialgene/sgnf/compare/v0.3.5...v0.3.6) (2023-11-10)
 
 

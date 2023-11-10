@@ -27,7 +27,9 @@ process ANTISMASH {
     script:
     def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
-    prefix = task.ext.suffix ? "${task.ext.suffix}" : "${sequence_input.getSimpleName()}"
+    def prefix = task.ext.suffix ? "${task.ext.suffix}" : "${sequence_input.getSimpleName()}"
+    def keep_tar = params.antismash_tar ? "" : "rm ${prefix}_antismash_results.tar"
+
     """
     antismash \\
         $args \\
@@ -52,6 +54,8 @@ process ANTISMASH {
     rm -r ${prefix}
 
     antismash_to_jsonl.py --input_dir . --outpath ${prefix}.jsonl --ncpus $task.cpus
+
+    $keep_tar
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

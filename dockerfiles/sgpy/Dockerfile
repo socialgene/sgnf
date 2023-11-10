@@ -1,6 +1,6 @@
 # Couldn't get github actions to cache the docker builds so this starts from a sgpy_base image
 # x-release-please-start-version
-FROM chasemc2/sgpy-base:0.3.5
+FROM chasemc2/sgpy-base:0.3.6
 # x-release-please-end
 ################## METADATA ######################
 LABEL software="socialgene"

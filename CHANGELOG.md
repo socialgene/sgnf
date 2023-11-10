@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.3.4](https://github.com/socialgene/sgnf/compare/v0.3.3...v0.3.4) (2023-11-10)
+
+
+### Bug Fixes
+
+* move antismash cpus and mem to config ([1a74e81](https://github.com/socialgene/sgnf/commit/1a74e81ed09da0dd72bdc7803c9b4fe05082bbe7))
+* prevent antismash from erroring on seqs w/o proteins ([f7065d0](https://github.com/socialgene/sgnf/commit/f7065d0361cda8496e51e7aa5f023e2a810c2e76))
+* remove and comment out currently unused computation ([7677748](https://github.com/socialgene/sgnf/commit/7677748e0c30b883abae20d7c1c18c79ca290c4c))
+* update strep config ([ddd2299](https://github.com/socialgene/sgnf/commit/ddd2299357ddaaaae20145dee861f4f5fb34f901))
+
 ## [0.3.3](https://github.com/socialgene/sgnf/compare/v0.3.2...v0.3.3) (2023-11-09)
 
 

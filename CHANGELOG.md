@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.5](https://github.com/socialgene/sgnf/compare/v0.3.4...v0.3.5) (2023-11-10)
+
+
+### Bug Fixes
+
+* add antismash version to reports ([fc59e1c](https://github.com/socialgene/sgnf/commit/fc59e1c658f0e8426de06ca37308ad6ecf5e3239))
+* ncbi datasets ([138c9b8](https://github.com/socialgene/sgnf/commit/138c9b8fa0c2dd3c0a0b5de01a773fd4d3bfd630))
+
 ## [0.3.4](https://github.com/socialgene/sgnf/compare/v0.3.3...v0.3.4) (2023-11-10)
 
 

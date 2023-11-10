@@ -15,7 +15,7 @@ process DEDUPLICATE_AND_INDEX_FASTA {
 
     output:
     path "nr.faa.bgz"   , emit: fasta
-    path "*.fai"        , emit: fai
+    path "*.fai"        , emit: fai, optional: true
     path "*.gzi"        , emit: gzi, optional: true
     path 'versions.yml' , emit: versions
 
@@ -36,12 +36,10 @@ process DEDUPLICATE_AND_INDEX_FASTA {
                 bgzip \\
                 --threads ${task.cpus} \\
                 -c > nr.faa.bgz
-    samtools \\
-        faidx \\
-        nr.faa.bgz
-
-    seqkit fx2tab nr.faa.bgz | gzip >  nr.faa.tsv
-
+    # don't implement for now
+    # samtools \\
+    #     faidx \\
+    #     nr.faa.bgz
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

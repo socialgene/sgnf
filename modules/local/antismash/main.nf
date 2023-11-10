@@ -1,6 +1,4 @@
 process ANTISMASH {
-    cpus 1
-    memory { 5.GB * task.attempt * 1.5}
     // only retry if memory issue
     errorStrategy { task.exitStatus == 137 ? 'retry' : 'ignore' }
     maxRetries 3

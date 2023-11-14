@@ -10,7 +10,7 @@ esearch -db assembly -query $taxon \
     do
         fname1=$(echo $line | grep -o 'GCF_.*' | sed 's/$/_feature_table.txt.gz/') ;
         fname2=$(echo $line | grep -o 'GCF_.*' | sed 's/$/_protein.faa.gz/') ;
-        fpre=${line#"ftp://ftp.ncbi.nlm.nih.gov/"};
+        fpre=${line#"https://ftp.ncbi.nlm.nih.gov/"};
         echo "$fpre/$fname1" >> ftp_list_1;
         echo "$fpre/$fname2" >> ftp_list_2;
     done

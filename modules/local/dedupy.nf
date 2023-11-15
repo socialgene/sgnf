@@ -3,10 +3,10 @@ process DEDUPY {
     label 'process_low'
     tag "$x"
 
-    if (params.sgnf_minimal_dockerimage) {
-        container "chasemc2/sgnf-minimal:${params.sgnf_minimal_dockerimage}"
+    if (params.sgnf_sgpy_dockerimage) {
+        container "chasemc2/sgnf-sgpy:${params.sgnf_sgpy_dockerimage}"
     } else {
-        container "chasemc2/sgnf-minimal:${workflow.manifest.version}"
+        container "chasemc2/sgnf-sgpy:${workflow.manifest.version}"
     }
 
     input:
@@ -21,15 +21,12 @@ process DEDUPY {
 
     script:
     """
-    zcat 'input_file' |\
-        sort |\
-        uniq |
-        gzip -n -3 > "${x}"
-
-    md5_as_filename.sh "${x}" "${x}.gz"
-
+    dedupy.py 
+    
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
+        python: \$(python --version 2>&1 | tail -n 1 | sed 's/^Python //')
+        socialgene: \$(sg_version)
     END_VERSIONS
     """
 }

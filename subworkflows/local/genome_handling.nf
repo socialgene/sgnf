@@ -9,7 +9,7 @@ include { MIBIG_DOWNLOAD                    } from '../../modules/local/mibig_do
 include { NCBI_DATASETS_DOWNLOAD            } from '../../modules/local/ncbi_datasets_download'
 include { NCBI_GENOME_DOWNLOAD              } from '../../modules/local/ncbi_genome_download'
 include { PROCESS_GENBANK_FILES                 } from '../../modules/local/process_genbank_files'
-include { DEDUPY as DEDUPLICATE_GENOMIC_INFO    } from '../../modules/local/dedupy'
+include { DEDUPE as DEDUPLICATE_GENOMIC_INFO    } from '../../modules/local/dedupe'
 include { DEDUPY as DEDUPLICATE_PROTEIN_INFO    } from '../../modules/local/dedupy'
 
 

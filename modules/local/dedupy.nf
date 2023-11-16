@@ -1,6 +1,7 @@
 
 process DEDUPY {
     label 'process_low'
+    label 'process_high_memory'
     tag "$x"
 
     if (params.sgnf_sgpy_dockerimage) {
@@ -10,7 +11,7 @@ process DEDUPY {
     }
 
     input:
-    tuple val(x), path('input_file')
+    tuple val(x), path('input_file*')
 
     output:
     path "*.gz" , emit: deduped
@@ -21,7 +22,7 @@ process DEDUPY {
 
     script:
     """
-    dedupy.py 
+    dedupy.py $x
     
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

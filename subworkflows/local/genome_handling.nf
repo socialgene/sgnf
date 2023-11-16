@@ -75,12 +75,12 @@ workflow GENOME_HANDLING {
 
     // sort by hash is needed for caching to work
     PROCESS_GENBANK_FILES.out.protein_ids
-        .collectFile(name:'protein_ids.gz', sort: 'hash', cache: true)
-        .map {[it.getSimpleName(), it]}
+        .collect()
+        .map {["protein_ids", it]}
         .set{ch_protein_ids}
     PROCESS_GENBANK_FILES.out.protein_to_go
-        .collectFile(name:'protein_to_go.gz', sort: 'hash', cache: true)
-        .map {[it.getSimpleName(), it]}
+        .collect()
+        .map {["protein_to_go", it]}
         .set{ch_protein_to_go}
     PROCESS_GENBANK_FILES.out.locus_to_protein
         .collectFile(name:'locus_to_protein.gz', sort: 'hash', cache: true)

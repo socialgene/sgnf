@@ -53,6 +53,7 @@ with open("sample_matrix.csv", "a") as out_handle:
 
 input = """#!/bin/bash
 
+SECONDS=0
 # have job exit if any command returns with non-zero exit status (aka failure)
 set -e
 
@@ -118,6 +119,7 @@ mkdir nope
 mv input_fasta_file.faa nope/input_fasta_file.faa
 gzip -6 --rsyncable "${outfilename}.domtblout"
 md5sum "${outfilename}.domtblout.gz" > "${outfilename}.sg_md5"
+echo "$SECONDS"
 """
 
 result = CustomTemplate(input).substitute(sg_env)

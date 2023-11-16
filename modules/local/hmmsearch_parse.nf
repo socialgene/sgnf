@@ -20,6 +20,7 @@ process HMMSEARCH_PARSE {
     script:
     if (workflow.profile.contains("test"))
         """
+        export HMMSEARCH_IEVALUE=${params.HMMSEARCH_IEVALUE}
         sg_process_domtblout \\
                 --input '.' \\
                 --glob '*.domtblout.gz' \\
@@ -41,6 +42,7 @@ process HMMSEARCH_PARSE {
         """
     else
         """
+        export HMMSEARCH_IEVALUE=${params.HMMSEARCH_IEVALUE}
         sg_process_domtblout \\
             --input '.' \\
             --glob '*.domtblout.gz' \\

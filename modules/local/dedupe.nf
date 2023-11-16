@@ -23,7 +23,7 @@ process DEDUPE {
     """
     zcat 'input_file' |\
         sort |\
-        uniq |
+        uniq | \
         gzip -n -3 > "${x}"
 
     md5_as_filename.sh "${x}" "${x}.gz"

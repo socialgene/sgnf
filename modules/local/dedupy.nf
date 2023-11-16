@@ -23,7 +23,9 @@ process DEDUPY {
     script:
     """
     dedupy.py $x
-    
+
+    md5_as_filename_after_gzip.sh "${x}" "${x}.gz"
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         python: \$(python --version 2>&1 | tail -n 1 | sed 's/^Python //')

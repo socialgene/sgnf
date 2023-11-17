@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.11](https://github.com/socialgene/sgnf/compare/v0.3.10...v0.3.11) (2023-11-17)
+
+
+### Bug Fixes
+
+* update hmmsearch parsing ([7cc82b0](https://github.com/socialgene/sgnf/commit/7cc82b007270dba5f12887a237f0a3f3bd7eccd5))
+
 ## [0.3.10](https://github.com/socialgene/sgnf/compare/v0.3.9...v0.3.10) (2023-11-17)
 
 

@@ -243,7 +243,7 @@ workflow SOCIALGENE {
         }
 
         if (domtblout_ch){
-            HMMSEARCH_PARSE(domtblout_ch)
+            HMMSEARCH_PARSE(domtblout_ch.groupTuple())
             ch_parsed_domtblout_concat = HMMSEARCH_PARSE.out.parseddomtblout.collectFile(name: "parseddomtblout", sort: 'hash', cache: true)
             MERGE_PARSED_DOMTBLOUT(ch_parsed_domtblout_concat)
             hmmer_result_ch = MERGE_PARSED_DOMTBLOUT.out.outfile

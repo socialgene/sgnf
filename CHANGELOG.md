@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.10](https://github.com/socialgene/sgnf/compare/v0.3.9...v0.3.10) (2023-11-17)
+
+
+### Miscellaneous Chores
+
+* release 0.3.10 ([2a06777](https://github.com/socialgene/sgnf/commit/2a0677723337b0a2b09d44dd1d7e101a408a3f45))
+
 ## [0.3.9](https://github.com/socialgene/sgnf/compare/v0.3.8...v0.3.9) (2023-11-17)
 
 

@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.3.9](https://github.com/socialgene/sgnf/compare/v0.3.8...v0.3.9) (2023-11-17)
+
+
+### Bug Fixes
+
+* . ([227eed0](https://github.com/socialgene/sgnf/commit/227eed0bca1a7192c3f63b64d68f260e8c0071bc))
+* add control for HMMSEARCH_IEVALUE in hmmsearch parse ([0b5cf04](https://github.com/socialgene/sgnf/commit/0b5cf0432a9b6bd2aea43a56c23f51bd1dfa5320))
+* add job length to hcondor stdout ([a3741db](https://github.com/socialgene/sgnf/commit/a3741dbb16ece9c20594f32a63f16b31bb0d95d1))
+* add std cov for mmseqs ([9745704](https://github.com/socialgene/sgnf/commit/974570492907cb2f816f2a83356bb68d344e6549))
+* switch ncbi ftp to https ([7c3eb17](https://github.com/socialgene/sgnf/commit/7c3eb175b8a41d985365e0bd6bc6cb634a280a21))
+
 ## [0.3.8](https://github.com/socialgene/sgnf/compare/v0.3.7...v0.3.8) (2023-11-10)
 
 

@@ -13,7 +13,7 @@ process HMMER_HMMSEARCH {
     tuple val(has_cutoff), path(hmm), path(fasta)
 
     output:
-    path "*.domtblout.gz", emit: domtblout, optional:true //optional in case no domains found
+    tuple val(has_cutoff), path("*.domtblout.gz") , emit: domtblout, optional:true //optional in case no domains found
     path "versions.yml" , emit: versions
 
     when:
@@ -22,7 +22,7 @@ process HMMER_HMMSEARCH {
     script:
     def args = task.ext.args ?: ''
 
-    if (has_cutoff)
+    if (has_cutoff == "domtblout_with_ga")
         """
         # hmmsearch can'ts use or pipe in gzipped fasta TODO: can accept /dev/stdin?
 

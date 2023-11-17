@@ -213,25 +213,28 @@ workflow SOCIALGENE {
             ch_versions = ch_versions.mix(HTCONDOR_PREP.out.versions)
             domtblout_ch = false
         } else if (params.domtblout_path){
-            domtblout_ch = Channel.fromPath(params.domtblout_path)
+
+            Channel.fromPath(params.domtblout_with_ga)
+            .flatMap( it -> ["domtblout_with_ga", it])
+            .set{with_domtblout_ch}
+
+            Channel.fromPath(params.domtblout_without_ga)
+            .flatMap( it -> ["domtblout_without_ga", it])
+            .set{without_domtblout_ch}
+            domtblout_ch = with_domtblout_ch.mix(without_domtblout_ch)
+
         } else {
-            // create a channel that's the cartesian product of all hmm files and all fasta files
-            HMM_PREP.out.hmms_file_with_cutoffs.mix(HMM_PREP.out.hmms_file_without_cutoffs)
-                .combine(
-                    ch_split_fasta
-                        .flatten()
-                )
-                .set{ mixed_hmm_fasta_ch }
-            HMMER_HMMSEARCH(mixed_hmm_fasta_ch)
+            // create a channel that's the cartesian product of all hmm files and fasta files
+            HMM_PREP.out.domtblout_ch
+                .combine(ch_split_fasta.flatten())
+                .set{hmmprep_ch}
+            HMMER_HMMSEARCH(hmmprep_ch)
             ch_versions = ch_versions.mix(HMMER_HMMSEARCH.out.versions.last())
             domtblout_ch = HMMER_HMMSEARCH.out.domtblout
         }
 
         if (domtblout_ch){
-
-            HMMSEARCH_PARSE(domtblout_ch.buffer( size: 50, remainder: true ))
-
-
+            HMMSEARCH_PARSE(domtblout_ch)
             ch_parsed_domtblout_concat = HMMSEARCH_PARSE.out.parseddomtblout.collectFile(name: "parseddomtblout", sort: 'hash', cache: true)
             MERGE_PARSED_DOMTBLOUT(ch_parsed_domtblout_concat)
             hmmer_result_ch = MERGE_PARSED_DOMTBLOUT.out.outfile

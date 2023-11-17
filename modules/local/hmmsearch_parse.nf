@@ -8,7 +8,7 @@ process HMMSEARCH_PARSE {
     }
 
     input:
-    path domtblout
+    tuple val(has_cutoff), path(domtblout)
 
     output:
     path "*.parseddomtblout.gz", emit: parseddomtblout, optional:true //optional in case no domains found
@@ -17,7 +17,9 @@ process HMMSEARCH_PARSE {
     when:
     task.ext.when == null || task.ext.when
 
+    // TODO: combine if else and make the sort a param arg
     script:
+    def ievaluefilter = has_cutoff == "domtblout_with_ga" ? '' : '--ievaluefilter'
     if (workflow.profile.contains("test"))
         """
         export HMMSEARCH_IEVALUE=${params.HMMSEARCH_IEVALUE}
@@ -47,7 +49,9 @@ process HMMSEARCH_PARSE {
             --input '.' \\
             --glob '*.domtblout.gz' \\
             --outpath "parseddomtblout" \\
-            --cpus ${task.cpus}
+            --cpus ${task.cpus} \\
+            ${ievaluefilter}
+
         md5_as_filename_after_gzip.sh "parseddomtblout" "parseddomtblout.gz"
 
         # remove empty files, which hash to -> 7029066c27ac6f5ef18d660d5741979a.parseddomtblout.gz

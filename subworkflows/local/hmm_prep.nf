@@ -30,12 +30,28 @@ workflow HMM_PREP {
             GATHER_HMMS.out.hmms
         )
 
+        domtblout_ch = Channel.empty()
+
+        HMM_HASH.out.hmms_file_with_cutoffs
+            .map{
+                ["domtblout_with_ga", it]
+            }
+            .set{ch1}
+
+        HMM_HASH.out.hmms_file_without_cutoffs
+            .map{
+                ["domtblout_without_ga", it]
+            }
+            .set{ch2}
+
+        domtblout_ch.concat(ch1, ch2)
+                .set{domtblout_ch2}
+
     emit:
-        hmms_file_with_cutoffs      = HMM_HASH.out.hmms_file_with_cutoffs
-        hmms_file_without_cutoffs   = HMM_HASH.out.hmms_file_without_cutoffs
-        all_hmms                    = HMM_HASH.out.all_hmms
-        hmm_info                    = HMM_HASH.out.hmminfo
-        hmm_nodes                   = HMM_HASH.out.hmm_nodes
-        versions                    = ch_versions
-        tigr_ch                     = tigr_ch
+        domtblout_ch =domtblout_ch2
+        all_hmms     = HMM_HASH.out.all_hmms
+        hmm_info     = HMM_HASH.out.hmminfo
+        hmm_nodes    = HMM_HASH.out.hmm_nodes
+        versions     = ch_versions
+        tigr_ch      = tigr_ch
 }

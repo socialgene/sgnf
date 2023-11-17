@@ -199,7 +199,7 @@ workflow SOCIALGENE {
         }
 
         HMM_PREP(hmmlist)
-
+        domtblout_ch = Channel.empty()
         // either
         // 1) collect files to send to high throughput computing (outside of nf-workflow)
         // 2) use path to domtblout file
@@ -211,18 +211,27 @@ workflow SOCIALGENE {
             ch_split_fasta.collect().set{all_split_fasta}
             HTCONDOR_PREP(HMM_PREP.out.all_hmms, all_split_fasta)
             ch_versions = ch_versions.mix(HTCONDOR_PREP.out.versions)
-            domtblout_ch = false
-        } else if (params.domtblout_path){
-
-            Channel.fromPath(params.domtblout_with_ga)
-            .flatMap( it -> ["domtblout_with_ga", it])
-            .set{with_domtblout_ch}
-
-            Channel.fromPath(params.domtblout_without_ga)
-            .flatMap( it -> ["domtblout_without_ga", it])
-            .set{without_domtblout_ch}
-            domtblout_ch = with_domtblout_ch.mix(without_domtblout_ch)
-
+        } else if (params.domtblout_path || params.domtblout_with_ga || params.domtblout_without_ga){
+            // TODO: check that no paths are repeated between the param inputs
+            if (params.domtblout_with_ga){
+                Channel.fromPath(params.domtblout_with_ga)
+                    .map( it -> ["domtblout_with_ga", it])
+                    .set{aa}
+                domtblout_ch = domtblout_ch.concat(aa)
+            }
+            if (params.domtblout_without_ga){
+                Channel.fromPath(params.domtblout_without_ga)
+                    .map( it -> ["domtblout_without_ga", it])
+                    .set{bb}
+                domtblout_ch = domtblout_ch.concat(bb)
+            }
+            if (params.domtblout_path){
+                // domtblout_with_ga so no filtering will be performed
+                Channel.fromPath(params.domtblout_path)
+                    .map( it -> ["domtblout_without_ga", it])
+                    .set{cc}
+                domtblout_ch = domtblout_ch.concat(cc)
+            }
         } else {
             // create a channel that's the cartesian product of all hmm files and fasta files
             HMM_PREP.out.domtblout_ch

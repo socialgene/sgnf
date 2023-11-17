@@ -20,6 +20,7 @@ process HMMSEARCH_PARSE {
     // TODO: combine if else and make the sort a param arg
     script:
     def ievaluefilter = has_cutoff == "domtblout_with_ga" ? '' : '--ievaluefilter'
+    def ievaluefilter_text = has_cutoff == "domtblout_with_ga" ? 'cutga' : 'nocutga'
     if (workflow.profile.contains("test"))
         """
         export HMMSEARCH_IEVALUE=${params.HMMSEARCH_IEVALUE}
@@ -32,7 +33,7 @@ process HMMSEARCH_PARSE {
         # sort so consistent for testing
         sort parseddomtblout_unsorted > parseddomtblout
 
-        md5_as_filename_after_gzip.sh "parseddomtblout" "parseddomtblout.gz"
+        md5_as_filename_after_gzip.sh "parseddomtblout" "${ievaluefilter_text}.parseddomtblout.gz"
 
         # remove empty files, which hash to -> 7029066c27ac6f5ef18d660d5741979a.parseddomtblout.gz
         [ ! -e '7029066c27ac6f5ef18d660d5741979a.parseddomtblout.gz' ] || rm '7029066c27ac6f5ef18d660d5741979a.parseddomtblout.gz'
@@ -52,7 +53,7 @@ process HMMSEARCH_PARSE {
             --cpus ${task.cpus} \\
             ${ievaluefilter}
 
-        md5_as_filename_after_gzip.sh "parseddomtblout" "parseddomtblout.gz"
+        md5_as_filename_after_gzip.sh "parseddomtblout" "${ievaluefilter_text}.parseddomtblout.gz"
 
         # remove empty files, which hash to -> 7029066c27ac6f5ef18d660d5741979a.parseddomtblout.gz
         [ ! -e '7029066c27ac6f5ef18d660d5741979a.parseddomtblout.gz' ] || rm '7029066c27ac6f5ef18d660d5741979a.parseddomtblout.gz'

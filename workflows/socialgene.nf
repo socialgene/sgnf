@@ -273,7 +273,6 @@ workflow SOCIALGENE {
         ANTISMASH(GENOME_HANDLING.out.ch_non_mibig_gbk_file)
         // python script that creates the jsonl adds newline at end
         ANTISMASH.out.jsonl.collectFile(name:"${params.outdir_neo4j}/import/antismash_results.jsonl", sort: 'hash', cache: true, newLine:false)
-        ANTISMASH.out.all.collectFile(name:"${params.outdir_per_run}/antismash_results/antismash_results.tar", sort: 'hash', cache: true, newLine:false)
         ch_versions = ch_versions.mix(ANTISMASH.out.versions.first())
 
     }

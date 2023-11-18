@@ -9,9 +9,9 @@ from pathlib import Path
 
 parser = argparse.ArgumentParser(description="Extract from antismash json")
 parser.add_argument(
-    "--jsonpath",
+    "--input_dir",
     metavar="filepath",
-    help="path of json.gz",
+    help="path containing many tgz of antismash results",
     required=True,
 )
 parser.add_argument(
@@ -20,6 +20,25 @@ parser.add_argument(
     help="path to write jsonl",
     required=True,
 )
+
+parser.add_argument(
+    "--ncpus",
+    metavar="int",
+    help="ncpus",
+    required=True,
+)
+
+
+def read_json(input_path):
+    with tarfile.open(input_path, "r") as tar:
+        for member in tar:
+            if member.name.endswith(".json.gz"):
+                f = gzip.GzipFile(fileobj=tar.extractfile(member))
+                return json.load(f).get("records")
+
+
+def find_tgz(input_dir):
+    return Path(input_dir).glob("*.tar")
 
 
 def extract(records):
@@ -36,12 +55,16 @@ def extract(records):
     }
 
 
+def outerfun(one_path):
+    return extract(read_json(one_path))
+
+
 def main():
     args = parser.parse_args()
-    with open(args.outpath, "w") as outfile:
-        with gzip.open(args.jsonpath) as handle:
-            json.dump(extract(json.load(handle).get("records")), outfile)
-            outfile.write("\n")
+    with Pool(int(args.ncpus)) as pool:
+        with open(args.outpath, "w") as outfile:
+            for result in pool.imap(outerfun, find_tgz(args.input_dir)):
+                json.dump(result, outfile)
 
 
 if __name__ == "__main__":

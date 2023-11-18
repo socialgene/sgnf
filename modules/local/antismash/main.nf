@@ -1,4 +1,5 @@
 process ANTISMASH {
+    tag "$sequence_input"
     // only retry if memory issue
     errorStrategy { task.exitStatus == 137 ? 'retry' : 'ignore' }
     maxRetries 3
@@ -17,9 +18,10 @@ process ANTISMASH {
     path(sequence_input)
 
     output:
-    path("${prefix}_antismash_results.tar") , emit: all, optional:true
-    path("${prefix}.jsonl")                 , emit: jsonl, optional:true
-    path "versions.yml"                     , emit: versions
+    path("*.jsonl")             , emit: jsonl, optional:true
+    path("*.json.tar")          , emit: json, optional:true
+    path("*.regions.tar")       , emit: regions, optional:true
+    path "versions.yml"                 , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -28,7 +30,7 @@ process ANTISMASH {
     def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
     def prefix = task.ext.suffix ? "${task.ext.suffix}" : "${sequence_input.getSimpleName()}"
-    def keep_tar = params.antismash_tar ? "" : "rm ${prefix}_antismash_results.tar"
+    def keep_json = params.antismash_fulljson ? "" : "rm ${prefix}_antismash_results.tar"
 
     """
     antismash \\
@@ -40,22 +42,17 @@ process ANTISMASH {
         $sequence_input
 
     # SocialGene doesn't care about a bunch of the output, just save the genbank files and json and minimal web things for interactive
-    find ${prefix} -name "*region*gbk"  -exec gzip -n --stdout {} +  > ${prefix}_regions.gbk.gz
+    find ${prefix} -name "*region*gbk"  -exec gzip -n --stdout {} +  > ${prefix}.regions.gbk.gz
     find ${prefix} -name "${prefix}*.json" -exec gzip -n --stdout {} + > ${prefix}.json.gz
-    tar --remove-files -cvf ${prefix}_antismash_results.tar \
-        ${prefix}_regions.gbk.gz \
-        ${prefix}.json.gz \
-        ${prefix}/css \
-        ${prefix}/js \
-        ${prefix}/svg \
-        ${prefix}/index.html \
-        ${prefix}/regions.js
+
+    antismash_to_jsonl.py --jsonpath ${prefix}.json.gz --outpath ${prefix}.jsonl 
+
+    tar --remove-files -cvf ${prefix}.regions.tar ${prefix}.regions.gbk.gz
+    tar --remove-files -cvf ${prefix}.json.tar ${prefix}.json.gz
 
     rm -r ${prefix}
 
-    antismash_to_jsonl.py --input_dir . --outpath ${prefix}.jsonl --ncpus $task.cpus
-
-    $keep_tar
+    $keep_json
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

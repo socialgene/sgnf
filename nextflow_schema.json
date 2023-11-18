@@ -76,7 +76,10 @@
                     "default": "socialgene_downloads"
                 }
             },
-            "required": ["outdir", "outdir_download_cache"]
+            "required": [
+                "outdir",
+                "outdir_download_cache"
+            ]
         },
         "input_hmms": {
             "title": "Input HMMs",
@@ -166,10 +169,11 @@
                     "type": "boolean",
                     "description": "Include protein sequences in the Neo4j database?"
                 },
-                "antismash_tar": {
+                "antismash_fulljson": {
                     "type": "boolean",
-                    "description": "Keep antismash tar? Can take up a lot of space for large datasets",
-                    "hidden": true
+                    "description": "Keep full antismash output json? Can take up a lot of space for large datasets",
+                    "hidden": true,
+                    "default": true
                 }
             }
         },

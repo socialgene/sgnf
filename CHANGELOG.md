@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.4.0](https://github.com/socialgene/sgnf/compare/v0.3.12...v0.4.0) (2023-11-18)
+
+
+### Features
+
+* antismash 7 ([8178835](https://github.com/socialgene/sgnf/commit/8178835f9033d67100f20dc8073a3a056d6c6f18))
+
+
+### Bug Fixes
+
+* deprecate 6.1 antismash ([bda70d0](https://github.com/socialgene/sgnf/commit/bda70d0c7a319dead3d30f7adee83961268955bc))
+
 ## [0.3.12](https://github.com/socialgene/sgnf/compare/v0.3.11...v0.3.12) (2023-11-17)
 
 

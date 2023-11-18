@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.12](https://github.com/socialgene/sgnf/compare/v0.3.11...v0.3.12) (2023-11-17)
+
+
+### Bug Fixes
+
+* hmmparse ([4c771b9](https://github.com/socialgene/sgnf/commit/4c771b9d073b3cab699201bb9f4df6e284b55d18))
+
 ## [0.3.11](https://github.com/socialgene/sgnf/compare/v0.3.10...v0.3.11) (2023-11-17)
 
 

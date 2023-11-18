@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.1](https://github.com/socialgene/sgnf/compare/v0.4.0...v0.4.1) (2023-11-18)
+
+
+### Bug Fixes
+
+* change from tar to gz ([7dde2fd](https://github.com/socialgene/sgnf/commit/7dde2fdb72e1d5114ed8a0ddf981357205e0c75d))
+
 ## [0.4.0](https://github.com/socialgene/sgnf/compare/v0.3.12...v0.4.0) (2023-11-18)
 
 

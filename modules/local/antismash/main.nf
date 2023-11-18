@@ -18,10 +18,10 @@ process ANTISMASH {
     path(sequence_input)
 
     output:
-    path("*.jsonl")             , emit: jsonl, optional:true
-    path("*.json.tar")          , emit: json, optional:true
-    path("*.regions.tar")       , emit: regions, optional:true
-    path "versions.yml"                 , emit: versions
+    path("*.jsonl")            , emit: jsonl, optional:true
+    path("*.json.gz")          , emit: json, optional:true
+    path("*.regions.gbk.gz")       , emit: regions, optional:true
+    path "versions.yml"        , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -46,9 +46,6 @@ process ANTISMASH {
     find ${prefix} -name "${prefix}*.json" -exec gzip -n --stdout {} + > ${prefix}.json.gz
 
     antismash_to_jsonl.py --jsonpath ${prefix}.json.gz --outpath ${prefix}.jsonl 
-
-    tar --remove-files -cvf ${prefix}.regions.tar ${prefix}.regions.gbk.gz
-    tar --remove-files -cvf ${prefix}.json.tar ${prefix}.json.gz
 
     rm -r ${prefix}
 

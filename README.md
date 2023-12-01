@@ -44,8 +44,6 @@ If you would like to contribute to this pipeline, please see the [contributing g
 
 Chase M. Clark (and thus this project) was supported by an NLM training grant to the Computation and Informatics in Biology and Medicine Training Program (NLM 5T15LM007359)
 
-For further information or help, don't hesitate to get in touch on the [Slack `#socialgene/sgnf` channel](https://nfcore.slack.com/channels/socialgene/sgnf) (you can join with [this invite](https://nf-co.re/join/slack)).
-
 ## Citations
 
 An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.

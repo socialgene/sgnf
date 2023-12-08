@@ -44,8 +44,6 @@ If you would like to contribute to this pipeline, please see the [contributing g
 
 Chase M. Clark (and thus this project) was supported by an NLM training grant to the Computation and Informatics in Biology and Medicine Training Program (NLM 5T15LM007359)
 
-For further information or help, don't hesitate to get in touch on the [Slack `#socialgene/sgnf` channel](https://nfcore.slack.com/channels/socialgene/sgnf) (you can join with [this invite](https://nf-co.re/join/slack)).
-
 ## Citations
 
 An extensive list of references for the tools used by the pipeline can be found in the [`CITATIONS.md`](CITATIONS.md) file.
@@ -58,6 +56,8 @@ You can cite the `nf-core` publication as follows:
 > _Nat Biotechnol._ 2020 Feb 13. doi: [10.1038/s41587-020-0439-x](https://dx.doi.org/10.1038/s41587-020-0439-x).
 
 # Docker Images
+
+Docker image versions are synced via GitHub actions to be identical to the GitHub release version and the Nextflow pipline version
 
 [![DockerPulls](https://img.shields.io/static/v1?logo=docker&label=&message=sgnf-hmmer&color=blue)](https://hub.docker.com/repository/docker/chasemc2/sgnf-hmmer) ![DockerImageSize(latestbydate)](https://img.shields.io/docker/image-size/chasemc2/sgnf-hmmer) ![DockerImageVersion(latestsemver)](https://img.shields.io/docker/v/chasemc2/sgnf-hmmer) ![DockerPulls](https://img.shields.io/docker/pulls/chasemc2/sgnf-hmmer)
 

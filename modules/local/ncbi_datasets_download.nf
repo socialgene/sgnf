@@ -36,7 +36,8 @@ process NCBI_DATASETS_DOWNLOAD {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        ncbi_datasets: \$(datasets version 2>&1 | sed 's/^.*version: //; s/ .*\$//')
+        ncbi_datasets: \$(datasets version | sed 's/^.*version: //; s/ .*\$//')
     END_VERSIONS
+    
     """
 }

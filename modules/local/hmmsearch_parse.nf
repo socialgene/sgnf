@@ -1,5 +1,5 @@
 process HMMSEARCH_PARSE {
-    label 'process_medium'
+    label 'process_low'
 
     if (params.sgnf_sgpy_dockerimage) {
         container "chasemc2/sgnf-sgpy:${params.sgnf_sgpy_dockerimage}"

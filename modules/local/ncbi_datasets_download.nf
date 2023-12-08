@@ -34,10 +34,13 @@ process NCBI_DATASETS_DOWNLOAD {
     datasets rehydrate --gzip --directory .
     rm ncbi_dataset.zip
 
+    # rename gbff files to {assembly_accession}.gbff.gz
+    rename_ncbi_datasets_genome_files.py
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         ncbi_datasets: \$(datasets version | sed 's/^.*version: //; s/ .*\$//')
     END_VERSIONS
-    
+
     """
 }

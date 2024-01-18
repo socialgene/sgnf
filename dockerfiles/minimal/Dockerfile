@@ -1,5 +1,9 @@
-FROM python:alpine3.17
+FROM mambaorg/micromamba:1.1.0
 
-# Add ps, required by Nextflow and not contained in the neo4j image
-# add sha256sum, see: https://github.com/werf/werf/issues/1544#issuecomment-498661886
-RUN apk update && apk add bash procps wget coreutils gzip rsync curl
+COPY environment.yaml /tmp/env.yaml
+
+RUN micromamba install -y -n base -f /tmp/env.yaml && \
+    micromamba clean --all --yes
+
+USER $MAMBA_USER
+ARG MAMBA_DOCKERFILE_ACTIVATE=1

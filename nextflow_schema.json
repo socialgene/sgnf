@@ -57,8 +57,8 @@
                 }
             }
         },
-        "required_output_directories": {
-            "title": "Required Output Directories",
+        "output_directories": {
+            "title": "Output Directories",
             "type": "object",
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
@@ -679,7 +679,7 @@
             "$ref": "#/definitions/input_genomes"
         },
         {
-            "$ref": "#/definitions/required_output_directories"
+            "$ref": "#/definitions/output_directories"
         },
         {
             "$ref": "#/definitions/socialgene_parameters"

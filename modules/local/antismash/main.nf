@@ -30,7 +30,7 @@ process ANTISMASH {
     def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
     def prefix = task.ext.suffix ? "${task.ext.suffix}" : "${sequence_input.getSimpleName()}"
-    def keep_json = params.antismash_fulljson ? "" : "rm ${prefix}_antismash_results.tar"
+    def keep_json = params.antismash_fulljson ? "" : "rm ${prefix}.json.gz"
 
     """
     antismash \\
@@ -45,7 +45,7 @@ process ANTISMASH {
     find ${prefix} -name "*region*gbk"  -exec gzip -n --stdout {} +  > ${prefix}.regions.gbk.gz
     find ${prefix} -name "${prefix}*.json" -exec gzip -n --stdout {} + > ${prefix}.json.gz
 
-    antismash_to_jsonl.py --jsonpath ${prefix}.json.gz --outpath ${prefix}.jsonl 
+    antismash_to_jsonl.py --jsonpath ${prefix}.json.gz --outpath ${prefix}.jsonl
 
     rm -r ${prefix}
 

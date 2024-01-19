@@ -142,7 +142,7 @@
                     "type": "boolean",
                     "description": "Keep full antismash output json? Can take up a lot of space for large datasets",
                     "hidden": true,
-                    "default": true
+                    "default": false
                 }
             }
         },

@@ -66,7 +66,7 @@
                 "outdir": {
                     "type": "string",
                     "description": "If set, and others not, all other outdirs within this directory",
-                    "fa_icon": "fas fa-folder-open",
+                    "fa_icon": "fas fa-folder-open"
                 },
                 "outdir_download_cache": {
                     "type": "string",

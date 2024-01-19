@@ -374,7 +374,7 @@
                 },
                 "HMMSEARCH_F3": {
                     "type": "number",
-                    "default": 1e-5,
+                    "default": 0.00001,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 }
@@ -572,7 +572,7 @@
                     "description": "mode for publishing results form work directories"
                 },
                 "show_hidden_params": {
-                    "type": "string"
+                    "type": "boolean"
                 }
             }
         },
@@ -664,11 +664,11 @@
             "default": "",
             "properties": {
                 "validationFailUnrecognisedParams": {
-                    "type": "string",
+                    "type": "boolean",
                     "hidden": true
                 },
                 "validationLenientMode": {
-                    "type": "string",
+                    "type": "boolean",
                     "hidden": true
                 }
             }

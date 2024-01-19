@@ -4,13 +4,14 @@ This is the subworkflow that controls downloading and processing input genomes
 ========================================================================================
 */
 
-include { CRABHASH                  } from '../../modules/local/crabhash.nf'
-include { MIBIG_DOWNLOAD                    } from '../../modules/local/mibig_download'
-include { NCBI_DATASETS_DOWNLOAD            } from '../../modules/local/ncbi_datasets_download'
-include { NCBI_GENOME_DOWNLOAD              } from '../../modules/local/ncbi_genome_download'
+include { CRABHASH                              } from '../../modules/local/crabhash.nf'
+include { MIBIG_DOWNLOAD                        } from '../../modules/local/mibig_download'
+include { NCBI_DATASETS_DOWNLOAD                } from '../../modules/local/ncbi_datasets_download'
+include { NCBI_GENOME_DOWNLOAD                  } from '../../modules/local/ncbi_genome_download'
 include { PROCESS_GENBANK_FILES                 } from '../../modules/local/process_genbank_files'
 include { DEDUPE as DEDUPLICATE_GENOMIC_INFO    } from '../../modules/local/dedupe'
 include { DEDUPY as DEDUPLICATE_PROTEIN_INFO    } from '../../modules/local/dedupy'
+include { PROKKA                                } from '../../modules/nf-core/prokka/main'
 
 
 workflow GENOME_HANDLING {
@@ -48,18 +49,27 @@ workflow GENOME_HANDLING {
 
         if (params.ncbi_datasets_command){
 
-            // if (!params.ncbi_datasets_file){
-            //     ch_opt_input_file = file("NO_FILE")
-            // } else {
-            //     opt_input_file = file(params.ncbi_datasets_file)
-            //     ch_opt_input_file = Channel.fromList(opt_input_file.splitText( by: 5000 , compress:false, file:true))
-            // }
-
             NCBI_DATASETS_DOWNLOAD()
             ch_gbk_file= ch_gbk_file.mix(NCBI_DATASETS_DOWNLOAD.out.gbff_files)
             ch_non_mibig_gbk_file= ch_non_mibig_gbk_file.mix(NCBI_DATASETS_DOWNLOAD.out.gbff_files)
             ch_versions = ch_versions.mix(NCBI_DATASETS_DOWNLOAD.out.versions)
         }
+
+        if (params.local_fna) {
+            files = Channel.fromPath( params.local_fna )
+            println params.local_fna
+            files.map {
+                def meta = [:]
+                meta.id = it.getSimpleName()
+                [meta, it]
+                }
+               .set{ch_contigs}
+            PROKKA(ch_contigs, [], [])
+            ch_gbk_file = ch_gbk_file.mix(PROKKA.out.gbk)
+            ch_non_mibig_gbk_file = ch_non_mibig_gbk_file.mix(PROKKA.out.gbk)
+            ch_versions = ch_versions.mix(PROKKA.out.versions)
+        }
+
 
         if (fasta_ch) {
             gbk_and_fasta_ch = ch_gbk_file.mix(fasta_ch)

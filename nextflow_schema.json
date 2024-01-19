@@ -72,7 +72,8 @@
                     "type": "string",
                     "description": "Long term caching directory for use between different pipeline runs.",
                     "fa_icon": "fas fa-folder-open",
-                    "default": "${params.outdir}/socialgene_long_cache"
+                    "default": "${params.outdir}/socialgene_long_cache",
+                    "hidden": true
                 },
                 "outdir_per_run": {
                     "type": "string",

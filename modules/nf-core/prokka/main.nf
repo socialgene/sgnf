@@ -22,14 +22,20 @@ process PROKKA {
     prefix   = task.ext.prefix ?: "${meta.id}"
     def proteins_opt = proteins ? "--proteins ${proteins[0]}" : ""
     def prodigal_tf = prodigal_tf ? "--prodigaltf ${prodigal_tf[0]}" : ""
+    def is_compressed = fasta.getExtension() == "gz" ? true : false
+    def fasta_name = is_compressed ? fasta.getBaseName() : fasta
     """
+    if [ "${is_compressed}" == "true" ]; then
+        gzip -c -d ${fasta} > ${fasta_name}
+    fi
+
     prokka \\
         $args \\
         --cpus $task.cpus \\
         --prefix $prefix --fast \\
         $proteins_opt \\
         $prodigal_tf \\
-        $fasta
+        $fasta_name
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

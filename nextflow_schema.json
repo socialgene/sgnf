@@ -164,7 +164,7 @@
                 "hmmlist": {
                     "type": "string",
                     "description": "Comma-separated string (e.g. 'antismash,amrfinder) or 'all', see extended help for all options",
-                    "help_text": "available_hmms=[\"antismash\",\"amrfinder\",\"bigslice\",\"classiphage\", \"ipresto\",\"pfam\",\"prism\",\"resfams\",\"tigrfam\",\"virus_orthologous_groups\"]\n",
+                    "help_text": "antismash,amrfinder,bigslice,classiphage, ipresto,pfam,prism,resfams,tigrfam,virus_orthologous_groups",
                     "hidden": true
                 },
                 "mmseqs_steps": {

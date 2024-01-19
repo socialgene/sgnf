@@ -153,7 +153,6 @@ workflow SOCIALGENE {
     }
 
 
-PROKKA
 
     input_fasta_ch = chembl_fasta_ch.mix(local_faa_ch)
 

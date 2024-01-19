@@ -74,49 +74,7 @@
                     "description": "Long term caching directory for use between different pipeline runs.",
                     "fa_icon": "fas fa-folder-open",
                     "default": "socialgene_downloads"
-                }
-            },
-            "required": [
-                "outdir",
-                "outdir_download_cache"
-            ]
-        },
-        "input_hmms": {
-            "title": "Input HMMs",
-            "type": "object",
-            "description": "Any one or more of the following can be used to download/input HMMs for the pipeline",
-            "default": "",
-            "properties": {
-                "custom_hmm_file": {
-                    "type": "string",
-                    "description": "File path of a custom HMMER hmm file"
                 },
-                "hmmlist": {
-                    "type": "string",
-                    "description": "Comma-separated string (e.g. 'antismash,amrfinder) or 'all', see extended help for all options",
-                    "help_text": "available_hmms=[\"antismash\",\"amrfinder\",\"bigslice\",\"classiphage\", \"ipresto\",\"pfam\",\"prism\",\"resfams\",\"tigrfam\",\"virus_orthologous_groups\"]\n"
-                },
-                "domtblout_path": {
-                    "type": "string",
-                    "description": "Use externally-generated domtblout files. Please read the long description before using",
-                    "help_text": "Use externally-generated domtblout files.\nThe models have to have the same name (identifier) as SocialGene expects, which is a SocialGene-generated hash of the HMM model"
-                },
-                "domtblout_with_ga": {
-                    "type": "string",
-                    "description": "Path to hmmsearch results that used cutoffs"
-                },
-                "domtblout_without_ga": {
-                    "type": "string",
-                    "description": "Path to hmmsearch results that didn't use cutoffs"
-                }
-            }
-        },
-        "optional_directory_settings": {
-            "title": "Optional directory settings",
-            "type": "object",
-            "description": "These directories have defaults based on the --outdir parameter, change them if you want",
-            "default": "",
-            "properties": {
                 "outdir_per_run": {
                     "type": "string",
                     "description": "Directory that holds data generated each run",
@@ -131,6 +89,13 @@
                     "fa_icon": "fas fa-folder-open",
                     "hidden": true
                 },
+                "outdir_genomes": {
+                    "type": "string",
+                    "default": "socialgene_results/outdir_genomes",
+                    "description": "Storage directory for downloaded genomes",
+                    "fa_icon": "fas fa-folder-open",
+                    "hidden": true
+                },
                 "outdir_blast_cache": {
                     "type": "string",
                     "default": "socialgene_results/socialgene_per_run/blastp_cache",
@@ -138,17 +103,21 @@
                     "description": "Cache folder where blast results are written to. Important to delete if starting a new pipeline run with different input data but using same cache directory as a previous run.",
                     "hidden": true
                 },
-                "outdir_genomes": {
+                "tracedir": {
                     "type": "string",
-                    "default": "socialgene_results/outdir_genomes",
-                    "description": "Storage directory for downloaded genomes",
+                    "description": "Directory to keep pipeline Nextflow logs and reports.",
+                    "default": "${params.outdir}/pipeline_info",
                     "fa_icon": "fas fa-folder-open",
                     "hidden": true
                 }
-            }
+            },
+            "required": [
+                "outdir",
+                "outdir_download_cache"
+            ]
         },
         "socialgene_parameters": {
-            "title": "SocialGene parameters",
+            "title": "SocialGene Parameters",
             "type": "object",
             "description": "",
             "default": "",
@@ -167,7 +136,8 @@
                 },
                 "include_sequences": {
                     "type": "boolean",
-                    "description": "Include protein sequences in the Neo4j database?"
+                    "description": "Include protein sequences in the Neo4j database?",
+                    "default": true
                 },
                 "antismash_fulljson": {
                     "type": "boolean",
@@ -191,6 +161,12 @@
                 "blastp": {
                     "type": "boolean",
                     "description": "Should all vs all  BLASTp be run? DO NOT RUN ON LARGE INPUT DATA WITHOUT STRICT FILTERS"
+                },
+                "hmmlist": {
+                    "type": "string",
+                    "description": "Comma-separated string (e.g. 'antismash,amrfinder) or 'all', see extended help for all options",
+                    "help_text": "available_hmms=[\"antismash\",\"amrfinder\",\"bigslice\",\"classiphage\", \"ipresto\",\"pfam\",\"prism\",\"resfams\",\"tigrfam\",\"virus_orthologous_groups\"]\n",
+                    "hidden": true
                 },
                 "mmseqs_steps": {
                     "type": "string",
@@ -220,8 +196,8 @@
                 }
             }
         },
-        "max_job_resource_request_options": {
-            "title": "Max job resource request options",
+        "max_job_resources": {
+            "title": "Max Job Resources",
             "type": "object",
             "fa_icon": "fab fa-acquisitions-incorporated",
             "description": "Set the top limit for requested resources for any single job.",
@@ -230,14 +206,14 @@
                 "max_cpus": {
                     "type": "integer",
                     "description": "Maximum number of CPUs that can be requested for any single job.",
-                    "default": 16,
+                    "default": 8,
                     "fa_icon": "fas fa-microchip",
                     "help_text": "Used to set an upper-limit for the number of CPUs that can be used at once. Should be an integer e.g. `--max_cpus 1`\n\nhttps://www.nextflow.io/docs/latest/process.html#process-cpus"
                 },
                 "max_memory": {
                     "type": "string",
                     "description": "Maximum amount of memory that can be requested for any single job.",
-                    "default": "128.GB",
+                    "default": "24.GB",
                     "fa_icon": "fas fa-memory",
                     "pattern": "^\\d+(\\.\\d+)?\\.?\\s*(K|M|G|T)?B$",
                     "help_text": "Used to set an upper-limit for the memory any single process can use.  Should be a string in the format integer-unit e.g. `--max_memory '8.GB'`\n\nhttps://www.nextflow.io/docs/latest/process.html#process-memory"
@@ -245,7 +221,7 @@
                 "max_time": {
                     "type": "string",
                     "description": "Maximum amount of time that can be requested for any single job.",
-                    "default": "240.h",
+                    "default": "24.h",
                     "fa_icon": "far fa-clock",
                     "pattern": "^(\\d+\\.?\\s*(s|m|h|d|day)\\s*)+$",
                     "help_text": "Used to set an upper-limit for the amount of time any single process is allowed to run. Should be a string in the format integer-unit e.g. `--max_time '2.h'`\n\nhttps://www.nextflow.io/docs/latest/process.html#time"
@@ -258,51 +234,32 @@
                 }
             }
         },
-        "external_data_versions": {
-            "title": "External Data Versions",
+        "advanced_hmm_input": {
+            "title": "Advanced HMM Input",
             "type": "object",
-            "description": "",
+            "description": "Any one or more of the following can be used to download/input HMMs for the pipeline",
             "default": "",
             "properties": {
-                "amrfinder_version": {
+                "custom_hmm_file": {
                     "type": "string",
-                    "default": "2021-03-01.1",
-                    "hidden": true,
-                    "description": "Version of amrfinder to download/use"
-                },
-                "bigslice_version": {
-                    "type": "string",
-                    "default": "v1.0.0/bigslice-models.2020-04-27",
-                    "hidden": true,
-                    "description": "Version of bigslice to download/use"
-                },
-                "vog_version": {
-                    "type": "string",
-                    "default": "vog211",
-                    "hidden": true,
-                    "description": "Version of vog to download/use"
-                },
-                "tigrfam_version": {
-                    "type": "string",
-                    "default": "15.0",
-                    "hidden": true,
-                    "description": "Version of tigrfam to download/use"
-                },
-                "pfam_version": {
-                    "type": "string",
-                    "default": "35.0",
-                    "description": "PFAM version. Ffor version numbers see: http://ftp.ebi.ac.uk/pub/databases/Pfam/releases",
+                    "description": "File path of a custom HMMER hmm file",
                     "hidden": true
                 },
-                "antismash_hmms_git_sha": {
+                "domtblout_path": {
                     "type": "string",
-                    "default": "e2d777c6cd035e6bf20f7eec924a350b00b84c7b",
-                    "description": "Controls which version of antismash the antismash HMMS are pulled from",
+                    "description": "Use externally-generated domtblout files. Please read the long description before using",
+                    "help_text": "Use externally-generated domtblout files.\nThe models have to have the same name (identifier) as SocialGene expects, which is a SocialGene-generated hash of the HMM model",
                     "hidden": true
                 },
-                "chembl_version": {
+                "domtblout_with_ga": {
                     "type": "string",
-                    "description": "Set (e.g. 31 for chembl version 31) to incorporate chembl into the database"
+                    "description": "Path to hmmsearch results that used cutoffs",
+                    "hidden": true
+                },
+                "domtblout_without_ga": {
+                    "type": "string",
+                    "description": "Path to hmmsearch results that didn't use cutoffs",
+                    "hidden": true
                 }
             }
         },
@@ -316,7 +273,8 @@
                     "type": "string",
                     "default": "--cut_ga",
                     "description": "--cut_ga or --cut_nc or --cut_tc",
-                    "help_text": "From HMMER documentation:\nOptions controlling model-specific thresholding:\n\n--cut_ga : use profile's GA gathering cutoffs to set all thresholding\n\n--cut_nc : use profile's NC noise cutoffs to set all thresholding\n\n--cut_tc : use profile's TC trusted cutoffs to set all thresholding\n"
+                    "help_text": "From HMMER documentation:\nOptions controlling model-specific thresholding:\n\n--cut_ga : use profile's GA gathering cutoffs to set all thresholding\n\n--cut_nc : use profile's NC noise cutoffs to set all thresholding\n\n--cut_tc : use profile's TC trusted cutoffs to set all thresholding\n",
+                    "hidden": true
                 },
                 "HMMSEARCH_Z": {
                     "type": "integer",
@@ -376,6 +334,55 @@
                     "type": "number",
                     "default": 0.00001,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
+                    "hidden": true
+                }
+            }
+        },
+        "external_data_versions": {
+            "title": "External Data Versions",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "amrfinder_version": {
+                    "type": "string",
+                    "default": "2021-03-01.1",
+                    "hidden": true,
+                    "description": "Version of amrfinder to download/use"
+                },
+                "bigslice_version": {
+                    "type": "string",
+                    "default": "v1.0.0/bigslice-models.2020-04-27",
+                    "hidden": true,
+                    "description": "Version of bigslice to download/use"
+                },
+                "vog_version": {
+                    "type": "string",
+                    "default": "vog211",
+                    "hidden": true,
+                    "description": "Version of vog to download/use"
+                },
+                "tigrfam_version": {
+                    "type": "string",
+                    "default": "15.0",
+                    "hidden": true,
+                    "description": "Version of tigrfam to download/use"
+                },
+                "pfam_version": {
+                    "type": "string",
+                    "default": "35.0",
+                    "description": "PFAM version. Ffor version numbers see: http://ftp.ebi.ac.uk/pub/databases/Pfam/releases",
+                    "hidden": true
+                },
+                "antismash_hmms_git_sha": {
+                    "type": "string",
+                    "default": "e2d777c6cd035e6bf20f7eec924a350b00b84c7b",
+                    "description": "Controls which version of antismash the antismash HMMS are pulled from",
+                    "hidden": true
+                },
+                "chembl_version": {
+                    "type": "string",
+                    "description": "Set (e.g. 31 for chembl version 31) to incorporate chembl into the database",
                     "hidden": true
                 }
             }
@@ -507,13 +514,6 @@
                     "type": "boolean",
                     "description": "Do not use coloured log outputs.",
                     "fa_icon": "fas fa-palette",
-                    "hidden": true
-                },
-                "tracedir": {
-                    "type": "string",
-                    "description": "Directory to keep pipeline Nextflow logs and reports.",
-                    "default": "${params.outdir}/pipeline_info",
-                    "fa_icon": "fas fa-cogs",
                     "hidden": true
                 },
                 "validate_params": {
@@ -682,25 +682,22 @@
             "$ref": "#/definitions/required_output_directories"
         },
         {
-            "$ref": "#/definitions/input_hmms"
-        },
-        {
-            "$ref": "#/definitions/optional_directory_settings"
-        },
-        {
             "$ref": "#/definitions/socialgene_parameters"
         },
         {
             "$ref": "#/definitions/socialgene_modules"
         },
         {
-            "$ref": "#/definitions/max_job_resource_request_options"
+            "$ref": "#/definitions/max_job_resources"
         },
         {
-            "$ref": "#/definitions/external_data_versions"
+            "$ref": "#/definitions/advanced_hmm_input"
         },
         {
             "$ref": "#/definitions/hmmer_options"
+        },
+        {
+            "$ref": "#/definitions/external_data_versions"
         },
         {
             "$ref": "#/definitions/htcondor_specific_parameters"

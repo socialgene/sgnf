@@ -67,38 +67,37 @@
                     "type": "string",
                     "description": "If set, and others not, all other outdirs within this directory",
                     "fa_icon": "fas fa-folder-open",
-                    "default": "socialgene_results"
                 },
                 "outdir_download_cache": {
                     "type": "string",
                     "description": "Long term caching directory for use between different pipeline runs.",
                     "fa_icon": "fas fa-folder-open",
-                    "default": "socialgene_downloads"
+                    "default": "${params.outdir}/socialgene_long_cache"
                 },
                 "outdir_per_run": {
                     "type": "string",
                     "description": "Directory that holds data generated each run",
                     "fa_icon": "fas fa-folder-open",
-                    "default": "socialgene_results/socialgene_per_run",
+                    "default": "${params.outdir}/socialgene_per_run",
                     "hidden": true
                 },
                 "outdir_neo4j": {
                     "type": "string",
                     "description": "Path to the output directory where the results will be saved.",
-                    "default": "socialgene_results/socialgene_neo4j",
+                    "default": "${params.outdir}/socialgene_neo4j",
                     "fa_icon": "fas fa-folder-open",
                     "hidden": true
                 },
                 "outdir_genomes": {
                     "type": "string",
-                    "default": "socialgene_results/outdir_genomes",
+                    "default": "${params.outdir_per_run}",
                     "description": "Storage directory for downloaded genomes",
                     "fa_icon": "fas fa-folder-open",
                     "hidden": true
                 },
                 "outdir_blast_cache": {
                     "type": "string",
-                    "default": "socialgene_results/socialgene_per_run/blastp_cache",
+                    "default": "${params.outdir}/socialgene_per_run/blastp_cache",
                     "fa_icon": "fas fa-folder-open",
                     "description": "Cache folder where blast results are written to. Important to delete if starting a new pipeline run with different input data but using same cache directory as a previous run.",
                     "hidden": true
@@ -112,8 +111,7 @@
                 }
             },
             "required": [
-                "outdir",
-                "outdir_download_cache"
+                "outdir"
             ]
         },
         "socialgene_parameters": {
@@ -290,13 +288,13 @@
                 },
                 "HMMSEARCH_E": {
                     "type": "number",
-                    "default": 10,
+                    "default": 10.0,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 },
                 "HMMSEARCH_DOME": {
                     "type": "number",
-                    "default": 10,
+                    "default": 10.0,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 },
@@ -332,7 +330,7 @@
                 },
                 "HMMSEARCH_F3": {
                     "type": "number",
-                    "default": 0.00001,
+                    "default": 1e-5,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 }
@@ -570,9 +568,6 @@
                     "type": "string",
                     "default": "copy",
                     "description": "mode for publishing results form work directories"
-                },
-                "show_hidden_params": {
-                    "type": "boolean"
                 }
             }
         },

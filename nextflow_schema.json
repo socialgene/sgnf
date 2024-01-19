@@ -30,9 +30,13 @@
                     "description": "Path to local GenBank file(s), can be a glob",
                     "help_text": "Accepted files:\ngbff, gbk\nand gzipped versions of those\n"
                 },
-                "local_fasta": {
+                "local_faa": {
                     "type": "string",
                     "description": "Path to local protein FASTA file(s), can be a glob"
+                },
+                "local_fna": {
+                    "type": "string",
+                    "description": "Path to local assemblies in nucleotide format (to be annotated with Prokka)"
                 },
                 "paired_omics_json_path": {
                     "type": "string",
@@ -140,7 +144,7 @@
                     "type": "boolean",
                     "description": "Keep full antismash output json? Can take up a lot of space for large datasets",
                     "hidden": true,
-                    "default": false
+                    "default": true
                 }
             }
         },
@@ -287,13 +291,13 @@
                 },
                 "HMMSEARCH_E": {
                     "type": "number",
-                    "default": 10.0,
+                    "default": 10,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 },
                 "HMMSEARCH_DOME": {
                     "type": "number",
-                    "default": 10.0,
+                    "default": 10,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 },
@@ -380,7 +384,8 @@
                 "chembl_version": {
                     "type": "string",
                     "description": "Set (e.g. 31 for chembl version 31) to incorporate chembl into the database",
-                    "hidden": true
+                    "hidden": true,
+                    "default": "31"
                 }
             }
         },

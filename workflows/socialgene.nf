@@ -79,7 +79,6 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/local/custom/dumpsoft
 include { DIAMOND_BLASTP                } from '../modules/local/diamond/blastp/main'
 include { DIAMOND_MAKEDB                } from '../modules/local/diamond/makedb/main'
 include { MULTIQC                       } from '../modules/local/multiqc/main'
-
 /*
 ========================================================================================
     RUN MAIN WORKFLOW
@@ -147,13 +146,16 @@ workflow SOCIALGENE {
         chembl_fasta_ch = Channel.empty()
     }
 
-    if (params.local_fasta){
-        local_fasta_ch = Channel.fromPath(params.local_fasta)
+    if (params.local_faa){
+        local_faa_ch = Channel.fromPath(params.local_faa)
     } else {
-        local_fasta_ch = Channel.empty()
+        local_faa_ch = Channel.empty()
     }
 
-    input_fasta_ch = chembl_fasta_ch.mix(local_fasta_ch)
+
+PROKKA
+
+    input_fasta_ch = chembl_fasta_ch.mix(local_faa_ch)
 
     GENOME_HANDLING(input_fasta_ch)
     GENOME_HANDLING.out.ch_fasta.set{ch_fasta}

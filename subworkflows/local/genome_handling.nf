@@ -57,13 +57,14 @@ workflow GENOME_HANDLING {
 
         if (params.local_fna) {
             files = Channel.fromPath( params.local_fna )
-            println params.local_fna
-            files.map {
+            file.toSortedList().flatten().set{files_sorted}
+            files_sorted.map {
                 def meta = [:]
                 meta.id = it.getSimpleName()
                 [meta, it]
                 }
                .set{ch_contigs}
+
             PROKKA(ch_contigs, [], [])
             ch_gbk_file = ch_gbk_file.mix(PROKKA.out.gbk)
             ch_non_mibig_gbk_file = ch_non_mibig_gbk_file.mix(PROKKA.out.gbk)

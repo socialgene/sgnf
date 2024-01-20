@@ -33,7 +33,7 @@ workflow GATHER_HMMS {
                 "classiphage": '',
                 "ipresto": '',
                 "pfam": params.pfam_version,
-                "prism": '',
+                "prism": params.prism_hmms_git_sha,
                 "resfams": '',
                 "tigrfam": params.tigrfam_version,
                 "virus_orthologous_groups": params.vog_version,

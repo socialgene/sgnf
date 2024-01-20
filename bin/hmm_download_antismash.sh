@@ -2,9 +2,9 @@
 
 # wget handles the redirect
 git clone https://github.com/antismash/antismash.git
-cd antismash
-git switch $1
-cd ..
+pushd antismash
+git checkout -f $1
+popd
 
 cat <<-END_VERSIONS > versions.yml
 "antismash":

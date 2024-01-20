@@ -1,16 +1,24 @@
 #!/bin/bash
 
-mkdir prism
-cd prism
-wget -r -np -nH --no-check-certificate --cut-dirs=3 -R index.html https://magarveylab.ca/Skinnider_etal/models/hmm/
 
-cd ..
+# wget handles the redirect
+git clone https://github.com/magarveylab/prism-releases.git
+pushd prism-releases
+git checkout -f $1
 
+# not actually hmm files
+rm prism/WebContent/hmm/resistance/fosfomycin-fomA-Phosphotransferase.hmm
+rm prism/WebContent/hmm/resistance/fosfomycin-fomB-phosphotransferase.hmm
+# don't need
+rm prism/WebContent/tests/hmm/database.hmm
+popd
+
+mv ./prism-releases/prism ./prism
 
 cat <<-END_VERSIONS > versions.yml
 "prism":
-    version: '2017-03-21'
+    commit_sha: $1
     notice: 'Cannot be redistributed'
-    url: 'https://magarveylab.ca/Skinnider_etal/models/hmm/'
+    url: 'https://github.com/magarveylab/prism-releases/commit/$1'
     hmmconvert: \$(hmmconvert -h | grep -o '^# HMMER [0-9.]*' | sed 's/^# HMMER *//')
 END_VERSIONS

@@ -58,7 +58,7 @@ You can cite the `nf-core` publication as follows:
 
 # Docker Images
 
-Docker image versions are synced via GitHub actions to be identical to the GitHub release version and the Nextflow pipline version
+Docker image versions are synced via GitHub actions to be identical to the GitHub release version and the Nextflow pipeline version.
 
 [![DockerPulls](https://img.shields.io/static/v1?logo=docker&label=&message=sgnf-hmmer&color=blue)](https://hub.docker.com/repository/docker/chasemc2/sgnf-hmmer) ![DockerImageSize(latestbydate)](https://img.shields.io/docker/image-size/chasemc2/sgnf-hmmer) ![DockerImageVersion(latestsemver)](https://img.shields.io/docker/v/chasemc2/sgnf-hmmer) ![DockerPulls](https://img.shields.io/docker/pulls/chasemc2/sgnf-hmmer)
 

@@ -111,9 +111,7 @@
                     "hidden": true
                 }
             },
-            "required": [
-                "outdir"
-            ]
+            "required": ["outdir"]
         },
         "socialgene_parameters": {
             "title": "SocialGene Parameters",

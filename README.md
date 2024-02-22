@@ -1,6 +1,7 @@
 > Note: All releases may introduce breaking changes until the release of v1.0.0
 
 [![Launch on Nextflow Tower](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Nextflow%20Tower-%234256e7)](https://tower.nf/launch?pipeline=https://github.com/socialgene/sgnf)
+
 <!-- [![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX) -->
  <!-- [![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)  -->
 <!-- [![GitHub Actions CI Status](https://github.com/socialgene/sgnf/workflows/nf-core%20CI/badge.svg)](https://github.com/socialgene/sgnf/actions?query=workflow%3A%22nf-core+CI%22)
@@ -73,8 +74,6 @@ Docker image versions are synced via GitHub actions to be identical to the GitHu
 
 This pipeline can be launched directly from [![Launch on Nextflow Tower](https://img.shields.io/badge/Nextflow%20Tower-%234256e7)](https://tower.nf/launch?pipeline=https://github.com/socialgene/sgnf) or [![Run an example with Gitpod](https://img.shields.io/badge/Gitpod-908a85?logo=gitpod)](https://gitpod.io/#https://github.com/socialgene/sgnf)
 
-
 # Schema
 
 ![image](https://github.com/socialgene/sgnf/assets/18691127/36bcf534-3996-4b13-ba5d-f746830ada47)
-

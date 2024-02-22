@@ -1,257 +1,366 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="generator" content="quarto-1.1.251" />
 
-<meta charset="utf-8">
-<meta name="generator" content="quarto-1.1.251">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>contributing</title>
+    <style>
+      code {
+        white-space: pre-wrap;
+      }
+      span.smallcaps {
+        font-variant: small-caps;
+      }
+      div.columns {
+        display: flex;
+        gap: min(4vw, 1.5em);
+      }
+      div.column {
+        flex: auto;
+        overflow-x: auto;
+      }
+      div.hanging-indent {
+        margin-left: 1.5em;
+        text-indent: -1.5em;
+      }
+      ul.task-list {
+        list-style: none;
+      }
+      ul.task-list li input[type="checkbox"] {
+        width: 0.8em;
+        margin: 0 0.8em 0.2em -1.6em;
+        vertical-align: middle;
+      }
+    </style>
 
+    <script src="CONTRIBUTING_files/libs/clipboard/clipboard.min.js"></script>
+    <script src="CONTRIBUTING_files/libs/quarto-html/quarto.js"></script>
+    <script src="CONTRIBUTING_files/libs/quarto-html/popper.min.js"></script>
+    <script src="CONTRIBUTING_files/libs/quarto-html/tippy.umd.min.js"></script>
+    <script src="CONTRIBUTING_files/libs/quarto-html/anchor.min.js"></script>
+    <link href="CONTRIBUTING_files/libs/quarto-html/tippy.css" rel="stylesheet" />
+    <link
+      href="CONTRIBUTING_files/libs/quarto-html/quarto-syntax-highlighting.css"
+      rel="stylesheet"
+      id="quarto-text-highlighting-styles"
+    />
+    <script src="CONTRIBUTING_files/libs/bootstrap/bootstrap.min.js"></script>
+    <link href="CONTRIBUTING_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet" />
+    <link
+      href="CONTRIBUTING_files/libs/bootstrap/bootstrap.min.css"
+      rel="stylesheet"
+      id="quarto-bootstrap"
+      data-mode="light"
+    />
+  </head>
 
-<title>contributing</title>
-<style>
-code{white-space: pre-wrap;}
-span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
-div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-ul.task-list{list-style: none;}
-ul.task-list li input[type="checkbox"] {
-  width: 0.8em;
-  margin: 0 0.8em 0.2em -1.6em;
-  vertical-align: middle;
-}
-</style>
-
-
-<script src="CONTRIBUTING_files/libs/clipboard/clipboard.min.js"></script>
-<script src="CONTRIBUTING_files/libs/quarto-html/quarto.js"></script>
-<script src="CONTRIBUTING_files/libs/quarto-html/popper.min.js"></script>
-<script src="CONTRIBUTING_files/libs/quarto-html/tippy.umd.min.js"></script>
-<script src="CONTRIBUTING_files/libs/quarto-html/anchor.min.js"></script>
-<link href="CONTRIBUTING_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="CONTRIBUTING_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="CONTRIBUTING_files/libs/bootstrap/bootstrap.min.js"></script>
-<link href="CONTRIBUTING_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="CONTRIBUTING_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
-
-
-</head>
-
-<body class="fullcontent">
-
-<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
-
-<main class="content" id="quarto-document-content">
-
-
-
-<section id="socialgenesgnf-contributing-guidelines" class="level1">
-<h1>socialgene/sgnf: Contributing Guidelines</h1>
-<p>Hi there! Many thanks for taking an interest in improving socialgene.</p>
-<p>We try to manage the required tasks for socialgene using GitHub issues, you probably came to this page when creating one. Please use the pre-filled template to save time.</p>
-<p>However, don’t be put off by this template - other more general issues and suggestions are welcome! Contributions to the code are even more welcome ;)</p>
-<section id="contribution-workflow" class="level2">
-<h2 class="anchored" data-anchor-id="contribution-workflow">Contribution workflow</h2>
-<p>If you’d like to write some code for socialgene/sgnf, the standard workflow is as follows:</p>
-<ol type="1">
-<li>Check that there isn’t already an issue about your idea in the <a href="https://github.com/socialgene/sgnf/issues">socialgene/sgnf issues</a> to avoid duplicating work. If there isn’t one already, please create one so that others know you’re working on this</li>
-<li><a href="https://help.github.com/en/github/getting-started-with-github/fork-a-repo">Fork</a> the <a href="https://github.com/socialgene/sgnf">socialgene/sgnf repository</a> to your GitHub account</li>
-<li>Make the necessary changes / additions within your forked repository following <a href="#pipeline-contribution-conventions">Pipeline conventions</a></li>
-<li>Use <code>nf-core schema build</code> and add any new parameters to the pipeline JSON schema (requires <a href="https://github.com/nf-core/tools">nf-core tools</a> &gt;= 1.10).</li>
-<li>Submit a Pull Request against the <code>dev</code> branch and wait for the code to be reviewed and merged</li>
-</ol>
-<p>If you’re not used to this workflow with git, you can start with some <a href="https://help.github.com/en/github/collaborating-with-issues-and-pull-requests">docs from GitHub</a> or even their <a href="https://try.github.io/">excellent <code>git</code> resources</a>.</p>
-</section>
-<section id="tests" class="level2">
-<h2 class="anchored" data-anchor-id="tests">Tests</h2>
-<p>When you create a pull request with changes, <a href="https://github.com/features/actions">GitHub Actions</a> will run automatic tests. Typically, pull-requests are only fully reviewed when these tests are passing, though of course we can help out before then.</p>
-<p>There are typically two types of tests that run:</p>
-<section id="lint-tests" class="level3">
-<h3 class="anchored" data-anchor-id="lint-tests">Lint tests</h3>
-<p><code>nf-core</code> has a <a href="https://nf-co.re/developers/guidelines">set of guidelines</a> which all pipelines must adhere to. To enforce these and ensure that all pipelines stay in sync, we have developed a helper tool which runs checks on the pipeline code. This is in the <a href="https://github.com/nf-core/tools">nf-core/tools repository</a> and once installed can be run locally with the <code>nf-core lint &lt;pipeline-directory&gt;</code> command.</p>
-<p>If any failures or warnings are encountered, please follow the listed URL for more documentation.</p>
-</section>
-<section id="pipeline-tests" class="level3">
-<h3 class="anchored" data-anchor-id="pipeline-tests">Pipeline tests</h3>
-<p>Each <code>nf-core</code> pipeline should be set up with a minimal set of test-data. <code>GitHub Actions</code> then runs the pipeline on this data to ensure that it exits successfully. If there are any failures then the automated tests fail. These tests are run both with the latest available version of <code>Nextflow</code> and also the minimum required version that is stated in the pipeline code.</p>
-</section>
-</section>
-<section id="patch" class="level2">
-<h2 class="anchored" data-anchor-id="patch">Patch</h2>
-<p>:warning: Only in the unlikely and regretful event of a release happening with a bug.</p>
-<ul>
-<li>On your own fork, make a new branch <code>patch</code> based on <code>upstream/master</code>.</li>
-<li>Fix the bug, and bump version (X.Y.Z+1).</li>
-<li>A PR should be made on <code>master</code> from patch to directly this particular bug.</li>
-</ul>
-</section>
-<section id="pipeline-contribution-conventions" class="level2">
-<h2 class="anchored" data-anchor-id="pipeline-contribution-conventions">Pipeline contribution conventions</h2>
-<p>To make SocialGene’s Nextflow code and processing logic more understandable for new contributors and to ensure quality, we semi-standardise the way the code and other contributions are written.</p>
-<section id="adding-a-new-step" class="level3">
-<h3 class="anchored" data-anchor-id="adding-a-new-step">Adding a new step</h3>
-<p>If you wish to contribute a new step, please use the following coding standards:</p>
-<ol type="1">
-<li>Define the corresponding input channel into your new process from the expected previous process channel</li>
-<li>Write the process block (see below).</li>
-<li>Define the output channel if needed (see below).</li>
-<li>Add any new parameters to <code>nextflow.config</code> with a default (see below).</li>
-<li>Add any new parameters to <code>nextflow_schema.json</code> with help text (via the <code>nf-core schema build</code> tool).</li>
-<li>Add sanity checks and validation for all relevant parameters.</li>
-<li>Perform local tests to validate that the new code works as expected.</li>
-<li>If applicable, add a new test command in <code>.github/workflow/ci.yml</code>.</li>
-<li>Update MultiQC config <code>assets/multiqc_config.yml</code> so relevant suffixes, file name clean up and module plots are in the appropriate order. If applicable, add a <a href="https://https://multiqc.info/">MultiQC</a> module.</li>
-<li>Add a description of the output files and if relevant any appropriate images from the MultiQC report to <code>docs/output.md</code>.</li>
-</ol>
-</section>
-<section id="default-values" class="level3">
-<h3 class="anchored" data-anchor-id="default-values">Default values</h3>
-<p>Parameters should be initialised / defined with default values in <code>nextflow.config</code> under the <code>params</code> scope.</p>
-<p>Once there, use <code>nf-core schema build</code> to add to <code>nextflow_schema.json</code>.</p>
-</section>
-<section id="default-processes-resource-requirements" class="level3">
-<h3 class="anchored" data-anchor-id="default-processes-resource-requirements">Default processes resource requirements</h3>
-<p>Sensible defaults for process resource requirements (CPUs / memory / time) for a process should be defined in <code>conf/base.config</code>. These should generally be specified generic with <code>withLabel:</code> selectors so they can be shared across multiple processes/steps of the pipeline. A nf-core standard set of labels that should be followed where possible can be seen in the <a href="https://github.com/nf-core/tools/blob/master/nf_core/pipeline-template/conf/base.config">nf-core pipeline template</a>, which has the default process as a single core-process, and then different levels of multi-core configurations for increasingly large memory requirements defined with standardised labels.</p>
-<p>The process resources can be passed on to the tool dynamically within the process with the <code>${task.cpu}</code> and <code>${task.memory}</code> variables in the <code>script:</code> block.</p>
-</section>
-<section id="naming-schemes" class="level3">
-<h3 class="anchored" data-anchor-id="naming-schemes">Naming schemes</h3>
-<p>Please use the following naming schemes, to make it easy to understand what is going where.</p>
-<ul>
-<li>initial process channel: <code>ch_output_from_&lt;process&gt;</code></li>
-<li>intermediate and terminal channels: <code>ch_&lt;previousprocess&gt;_for_&lt;nextprocess&gt;</code></li>
-</ul>
-</section>
-<section id="nextflow-version-bumping" class="level3">
-<h3 class="anchored" data-anchor-id="nextflow-version-bumping">Nextflow version bumping</h3>
-<p>If you are using a new feature from core Nextflow, you may bump the minimum required version of nextflow in the pipeline with: <code>nf-core bump-version --nextflow . [min-nf-version]</code></p>
-</section>
-<section id="images-and-figures" class="level3">
-<h3 class="anchored" data-anchor-id="images-and-figures">Images and figures</h3>
-<p>For overview images and other documents we follow the nf-core <a href="https://nf-co.re/developers/design_guidelines">style guidelines and examples</a>.</p>
-</section>
-</section>
-<section id="github-codespaces" class="level2">
-<h2 class="anchored" data-anchor-id="github-codespaces">GitHub Codespaces</h2>
-<p>This repo includes a devcontainer configuration which will create a GitHub Codespaces for Nextflow development! This is an online developer environment that runs in your browser, complete with VSCode and a terminal.</p>
-<p>To get started:</p>
-<ul>
-<li>Open the repo in <a href="https://github.com/socialgene/sgnf/codespaces">Codespaces</a></li>
-<li>Tools installed
-<ul>
-<li>nf-core</li>
-<li>Nextflow</li>
-</ul></li>
-</ul>
-<p>Devcontainer specs:</p>
-<ul>
-<li><a href=".devcontainer/devcontainer.json">DevContainer config</a></li>
-</ul>
-</section>
-</section>
-
-</main>
-<!-- /main column -->
-<script id="quarto-html-after-body" type="application/javascript">
-window.document.addEventListener("DOMContentLoaded", function (event) {
-  const toggleBodyColorMode = (bsSheetEl) => {
-    const mode = bsSheetEl.getAttribute("data-mode");
-    const bodyEl = window.document.querySelector("body");
-    if (mode === "dark") {
-      bodyEl.classList.add("quarto-dark");
-      bodyEl.classList.remove("quarto-light");
-    } else {
-      bodyEl.classList.add("quarto-light");
-      bodyEl.classList.remove("quarto-dark");
-    }
-  }
-  const toggleBodyColorPrimary = () => {
-    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
-    if (bsSheetEl) {
-      toggleBodyColorMode(bsSheetEl);
-    }
-  }
-  toggleBodyColorPrimary();  
-  const icon = "";
-  const anchorJS = new window.AnchorJS();
-  anchorJS.options = {
-    placement: 'right',
-    icon: icon
-  };
-  anchorJS.add('.anchored');
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    target: function(trigger) {
-      return trigger.previousElementSibling;
-    }
-  });
-  clipboard.on('success', function(e) {
-    // button target
-    const button = e.trigger;
-    // don't keep focus
-    button.blur();
-    // flash "checked"
-    button.classList.add('code-copy-button-checked');
-    var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
-    setTimeout(function() {
-      button.setAttribute("title", currentTitle);
-      button.classList.remove('code-copy-button-checked');
-    }, 1000);
-    // clear code selection
-    e.clearSelection();
-  });
-  function tippyHover(el, contentFn) {
-    const config = {
-      allowHTML: true,
-      content: contentFn,
-      maxWidth: 500,
-      delay: 100,
-      arrow: false,
-      appendTo: function(el) {
-          return el.parentElement;
-      },
-      interactive: true,
-      interactiveBorder: 10,
-      theme: 'quarto',
-      placement: 'bottom-start'
-    };
-    window.tippy(el, config); 
-  }
-  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
-  for (var i=0; i<noterefs.length; i++) {
-    const ref = noterefs[i];
-    tippyHover(ref, function() {
-      // use id or data attribute instead here
-      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
-      try { href = new URL(href).hash; } catch {}
-      const id = href.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      return note.innerHTML;
-    });
-  }
-  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
-  for (var i=0; i<bibliorefs.length; i++) {
-    const ref = bibliorefs[i];
-    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
-    tippyHover(ref, function() {
-      var popup = window.document.createElement('div');
-      cites.forEach(function(cite) {
-        var citeDiv = window.document.createElement('div');
-        citeDiv.classList.add('hanging-indent');
-        citeDiv.classList.add('csl-entry');
-        var biblioDiv = window.document.getElementById('ref-' + cite);
-        if (biblioDiv) {
-          citeDiv.innerHTML = biblioDiv.innerHTML;
-        }
-        popup.appendChild(citeDiv);
-      });
-      return popup.innerHTML;
-    });
-  }
-});
-</script>
-</div> <!-- /content -->
-
-
-
-</body></html>
+  <body class="fullcontent">
+    <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+      <main class="content" id="quarto-document-content">
+        <section id="socialgenesgnf-contributing-guidelines" class="level1">
+          <h1>socialgene/sgnf: Contributing Guidelines</h1>
+          <p>Hi there! Many thanks for taking an interest in improving socialgene.</p>
+          <p>
+            We try to manage the required tasks for socialgene using GitHub issues, you probably came to this page when
+            creating one. Please use the pre-filled template to save time.
+          </p>
+          <p>
+            However, don’t be put off by this template - other more general issues and suggestions are welcome!
+            Contributions to the code are even more welcome ;)
+          </p>
+          <section id="contribution-workflow" class="level2">
+            <h2 class="anchored" data-anchor-id="contribution-workflow">Contribution workflow</h2>
+            <p>If you’d like to write some code for socialgene/sgnf, the standard workflow is as follows:</p>
+            <ol type="1">
+              <li>
+                Check that there isn’t already an issue about your idea in the
+                <a href="https://github.com/socialgene/sgnf/issues">socialgene/sgnf issues</a> to avoid duplicating
+                work. If there isn’t one already, please create one so that others know you’re working on this
+              </li>
+              <li>
+                <a href="https://help.github.com/en/github/getting-started-with-github/fork-a-repo">Fork</a> the
+                <a href="https://github.com/socialgene/sgnf">socialgene/sgnf repository</a> to your GitHub account
+              </li>
+              <li>
+                Make the necessary changes / additions within your forked repository following
+                <a href="#pipeline-contribution-conventions">Pipeline conventions</a>
+              </li>
+              <li>
+                Use <code>nf-core schema build</code> and add any new parameters to the pipeline JSON schema (requires
+                <a href="https://github.com/nf-core/tools">nf-core tools</a> &gt;= 1.10).
+              </li>
+              <li>
+                Submit a Pull Request against the <code>dev</code> branch and wait for the code to be reviewed and
+                merged
+              </li>
+            </ol>
+            <p>
+              If you’re not used to this workflow with git, you can start with some
+              <a href="https://help.github.com/en/github/collaborating-with-issues-and-pull-requests"
+                >docs from GitHub</a
+              >
+              or even their <a href="https://try.github.io/">excellent <code>git</code> resources</a>.
+            </p>
+          </section>
+          <section id="tests" class="level2">
+            <h2 class="anchored" data-anchor-id="tests">Tests</h2>
+            <p>
+              When you create a pull request with changes,
+              <a href="https://github.com/features/actions">GitHub Actions</a> will run automatic tests. Typically,
+              pull-requests are only fully reviewed when these tests are passing, though of course we can help out
+              before then.
+            </p>
+            <p>There are typically two types of tests that run:</p>
+            <section id="lint-tests" class="level3">
+              <h3 class="anchored" data-anchor-id="lint-tests">Lint tests</h3>
+              <p>
+                <code>nf-core</code> has a <a href="https://nf-co.re/developers/guidelines">set of guidelines</a> which
+                all pipelines must adhere to. To enforce these and ensure that all pipelines stay in sync, we have
+                developed a helper tool which runs checks on the pipeline code. This is in the
+                <a href="https://github.com/nf-core/tools">nf-core/tools repository</a> and once installed can be run
+                locally with the <code>nf-core lint &lt;pipeline-directory&gt;</code> command.
+              </p>
+              <p>If any failures or warnings are encountered, please follow the listed URL for more documentation.</p>
+            </section>
+            <section id="pipeline-tests" class="level3">
+              <h3 class="anchored" data-anchor-id="pipeline-tests">Pipeline tests</h3>
+              <p>
+                Each <code>nf-core</code> pipeline should be set up with a minimal set of test-data.
+                <code>GitHub Actions</code> then runs the pipeline on this data to ensure that it exits successfully. If
+                there are any failures then the automated tests fail. These tests are run both with the latest available
+                version of <code>Nextflow</code> and also the minimum required version that is stated in the pipeline
+                code.
+              </p>
+            </section>
+          </section>
+          <section id="patch" class="level2">
+            <h2 class="anchored" data-anchor-id="patch">Patch</h2>
+            <p>:warning: Only in the unlikely and regretful event of a release happening with a bug.</p>
+            <ul>
+              <li>On your own fork, make a new branch <code>patch</code> based on <code>upstream/master</code>.</li>
+              <li>Fix the bug, and bump version (X.Y.Z+1).</li>
+              <li>A PR should be made on <code>master</code> from patch to directly this particular bug.</li>
+            </ul>
+          </section>
+          <section id="pipeline-contribution-conventions" class="level2">
+            <h2 class="anchored" data-anchor-id="pipeline-contribution-conventions">
+              Pipeline contribution conventions
+            </h2>
+            <p>
+              To make SocialGene’s Nextflow code and processing logic more understandable for new contributors and to
+              ensure quality, we semi-standardise the way the code and other contributions are written.
+            </p>
+            <section id="adding-a-new-step" class="level3">
+              <h3 class="anchored" data-anchor-id="adding-a-new-step">Adding a new step</h3>
+              <p>If you wish to contribute a new step, please use the following coding standards:</p>
+              <ol type="1">
+                <li>
+                  Define the corresponding input channel into your new process from the expected previous process
+                  channel
+                </li>
+                <li>Write the process block (see below).</li>
+                <li>Define the output channel if needed (see below).</li>
+                <li>Add any new parameters to <code>nextflow.config</code> with a default (see below).</li>
+                <li>
+                  Add any new parameters to <code>nextflow_schema.json</code> with help text (via the
+                  <code>nf-core schema build</code> tool).
+                </li>
+                <li>Add sanity checks and validation for all relevant parameters.</li>
+                <li>Perform local tests to validate that the new code works as expected.</li>
+                <li>If applicable, add a new test command in <code>.github/workflow/ci.yml</code>.</li>
+                <li>
+                  Update MultiQC config <code>assets/multiqc_config.yml</code> so relevant suffixes, file name clean up
+                  and module plots are in the appropriate order. If applicable, add a
+                  <a href="https://https://multiqc.info/">MultiQC</a> module.
+                </li>
+                <li>
+                  Add a description of the output files and if relevant any appropriate images from the MultiQC report
+                  to <code>docs/output.md</code>.
+                </li>
+              </ol>
+            </section>
+            <section id="default-values" class="level3">
+              <h3 class="anchored" data-anchor-id="default-values">Default values</h3>
+              <p>
+                Parameters should be initialised / defined with default values in <code>nextflow.config</code> under the
+                <code>params</code> scope.
+              </p>
+              <p>Once there, use <code>nf-core schema build</code> to add to <code>nextflow_schema.json</code>.</p>
+            </section>
+            <section id="default-processes-resource-requirements" class="level3">
+              <h3 class="anchored" data-anchor-id="default-processes-resource-requirements">
+                Default processes resource requirements
+              </h3>
+              <p>
+                Sensible defaults for process resource requirements (CPUs / memory / time) for a process should be
+                defined in <code>conf/base.config</code>. These should generally be specified generic with
+                <code>withLabel:</code> selectors so they can be shared across multiple processes/steps of the pipeline.
+                A nf-core standard set of labels that should be followed where possible can be seen in the
+                <a href="https://github.com/nf-core/tools/blob/master/nf_core/pipeline-template/conf/base.config"
+                  >nf-core pipeline template</a
+                >, which has the default process as a single core-process, and then different levels of multi-core
+                configurations for increasingly large memory requirements defined with standardised labels.
+              </p>
+              <p>
+                The process resources can be passed on to the tool dynamically within the process with the
+                <code>${task.cpu}</code> and <code>${task.memory}</code> variables in the <code>script:</code> block.
+              </p>
+            </section>
+            <section id="naming-schemes" class="level3">
+              <h3 class="anchored" data-anchor-id="naming-schemes">Naming schemes</h3>
+              <p>Please use the following naming schemes, to make it easy to understand what is going where.</p>
+              <ul>
+                <li>initial process channel: <code>ch_output_from_&lt;process&gt;</code></li>
+                <li>
+                  intermediate and terminal channels: <code>ch_&lt;previousprocess&gt;_for_&lt;nextprocess&gt;</code>
+                </li>
+              </ul>
+            </section>
+            <section id="nextflow-version-bumping" class="level3">
+              <h3 class="anchored" data-anchor-id="nextflow-version-bumping">Nextflow version bumping</h3>
+              <p>
+                If you are using a new feature from core Nextflow, you may bump the minimum required version of nextflow
+                in the pipeline with: <code>nf-core bump-version --nextflow . [min-nf-version]</code>
+              </p>
+            </section>
+            <section id="images-and-figures" class="level3">
+              <h3 class="anchored" data-anchor-id="images-and-figures">Images and figures</h3>
+              <p>
+                For overview images and other documents we follow the nf-core
+                <a href="https://nf-co.re/developers/design_guidelines">style guidelines and examples</a>.
+              </p>
+            </section>
+          </section>
+          <section id="github-codespaces" class="level2">
+            <h2 class="anchored" data-anchor-id="github-codespaces">GitHub Codespaces</h2>
+            <p>
+              This repo includes a devcontainer configuration which will create a GitHub Codespaces for Nextflow
+              development! This is an online developer environment that runs in your browser, complete with VSCode and a
+              terminal.
+            </p>
+            <p>To get started:</p>
+            <ul>
+              <li>Open the repo in <a href="https://github.com/socialgene/sgnf/codespaces">Codespaces</a></li>
+              <li>
+                Tools installed
+                <ul>
+                  <li>nf-core</li>
+                  <li>Nextflow</li>
+                </ul>
+              </li>
+            </ul>
+            <p>Devcontainer specs:</p>
+            <ul>
+              <li><a href=".devcontainer/devcontainer.json">DevContainer config</a></li>
+            </ul>
+          </section>
+        </section>
+      </main>
+      <!-- /main column -->
+      <script id="quarto-html-after-body" type="application/javascript">
+        window.document.addEventListener("DOMContentLoaded", function (event) {
+          const toggleBodyColorMode = (bsSheetEl) => {
+            const mode = bsSheetEl.getAttribute("data-mode");
+            const bodyEl = window.document.querySelector("body");
+            if (mode === "dark") {
+              bodyEl.classList.add("quarto-dark");
+              bodyEl.classList.remove("quarto-light");
+            } else {
+              bodyEl.classList.add("quarto-light");
+              bodyEl.classList.remove("quarto-dark");
+            }
+          };
+          const toggleBodyColorPrimary = () => {
+            const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+            if (bsSheetEl) {
+              toggleBodyColorMode(bsSheetEl);
+            }
+          };
+          toggleBodyColorPrimary();
+          const icon = "";
+          const anchorJS = new window.AnchorJS();
+          anchorJS.options = {
+            placement: "right",
+            icon: icon,
+          };
+          anchorJS.add(".anchored");
+          const clipboard = new window.ClipboardJS(".code-copy-button", {
+            target: function (trigger) {
+              return trigger.previousElementSibling;
+            },
+          });
+          clipboard.on("success", function (e) {
+            // button target
+            const button = e.trigger;
+            // don't keep focus
+            button.blur();
+            // flash "checked"
+            button.classList.add("code-copy-button-checked");
+            var currentTitle = button.getAttribute("title");
+            button.setAttribute("title", "Copied!");
+            setTimeout(function () {
+              button.setAttribute("title", currentTitle);
+              button.classList.remove("code-copy-button-checked");
+            }, 1000);
+            // clear code selection
+            e.clearSelection();
+          });
+          function tippyHover(el, contentFn) {
+            const config = {
+              allowHTML: true,
+              content: contentFn,
+              maxWidth: 500,
+              delay: 100,
+              arrow: false,
+              appendTo: function (el) {
+                return el.parentElement;
+              },
+              interactive: true,
+              interactiveBorder: 10,
+              theme: "quarto",
+              placement: "bottom-start",
+            };
+            window.tippy(el, config);
+          }
+          const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+          for (var i = 0; i < noterefs.length; i++) {
+            const ref = noterefs[i];
+            tippyHover(ref, function () {
+              // use id or data attribute instead here
+              let href = ref.getAttribute("data-footnote-href") || ref.getAttribute("href");
+              try {
+                href = new URL(href).hash;
+              } catch {}
+              const id = href.replace(/^#\/?/, "");
+              const note = window.document.getElementById(id);
+              return note.innerHTML;
+            });
+          }
+          var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+          for (var i = 0; i < bibliorefs.length; i++) {
+            const ref = bibliorefs[i];
+            const cites = ref.parentNode.getAttribute("data-cites").split(" ");
+            tippyHover(ref, function () {
+              var popup = window.document.createElement("div");
+              cites.forEach(function (cite) {
+                var citeDiv = window.document.createElement("div");
+                citeDiv.classList.add("hanging-indent");
+                citeDiv.classList.add("csl-entry");
+                var biblioDiv = window.document.getElementById("ref-" + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        });
+      </script>
+    </div>
+    <!-- /content -->
+  </body>
+</html>

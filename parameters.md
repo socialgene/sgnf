@@ -40,12 +40,12 @@ Any one or more of the following can be used to download/input HMMs for the pipe
 
 These directories have defaults based on the --outdir parameter, change them if you want
 
-| Parameter              | Description                                                                                                                                                                     | Type     | Default                                             | Required | Hidden |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | --------------------------------------------------- | -------- | ------ |
-| `outdir_per_run`       | Directory that holds data generated each run                                                                                                                                    | `string` | socialgene_results/socialgene_per_run               |          | True   |
-| `outdir_neo4j`         | Path to the output directory where the results will be saved.                                                                                                                   | `string` | socialgene_results/socialgene_neo4j                 |          | True   |
-| `outdir_blast_cache`   | Cache folder where blast results are written to. Important to delete if starting a new pipeline run with different input data but using same cache directory as a previous run. | `string` | socialgene_results/socialgene_per_run/blastp_cache  |          | True   |
-| `outdir_genomes`       | Storage directory for downloaded genomes                                                                                                                                        | `string` | socialgene_results/outdir_genomes                   |          | True   |
+| Parameter            | Description                                                                                                                                                                     | Type     | Default                                            | Required | Hidden |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | -------------------------------------------------- | -------- | ------ |
+| `outdir_per_run`     | Directory that holds data generated each run                                                                                                                                    | `string` | socialgene_results/socialgene_per_run              |          | True   |
+| `outdir_neo4j`       | Path to the output directory where the results will be saved.                                                                                                                   | `string` | socialgene_results/socialgene_neo4j                |          | True   |
+| `outdir_blast_cache` | Cache folder where blast results are written to. Important to delete if starting a new pipeline run with different input data but using same cache directory as a previous run. | `string` | socialgene_results/socialgene_per_run/blastp_cache |          | True   |
+| `outdir_genomes`     | Storage directory for downloaded genomes                                                                                                                                        | `string` | socialgene_results/outdir_genomes                  |          | True   |
 
 ## SocialGene parameters
 

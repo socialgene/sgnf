@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.4.4](https://github.com/socialgene/sgnf/compare/v0.4.3...v0.4.4) (2024-02-22)
+
+
+### Miscellaneous Chores
+
+* release 0.4.3 ([50fba0c](https://github.com/socialgene/sgnf/commit/50fba0cbb36bf0fa21ff11cbcad4699a2732d03e))
+* release 0.4.4 ([03c4d6c](https://github.com/socialgene/sgnf/commit/03c4d6cf08980da338caa720e7c111e6f74b1119))
+
 ## [0.4.3](https://github.com/socialgene/sgnf/compare/v0.4.2...v0.4.3) (2024-02-22)
 
 

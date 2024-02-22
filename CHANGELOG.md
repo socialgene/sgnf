@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.4.3](https://github.com/socialgene/sgnf/compare/v0.4.2...v0.4.3) (2024-02-22)
+
+
+### Bug Fixes
+
+* alpine doesn't play well with aws/nextflow ([8bfc30a](https://github.com/socialgene/sgnf/commit/8bfc30ae7d178652f72860ef875312ae7567b51a))
+* docker container specification ([65f2d7d](https://github.com/socialgene/sgnf/commit/65f2d7daedc1f852a281e3371321898f97a5f431))
+* ncbi datasets renaming ([fb4bb7e](https://github.com/socialgene/sgnf/commit/fb4bb7ebc0d15723366c0ee85f7a269b83553507))
+* orthologs.config ([e50dafd](https://github.com/socialgene/sgnf/commit/e50dafd6fdbcf2e02065ed53c74768fd1dd49ad7))
+* params.antismash_fulljson ([d2e4348](https://github.com/socialgene/sgnf/commit/d2e4348bf6fa27edf56bf220c9b3ba4724b6c580))
+* restore storeDir, was issue with alpine based container ([93c77c9](https://github.com/socialgene/sgnf/commit/93c77c90fed435cab293ce37cf7e65ebbf5b07a1))
+* update schema ([ed493ee](https://github.com/socialgene/sgnf/commit/ed493eecbb81aae4401f7afd0ae895d475b95bde))
+
 ## [0.4.2](https://github.com/socialgene/sgnf/compare/v0.4.1...v0.4.2) (2023-12-08)
 
 ### Bug Fixes

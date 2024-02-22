@@ -32,7 +32,7 @@ import json
 
 
 current_gbff_paths = list(Path(".").glob(f"**/genomic.gbff.gz"))
-lookupdict = {str(Path(i.parents[0].name, i.name)).removesuffix('.gz'):i for i in current_gbff_paths}
+lookupdict = {str(Path(i.parents[0].name, i.name)).removesuffix(".gz"): i for i in current_gbff_paths}
 
 for input_path in Path(".").glob("**/dataset_catalog.json"):
     with open(input_path) as f:
@@ -40,15 +40,16 @@ for input_path in Path(".").glob("**/dataset_catalog.json"):
         for i in data["assemblies"]:
             if "accession" in i:
                 for ii in i["files"]:
-                    if ii['filePath'].endswith('genomic.gbff'):
-                       lookupdict[ii['filePath']].rename(Path(lookupdict[ii['filePath']]).with_name(f"{i['accession']}.gbff.gz"))
+                    if ii["filePath"].endswith("genomic.gbff"):
+                        lookupdict[ii["filePath"]].rename(
+                            Path(lookupdict[ii["filePath"]]).with_name(f"{i['accession']}.gbff.gz")
+                        )
 
 
 for i in Path(".").glob(f"**/*.gbff.gz"):
     if not i.parents[0].name == i.name.removesuffix(".gbff.gz"):
-        print("Assumption is that NCBI dataset files are in a folder named after the accession number\nand files themselves are renamed after teh accession.")
+        print(
+            "Assumption is that NCBI dataset files are in a folder named after the accession number\nand files themselves are renamed after teh accession."
+        )
         print(f"Expected {i.parents[0].name} but got {i.name.removesuffix('.gbff.gz')}")
         raise ValueError(f"File {i} is not in the correct folder")
-
-
-

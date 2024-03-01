@@ -57,7 +57,7 @@ workflow GENOME_HANDLING {
 
         if (params.local_fna) {
             files = Channel.fromPath( params.local_fna )
-            file.toSortedList().flatten().set{files_sorted}
+            files.toSortedList().flatten().set{files_sorted}
             files_sorted.map {
                 def meta = [:]
                 meta.id = it.getSimpleName()

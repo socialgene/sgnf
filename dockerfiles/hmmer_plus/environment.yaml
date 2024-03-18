@@ -1,4 +1,4 @@
-name: socialgene_hmmer
+name: sgnf-hmmer_plus
 # hmmer plus programs for downloading
 
 channels:
@@ -7,7 +7,7 @@ channels:
   - defaults
 
 dependencies:
-  - bioconda::hmmer>=3.3.2
+  - bioconda::hmmer==3.4
   - conda-forge::coreutils
   - conda-forge::gzip >=1.12
   - conda-forge::wget

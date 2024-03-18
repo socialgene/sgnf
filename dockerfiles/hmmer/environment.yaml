@@ -1,4 +1,4 @@
-name: socialgene_hmmer
+name: sgnf-hmmer
 
 channels:
   - conda-forge
@@ -6,7 +6,7 @@ channels:
   - defaults
 
 dependencies:
-  - bioconda::hmmer>=3.3.2
+  - bioconda::hmmer==3.4
   - conda-forge::coreutils
   - conda-forge::gzip >=1.12
   - procps-ng # required by nextflow

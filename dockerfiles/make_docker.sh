@@ -34,21 +34,13 @@ pushd antismash
 docker build . -t chasemc2/sgnf-antismash:0.4.4
 popd
 
-pushd sgpy/sgpy_base
-docker build . -t chasemc2/sgpy-base:0.4.4
+pushd multistage
+docker build --target sgnf-hmmer -t chasemc2/sgnf-hmmer:0.4.4 .
+docker build --target sgnf-hmmer-plus -t chasemc2/sgnf-hmmer-plus:0.4.4 .
+docker build --target sgpy-base -t chasemc2/sgpy-base:0.4.4 .
+docker build --squash --target sgnf-sgpy -t chasemc2/sgnf-sgpy:0.4.4 .
 popd
 
-pushd sgpy
-docker build . -t chasemc2/sgnf-sgpy:0.4.4
-popd
-
-pushd minimal
-docker build . -t chasemc2/sgnf-minimal:0.4.4
-popd
-
-pushd hmmer
-docker build . -t chasemc2/sgnf-hmmer:0.4.4
-popd
 
 pushd hmmer_plus
 docker build . -t chasemc2/sgnf-hmmer_plus:0.4.4
@@ -66,4 +58,6 @@ fi
 
 
 
-docker build --target build -t hello .
+
+
+

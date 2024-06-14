@@ -27,10 +27,13 @@ process HMMSEARCH_PARSE {
         sg_process_domtblout \\
                 --input '.' \\
                 --glob '*.domtblout.gz' \\
-                --outpath "parseddomtblout_unsorted"
+                --outpath "parseddomtblout_unsorted_gzipped" \\
+            ${ievaluefilter}
 
         # sort so consistent for testing
-        sort parseddomtblout_unsorted > parseddomtblout
+        zcat parseddomtblout_unsorted_gzipped |\\
+            sort > parseddomtblout
+        rm parseddomtblout_unsorted_gzipped
 
         md5_as_filename.sh "parseddomtblout" "${ievaluefilter_text}.parseddomtblout.gz"
 

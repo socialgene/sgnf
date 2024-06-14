@@ -1,0 +1,13 @@
+name: sgnf-hmmer_plus
+# hmmer plus programs for downloading
+
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+
+dependencies:
+  - conda-forge::wget>=1.20
+  - conda-forge::curl>=8.6
+  - conda-forge::git>=2.44
+  - conda-forge::unzip>=6..0

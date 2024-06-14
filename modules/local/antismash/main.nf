@@ -21,6 +21,7 @@ process ANTISMASH {
     path("*.jsonl")            , emit: jsonl, optional:true
     path("*.json.gz")          , emit: json, optional:true
     path("*.regions.gbk.gz")       , emit: regions, optional:true
+    val $args + ' ' + $args2    , emit: args
     path "versions.yml"        , emit: versions
 
     when:

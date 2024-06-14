@@ -14,8 +14,9 @@ process DIAMOND_BLASTP {
     path(db)
 
     output:
-    path('*.blast6.gz')              , emit: blastout
-    path "versions.yml"           , emit: versions
+    path('*.blast6.gz')                     , emit: blastout
+    path "versions.yml"                     , emit: versions
+    val $args + ' ' + $args2 + ' --no-self-hits'   , emit: args
 
 
     when:

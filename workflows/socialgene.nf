@@ -275,7 +275,9 @@ workflow SOCIALGENE {
         // python script that creates the jsonl adds newline at end
         ANTISMASH.out.jsonl.collectFile(name:"${params.outdir_neo4j}/import/antismash_results.jsonl", sort: 'hash', cache: true, newLine:false)
         ch_versions = ch_versions.mix(ANTISMASH.out.versions.first())
-
+        antismash_args = ANTISMASH.out.args
+    } else {
+        antismash_args = ''
     }
 
     /*
@@ -291,8 +293,11 @@ workflow SOCIALGENE {
             .set{blast_ch}
         ch_versions = ch_versions.mix(DIAMOND_MAKEDB.out.versions)
         ch_versions = ch_versions.mix(DIAMOND_BLASTP.out.versions)
+        blastp_args = DIAMOND_BLASTP.out.args
     } else {
         blast_ch = file("${baseDir}/assets/EMPTY_FILE")
+        blastp_args = ''
+
     }
 
     /*
@@ -307,8 +312,10 @@ workflow SOCIALGENE {
             .collect()
             .set{mmseqs2_ch}
         ch_versions = ch_versions.mix(MMSEQS2_CLUSTER.out.versions)
+        mmseqs2_args = MMSEQS2_CLUSTER.out.args
     } else {
         mmseqs2_ch = file("${baseDir}/assets/EMPTY_FILE")
+        mmseqs2_args = ''
     }
 
     /*

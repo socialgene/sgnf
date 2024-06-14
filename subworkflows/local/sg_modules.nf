@@ -21,7 +21,10 @@ workflow SG_MODULES {
     }
     if (params.ncbi_genome_download_command || params.local_genbank || params.ncbi_datasets_command || params.mibig || params.local_faa || params.local_fna){
         sg_modules.add("base")
+    } else {
+        println("\033[0;31m" + "!! No input genome source specified !!" + "\033[0m")
     }
+
     if (params.local_faa){
         sg_modules.add("protein")
     }

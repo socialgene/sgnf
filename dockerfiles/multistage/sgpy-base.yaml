@@ -33,3 +33,4 @@ dependencies:
   - conda-forge::unzip>=6.0
   - conda-forge::bc>=1.07.1
   - bioconda::ncbi-genome-download>=0.3.3
+  - bioconda::prokka>=1.14.6

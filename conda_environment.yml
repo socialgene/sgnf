@@ -6,5 +6,5 @@ channels:
   - defaults
 
 dependencies:
-  - bioconda::nf-core>=2.5.1
-  - bioconda::nextflow>=22.04.5
+  - bioconda::nf-core>=2.14.1
+  - bioconda::nextflow>=24.04.3

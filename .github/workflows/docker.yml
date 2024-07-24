@@ -17,34 +17,35 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKERHUBPAT }}
+      - name: Get release number without preceding v
+        id: get_release_number
+        run: echo "RELEASE_NUMBER=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
       - name: Build Docker images
         run: |
             cd dockerfiles
             pushd multistage
-            TAG=${{ github.event.release.tag_name/#v/ }}
-            docker build --target sgnf-hmmer -t chasemc2/sgnf-hmmer:$TAG .
-            docker build --target sgnf-hmmer-plus -t chasemc2/sgnf-hmmer-plus:$TAG .
-            docker build --squash --target sgnf-sgpy -t chasemc2/sgnf-sgpy:$TAG .
+            docker build --target sgnf-hmmer -t chasemc2/sgnf-hmmer:$RELEASE_NUMBER .
+            docker build --target sgnf-hmmer-plus -t chasemc2/sgnf-hmmer-plus:$RELEASE_NUMBER .
+            docker build --squash --target sgnf-sgpy -t chasemc2/sgnf-sgpy:$RELEASE_NUMBER .
             popd
 
             pushd antismash
-            docker build . -t chasemc2/sgnf-antismash:$TAG .
+            docker build . -t chasemc2/sgnf-antismash:$RELEASE_NUMBER .
             popd
 
             pushd prokka
-            docker build . -t chasemc2/sgnf-prokka:$TAG .
+            docker build . -t chasemc2/sgnf-prokka:$RELEASE_NUMBER .
             popd
 
             pushd minimal
-            docker build . -t chasemc2/sgnf-minimal:$TAG .
+            docker build . -t chasemc2/sgnf-minimal:$RELEASE_NUMBER .
             popd
 
       - name: Push Docker images
         run: |
-            TAG=${{ github.event.release.tag_name/#v/ }}
-            docker push chasemc2/sgnf-hmmer:$TAG
-            docker push chasemc2/sgnf-hmmer-plus:$TAG
-            docker push chasemc2/sgnf-sgpy:$TAG
-            docker push chasemc2/sgnf-antismash:$TAG
-            docker push chasemc2/sgnf-prokka:$TAG
-            docker push chasemc2/sgnf-minimal:$TAG
+            docker push chasemc2/sgnf-hmmer:$RELEASE_NUMBER
+            docker push chasemc2/sgnf-hmmer-plus:$RELEASE_NUMBER
+            docker push chasemc2/sgnf-sgpy:$RELEASE_NUMBER
+            docker push chasemc2/sgnf-antismash:$RELEASE_NUMBER
+            docker push chasemc2/sgnf-prokka:$RELEASE_NUMBER
+            docker push chasemc2/sgnf-minimal:$RELEASE_NUMBER

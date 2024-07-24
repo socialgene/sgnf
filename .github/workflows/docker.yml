@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 jobs:
   build_and_push_sgnf_base:
-    name: Push Docker image to Docker Hub
+    name: Build and push multistage
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
@@ -28,8 +28,6 @@ jobs:
             docker build --target sgnf-hmmer-plus -t chasemc2/sgnf-hmmer-plus:$RELEASE_NUMBER .
             docker build --squash --target sgnf-sgpy -t chasemc2/sgnf-sgpy:$RELEASE_NUMBER .
             popd
-
-
             pushd minimal
             docker build -t chasemc2/sgnf-minimal:$RELEASE_NUMBER .
             popd
@@ -60,7 +58,6 @@ jobs:
               docker build -t chasemc2/sgnf-antismash:$RELEASE_NUMBER .
         - name: Push Docker images
           run: |
-              docker push chasemc2/sgnf-prokka:$RELEASE_NUMBER
               docker push chasemc2/sgnf-antismash:$RELEASE_NUMBER
   build_and_push_prokka:
       name: Build and push prokka

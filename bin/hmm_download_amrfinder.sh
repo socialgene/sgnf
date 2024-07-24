@@ -4,7 +4,7 @@ wget https://ftp.ncbi.nlm.nih.gov/hmm/NCBIfam-AMRFinder/${1}/NCBIfam-AMRFinder.H
 
 # file integerity check
 # TODO: fix so it changes with versions
-echo 'MD5 (NCBIfam-AMRFinder.HMM.tar.gz) = b1ce56bddc7a453c3097f08b02634da9' >> md5
+echo 'MD5 (NCBIfam-AMRFinder.HMM.tar.gz) = 119d93d5f55e319b6e71e22ac04e7c61' >> md5
 md5sum -c md5
 
 tar -xf NCBIfam-AMRFinder.HMM.tar.gz

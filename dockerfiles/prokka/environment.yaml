@@ -1,4 +1,4 @@
-name: antismash
+name: sgnf-prokka
 
 channels:
   - anaconda

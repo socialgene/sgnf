@@ -1,4 +1,4 @@
-name: socialgene_hmmer
+name: sgnf-minimal
 
 channels:
   - conda-forge
@@ -8,7 +8,7 @@ channels:
 dependencies:
   - conda-forge::procps-ng>=4.0 # required by nextflow
   - conda-forge::bash # required by nextflow
-  - conda-forge::python==3.11
+  - conda-forge::python==3.12
   - conda-forge::wget
   - conda-forge::rsync
   - conda-forge::coreutils

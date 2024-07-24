@@ -21,7 +21,7 @@ process ANTISMASH {
     path("*.jsonl")            , emit: jsonl, optional:true
     path("*.json.gz")          , emit: json, optional:true
     path("*.regions.gbk.gz")       , emit: regions, optional:true
-    val $args + ' ' + $args2    , emit: args
+    val args     , emit: args
     path "versions.yml"        , emit: versions
 
     when:
@@ -32,6 +32,7 @@ process ANTISMASH {
     def args2 = task.ext.args2 ?: ''
     def prefix = task.ext.suffix ? "${task.ext.suffix}" : "${sequence_input.getSimpleName()}"
     def keep_json = params.antismash_fulljson ? "" : "rm ${prefix}.json.gz"
+    def output_args = args + ' ' + args2
 
     """
     antismash \\

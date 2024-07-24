@@ -14,9 +14,9 @@ process DIAMOND_BLASTP {
     path(db)
 
     output:
-    path('*.blast6.gz')                     , emit: blastout
-    path "versions.yml"                     , emit: versions
-    val $args + ' ' + $args2 + ' --no-self-hits'   , emit: args
+    path('*.blast6.gz')     , emit: blastout
+    path "versions.yml"     , emit: versions
+    val output_args         , emit: args
 
 
     when:
@@ -25,6 +25,7 @@ process DIAMOND_BLASTP {
     script:
     def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
+    output_args = args + ' ' + args2
     """
     DB=`find -L ./ -name "*.dmnd" | sed 's/.dmnd//'`
 

@@ -16,7 +16,7 @@ process MMSEQS2_CLUSTER {
     output:
     path '*.mmseqs2_results_cluster.tsv.gz' , emit: mmseqs_clustered_db_tsv
     path 'mmseqs_*'                         , emit: db
-    val $args + ' ' + $args2                      , emit: args
+    val output_args                         , emit: args
     path "versions.yml"                     , emit: versions
 
 
@@ -26,6 +26,7 @@ process MMSEQS2_CLUSTER {
     script:
     def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
+    output_args = args + ' ' + args2
         """
         # have to modify fasta until mmseqs is fixed:
         # https://github.com/soedinglab/MMseqs2/issues/557

@@ -66,7 +66,7 @@ COPY --from=sgpy-base /opt/conda /opt/conda
 USER $MAMBA_USER
 ARG MAMBA_DOCKERFILE_ACTIVATE=1  # (otherwise python will not be found)
 
-RUN pip install socialgene==0.6.4
+RUN pip install socialgene==1.0.0
 # RUN /opt/conda/bin/pip install git+https://github.com/socialgene/sgpy@d1d828e2c41faa441128f9e9996ec64dcc6e6fdd
 
 ENV PATH="/opt/conda/bin/neo4j/bin:$PATH:/opt/conda/condabin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"

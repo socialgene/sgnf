@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.0](https://github.com/socialgene/sgnf/compare/v0.5.7...v1.0.0) (2024-07-24)
+
+
+### Miscellaneous Chores
+
+* release 1.0.0 ([a8dbf88](https://github.com/socialgene/sgnf/commit/a8dbf883044dcdede4f45b980d5edeb761cc192a))
+
 ## [0.5.7](https://github.com/socialgene/sgnf/compare/v0.5.6...v0.5.7) (2024-07-24)
 
 

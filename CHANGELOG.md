@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/socialgene/sgnf/compare/v1.0.1...v1.0.2) (2024-07-24)
+
+
+### Bug Fixes
+
+* revert base.config and fix micromono ([cd9257e](https://github.com/socialgene/sgnf/commit/cd9257ea52ea673a5016d09cd98090a89428c288))
+
 ## [1.0.1](https://github.com/socialgene/sgnf/compare/v1.0.0...v1.0.1) (2024-07-24)
 
 

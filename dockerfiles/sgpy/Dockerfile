@@ -19,7 +19,7 @@ LABEL MAINTAINER "Chase M. Clark chasingmicrobes@gmail.com"
 ################## INSTALLATION ######################
 ARG MAMBA_DOCKERFILE_ACTIVATE=1  # (otherwise python will not be found)
 
-RUN /opt/conda/bin/pip install socialgene==0.3.3
+RUN /opt/conda/bin/pip install socialgene==1.0.0
 # RUN /opt/conda/bin/pip install git+https://github.com/socialgene/sgpy@63c15e7367c6b31d47802412d03ae47c6f6a0b8b
 # COPY --chown=mambauser:mambauser . sgpy
 # RUN cd sgpy && /opt/conda/bin/pip install -e .

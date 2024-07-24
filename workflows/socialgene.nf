@@ -79,7 +79,6 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/local/custom/dumpsoft
 include { DIAMOND_BLASTP                } from '../modules/local/diamond/blastp/main'
 include { DIAMOND_MAKEDB                } from '../modules/local/diamond/makedb/main'
 include { MULTIQC                       } from '../modules/local/multiqc/main'
-
 /*
 ========================================================================================
     RUN MAIN WORKFLOW
@@ -147,13 +146,15 @@ workflow SOCIALGENE {
         chembl_fasta_ch = Channel.empty()
     }
 
-    if (params.local_fasta){
-        local_fasta_ch = Channel.fromPath(params.local_fasta)
+    if (params.local_faa){
+        local_faa_ch = Channel.fromPath(params.local_faa)
     } else {
-        local_fasta_ch = Channel.empty()
+        local_faa_ch = Channel.empty()
     }
 
-    input_fasta_ch = chembl_fasta_ch.mix(local_fasta_ch)
+
+
+    input_fasta_ch = chembl_fasta_ch.mix(local_faa_ch)
 
     GENOME_HANDLING(input_fasta_ch)
     GENOME_HANDLING.out.ch_fasta.set{ch_fasta}
@@ -274,7 +275,9 @@ workflow SOCIALGENE {
         // python script that creates the jsonl adds newline at end
         ANTISMASH.out.jsonl.collectFile(name:"${params.outdir_neo4j}/import/antismash_results.jsonl", sort: 'hash', cache: true, newLine:false)
         ch_versions = ch_versions.mix(ANTISMASH.out.versions.first())
-
+        antismash_args = ANTISMASH.out.args
+    } else {
+        antismash_args = ''
     }
 
     /*
@@ -290,8 +293,11 @@ workflow SOCIALGENE {
             .set{blast_ch}
         ch_versions = ch_versions.mix(DIAMOND_MAKEDB.out.versions)
         ch_versions = ch_versions.mix(DIAMOND_BLASTP.out.versions)
+        blastp_args = DIAMOND_BLASTP.out.args
     } else {
         blast_ch = file("${baseDir}/assets/EMPTY_FILE")
+        blastp_args = ''
+
     }
 
     /*
@@ -306,8 +312,10 @@ workflow SOCIALGENE {
             .collect()
             .set{mmseqs2_ch}
         ch_versions = ch_versions.mix(MMSEQS2_CLUSTER.out.versions)
+        mmseqs2_args = MMSEQS2_CLUSTER.out.args
     } else {
         mmseqs2_ch = file("${baseDir}/assets/EMPTY_FILE")
+        mmseqs2_args = ''
     }
 
     /*

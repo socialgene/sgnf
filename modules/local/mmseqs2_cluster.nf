@@ -14,11 +14,10 @@ process MMSEQS2_CLUSTER {
     path fasta
 
     output:
-    path '*.mmseqs2_results_cluster.tsv.gz'  , emit: mmseqs_clustered_db_tsv
+    path '*.mmseqs2_results_cluster.tsv.gz' , emit: mmseqs_clustered_db_tsv
     path 'mmseqs_*'                         , emit: db
-
-
-    path "versions.yml" , emit: versions
+    val output_args                         , emit: args
+    path "versions.yml"                     , emit: versions
 
 
     when:
@@ -27,6 +26,7 @@ process MMSEQS2_CLUSTER {
     script:
     def args = task.ext.args ?: ''
     def args2 = task.ext.args2 ?: ''
+    output_args = args + ' ' + args2
         """
         # have to modify fasta until mmseqs is fixed:
         # https://github.com/soedinglab/MMseqs2/issues/557
@@ -39,7 +39,6 @@ process MMSEQS2_CLUSTER {
                 echo \$temp
                 # scale input eg 90 to 0.90
                 transformed_id=\$(bc <<< "scale=1;(\$i/100)")
-
                 mkdir  mmseqs_\${i} clu_\${i}
                 mmseqs cluster \$temp clu_\${i}/clu_\${i} tmp --threads ${task.cpus}  --min-seq-id 0\${transformed_id} $args --remove-tmp-files --compressed 1
                 rm -r tmp

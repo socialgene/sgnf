@@ -1,0 +1,12 @@
+name: sgnf-hmmer
+
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+
+dependencies:
+  - bioconda::hmmer==3.4
+  - conda-forge::coreutils=>9.3
+  - conda-forge::gzip>=1.12
+  - procps-ng>=4.0 # required by nextflow

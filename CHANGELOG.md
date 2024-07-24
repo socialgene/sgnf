@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.6](https://github.com/socialgene/sgnf/compare/v0.5.5...v0.5.6) (2024-07-24)
+
+
+### Bug Fixes
+
+* docker workflow ([9c11c85](https://github.com/socialgene/sgnf/commit/9c11c8540874809cba6f5594de821a394bea45f0))
+
 ## [0.5.5](https://github.com/socialgene/sgnf/compare/v0.5.4...v0.5.5) (2024-07-24)
 
 

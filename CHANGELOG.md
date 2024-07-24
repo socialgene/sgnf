@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.5.3](https://github.com/socialgene/sgnf/compare/v0.5.2...v0.5.3) (2024-07-24)
+
+
+### Bug Fixes
+
+* bump dependencies ([e87579c](https://github.com/socialgene/sgnf/commit/e87579c285d7b44c196cafe680b0589b7bc339d4))
+* bumping dependencies ([cbe0916](https://github.com/socialgene/sgnf/commit/cbe0916c44f3f7d26188c78358e1b5713c03d6ee))
+* docker version tag ([ef5e8ad](https://github.com/socialgene/sgnf/commit/ef5e8ad967c3a91c55195a7232517b48cd2ab576))
+
 ## [0.5.2](https://github.com/socialgene/sgnf/compare/v0.5.1...v0.5.2) (2024-07-24)
 
 

@@ -30,15 +30,15 @@ jobs:
             popd
 
             pushd antismash
-            docker build . -t chasemc2/sgnf-antismash:$RELEASE_NUMBER .
+            docker build -t chasemc2/sgnf-antismash:$RELEASE_NUMBER .
             popd
 
             pushd prokka
-            docker build . -t chasemc2/sgnf-prokka:$RELEASE_NUMBER .
+            docker build -t chasemc2/sgnf-prokka:$RELEASE_NUMBER .
             popd
 
             pushd minimal
-            docker build . -t chasemc2/sgnf-minimal:$RELEASE_NUMBER .
+            docker build -t chasemc2/sgnf-minimal:$RELEASE_NUMBER .
             popd
 
       - name: Push Docker images

@@ -1,15 +1,10 @@
 process NCBI_GENOME_DOWNLOAD {
     label 'process_medium'
 
-    // conda "bioconda::ncbi-genome-download=0.3.1"
-    // container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-    //     'https://depot.galaxyproject.org/singularity/ncbi-genome-download:0.3.1--pyh5e36f6f_0' :
-    //     'quay.io/biocontainers/ncbi-genome-download:0.3.1--pyh5e36f6f_0' }"
-    if (params.sgnf_sgpy_dockerimage) {
-        container "chasemc2/sgnf-sgpy:${params.sgnf_sgpy_dockerimage}"
-    } else {
-        container "chasemc2/sgnf-sgpy:${workflow.manifest.version}"
-    }
+    conda "bioconda::ncbi-genome-download=0.3.3"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/ncbi-genome-download:0.3.3--pyh7cba7a3_0' :
+        'quay.io/biocontainers/ncbi-genome-download:0.3.3--pyh7cba7a3_0' }"
 
     input:
     val input_args

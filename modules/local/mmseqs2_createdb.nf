@@ -22,9 +22,9 @@ process MMSEQS2_CREATEDB {
     def args2 = task.ext.args2 ?: ''
     """
     mkdir mmseqs_100
-    
+
     # Unfortunately we have to modify all fasta ids until mmseqs is fixed:
-    # https://github.com/soedinglab/MMseqs2/issues/557    
+    # https://github.com/soedinglab/MMseqs2/issues/557
     seqkit replace  -w 0 -p ^ -r _mmseqs2_ ${fasta} | mmseqs createdb \\
         /dev/stdin \\
         mmseqs_100/mmseqs_100 \\

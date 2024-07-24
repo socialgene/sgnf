@@ -21,28 +21,30 @@ jobs:
         run: |
             cd dockerfiles
             pushd multistage
-            docker build --target sgnf-hmmer -t chasemc2/sgnf-hmmer:${{ github.event.release.tag_name }} .
-            docker build --target sgnf-hmmer-plus -t chasemc2/sgnf-hmmer-plus:${{ github.event.release.tag_name }} .
-            docker build --squash --target sgnf-sgpy -t chasemc2/sgnf-sgpy:${{ github.event.release.tag_name }} .
+            TAG=${{ github.event.release.tag_name/#v/ }}
+            docker build --target sgnf-hmmer -t chasemc2/sgnf-hmmer:$TAG .
+            docker build --target sgnf-hmmer-plus -t chasemc2/sgnf-hmmer-plus:$TAG .
+            docker build --squash --target sgnf-sgpy -t chasemc2/sgnf-sgpy:$TAG .
             popd
 
             pushd antismash
-            docker build . -t chasemc2/sgnf-antismash:${{ github.event.release.tag_name }} .
+            docker build . -t chasemc2/sgnf-antismash:$TAG .
             popd
 
             pushd prokka
-            docker build . -t chasemc2/sgnf-prokka:${{ github.event.release.tag_name }} .
+            docker build . -t chasemc2/sgnf-prokka:$TAG .
             popd
 
             pushd minimal
-            docker build . -t chasemc2/sgnf-minimal:${{ github.event.release.tag_name }} .
+            docker build . -t chasemc2/sgnf-minimal:$TAG .
             popd
 
       - name: Push Docker images
         run: |
-            docker push chasemc2/sgnf-hmmer:${{ github.event.release.tag_name }}
-            docker push chasemc2/sgnf-hmmer-plus:${{ github.event.release.tag_name }}
-            docker push chasemc2/sgnf-sgpy:${{ github.event.release.tag_name }}
-            docker push chasemc2/sgnf-antismash:${{ github.event.release.tag_name }}
-            docker push chasemc2/sgnf-prokka:${{ github.event.release.tag_name }}
-            docker push chasemc2/sgnf-minimal:${{ github.event.release.tag_name }}
+            TAG=${{ github.event.release.tag_name/#v/ }}
+            docker push chasemc2/sgnf-hmmer:$TAG
+            docker push chasemc2/sgnf-hmmer-plus:$TAG
+            docker push chasemc2/sgnf-sgpy:$TAG
+            docker push chasemc2/sgnf-antismash:$TAG
+            docker push chasemc2/sgnf-prokka:$TAG
+            docker push chasemc2/sgnf-minimal:$TAG

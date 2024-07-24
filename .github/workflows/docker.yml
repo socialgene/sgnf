@@ -29,23 +29,58 @@ jobs:
             docker build --squash --target sgnf-sgpy -t chasemc2/sgnf-sgpy:$RELEASE_NUMBER .
             popd
 
-            pushd antismash
-            docker build -t chasemc2/sgnf-antismash:$RELEASE_NUMBER .
-            popd
-
-            pushd prokka
-            docker build -t chasemc2/sgnf-prokka:$RELEASE_NUMBER .
-            popd
 
             pushd minimal
             docker build -t chasemc2/sgnf-minimal:$RELEASE_NUMBER .
             popd
-
       - name: Push Docker images
         run: |
             docker push chasemc2/sgnf-hmmer:$RELEASE_NUMBER
             docker push chasemc2/sgnf-hmmer-plus:$RELEASE_NUMBER
             docker push chasemc2/sgnf-sgpy:$RELEASE_NUMBER
-            docker push chasemc2/sgnf-antismash:$RELEASE_NUMBER
-            docker push chasemc2/sgnf-prokka:$RELEASE_NUMBER
             docker push chasemc2/sgnf-minimal:$RELEASE_NUMBER
+  build_and_push_antismash:
+      name: Build and push antismash
+      runs-on: ubuntu-latest
+      continue-on-error: true
+      steps:
+        - name: Check out the repo
+          uses: actions/checkout@v4
+        - name: Log in to Docker Hub
+          uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+          with:
+            username: ${{ secrets.DOCKER_USERNAME }}
+            password: ${{ secrets.DOCKERHUBPAT }}
+        - name: Get release number without preceding v
+          id: get_release_number
+          run: echo "RELEASE_NUMBER=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+        - name: Build Docker images
+          run: |
+              cd dockerfiles/antismash
+              docker build -t chasemc2/sgnf-antismash:$RELEASE_NUMBER .
+        - name: Push Docker images
+          run: |
+              docker push chasemc2/sgnf-prokka:$RELEASE_NUMBER
+              docker push chasemc2/sgnf-antismash:$RELEASE_NUMBER
+  build_and_push_prokka:
+      name: Build and push prokka
+      runs-on: ubuntu-latest
+      continue-on-error: true
+      steps:
+        - name: Check out the repo
+          uses: actions/checkout@v4
+        - name: Log in to Docker Hub
+          uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+          with:
+            username: ${{ secrets.DOCKER_USERNAME }}
+            password: ${{ secrets.DOCKERHUBPAT }}
+        - name: Get release number without preceding v
+          id: get_release_number
+          run: echo "RELEASE_NUMBER=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+        - name: Build Docker images
+          run: |
+              cd dockerfiles/prokka
+              docker build -t chasemc2/sgnf-prokka:$RELEASE_NUMBER .
+        - name: Push Docker images
+          run: |
+              docker push chasemc2/sgnf-prokka:$RELEASE_NUMBER

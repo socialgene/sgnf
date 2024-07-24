@@ -23,11 +23,9 @@ jobs:
             pushd multistage
             docker build --target sgnf-hmmer -t chasemc2/sgnf-hmmer:${{ github.event.release.tag_name }} .
             docker build --target sgnf-hmmer-plus -t chasemc2/sgnf-hmmer-plus:${{ github.event.release.tag_name }} .
-            docker build --target sgpy-minimal -t chasemc2/sgpy-base:${{ github.event.release.tag_name }} .
             docker build --squash --target sgnf-sgpy -t chasemc2/sgnf-sgpy:${{ github.event.release.tag_name }} .
             docker push chasemc2/sgnf-hmmer:${{ github.event.release.tag_name }}
             docker push chasemc2/sgnf-hmmer-plus:${{ github.event.release.tag_name }}
-            docker push chasemc2/sgpy-base:${{ github.event.release.tag_name }}
             docker push chasemc2/sgnf-sgpy:${{ github.event.release.tag_name }}
             popd
 

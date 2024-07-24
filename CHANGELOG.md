@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.4](https://github.com/socialgene/sgnf/compare/v0.5.3...v0.5.4) (2024-07-24)
+
+
+### Bug Fixes
+
+* docker versions ([6c90f74](https://github.com/socialgene/sgnf/commit/6c90f743289bf42d2e5eec788aa2a1c70f13d005))
+
 ## [0.5.3](https://github.com/socialgene/sgnf/compare/v0.5.2...v0.5.3) (2024-07-24)
 
 

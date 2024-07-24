@@ -10,8 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
       - name: Check out the repo
         uses: actions/checkout@v4
       - name: Log in to Docker Hub
@@ -21,6 +19,7 @@ jobs:
           password: ${{ secrets.DOCKERHUBPAT }}
       - name: Build and push Docker image
         run: |
+            cd dockerfiles
             pushd multistage
             docker build --target sgnf-hmmer -t chasemc2/sgnf-hmmer:${{ github.event.release.tag_name }} .
             docker build --target sgnf-hmmer-plus -t chasemc2/sgnf-hmmer-plus:${{ github.event.release.tag_name }} .

@@ -17,21 +17,17 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKERHUBPAT }}
-      - name: Build and push Docker image
+      - name: Build Docker images
         run: |
             cd dockerfiles
             pushd multistage
             docker build --target sgnf-hmmer -t chasemc2/sgnf-hmmer:${{ github.event.release.tag_name }} .
             docker build --target sgnf-hmmer-plus -t chasemc2/sgnf-hmmer-plus:${{ github.event.release.tag_name }} .
             docker build --squash --target sgnf-sgpy -t chasemc2/sgnf-sgpy:${{ github.event.release.tag_name }} .
-            docker push chasemc2/sgnf-hmmer:${{ github.event.release.tag_name }}
-            docker push chasemc2/sgnf-hmmer-plus:${{ github.event.release.tag_name }}
-            docker push chasemc2/sgnf-sgpy:${{ github.event.release.tag_name }}
             popd
 
             pushd antismash
             docker build . -t chasemc2/sgnf-antismash:${{ github.event.release.tag_name }} .
-            docker push chasemc2/sgnf-antismash:${{ github.event.release.tag_name }}
             popd
 
             pushd prokka
@@ -40,5 +36,13 @@ jobs:
 
             pushd minimal
             docker build . -t chasemc2/sgnf-minimal:${{ github.event.release.tag_name }} .
-            docker push chasemc2/sgnf-minimal:${{ github.event.release.tag_name }}
             popd
+
+      - name: Push Docker images
+        run: |
+            docker push chasemc2/sgnf-hmmer:${{ github.event.release.tag_name }}
+            docker push chasemc2/sgnf-hmmer-plus:${{ github.event.release.tag_name }}
+            docker push chasemc2/sgnf-sgpy:${{ github.event.release.tag_name }}
+            docker push chasemc2/sgnf-antismash:${{ github.event.release.tag_name }}
+            docker push chasemc2/sgnf-prokka:${{ github.event.release.tag_name }}
+            docker push chasemc2/sgnf-minimal:${{ github.event.release.tag_name }}

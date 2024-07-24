@@ -7,7 +7,7 @@ process HMMER_HMMSEARCH {
         container "chasemc2/sgnf-hmmer:${workflow.manifest.version}"
     }
 
-    conda 'bioconda::hmmer=3.3.2 conda-forge::sha256'
+    conda 'bioconda::hmmer=3.4 conda-forge::sha256'
 
     input:
     tuple val(has_cutoff), path(hmm), path(fasta)

@@ -8,7 +8,7 @@ process DEDUPLICATE_AND_INDEX_FASTA {
         container "chasemc2/sgnf-sgpy:${workflow.manifest.version}"
     }
 
-    conda 'bioconda::seqkit>=2.3.0 bioconda::samtools>=1.16.1 tabix coreutils'
+    conda 'bioconda::seqkit=2.8.2 bioconda::samtools=1.20 coreutils'
 
     input:
     path 'file??.gz'
@@ -45,7 +45,6 @@ process DEDUPLICATE_AND_INDEX_FASTA {
     "${task.process}":
         seqkit: \$(echo \$(seqkit 2>&1) | sed 's/^.*Version: //; s/ .*\$//')
         samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-        tabix: \$(echo \$(tabix -h 2>&1) | sed 's/^.*Version: //; s/ .*\$//')
     END_VERSIONS
     """
 

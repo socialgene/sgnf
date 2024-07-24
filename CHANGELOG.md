@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.1](https://github.com/socialgene/sgnf/compare/v1.0.0...v1.0.1) (2024-07-24)
+
+
+### Bug Fixes
+
+* update actino,streptomyces config ([172e72c](https://github.com/socialgene/sgnf/commit/172e72c8afc2d75bef12198727bdb6a9168accb0))
+* update hmm sources, update streptomyces config ([64f18c4](https://github.com/socialgene/sgnf/commit/64f18c4a95172868c3c8cbb4ac2ca45756b71f2a))
+
 ## [1.0.0](https://github.com/socialgene/sgnf/compare/v0.5.7...v1.0.0) (2024-07-24)
 
 

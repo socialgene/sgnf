@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.5.0](https://github.com/socialgene/sgnf/compare/v0.4.5...v0.5.0) (2024-07-24)
+
+
+### Features
+
+* annotate fna input with prokka ([514d1c6](https://github.com/socialgene/sgnf/commit/514d1c6a2ecda74407326cc170484fb222ea5cf2))
+
+
+### Bug Fixes
+
+* hmm git downloads ([4f54387](https://github.com/socialgene/sgnf/commit/4f543875535a2384df57ef25e08759a5ab25fb5b))
+* update conda env ([57042c6](https://github.com/socialgene/sgnf/commit/57042c6ea67f3394f22ae1d4c4372a038ad20c72))
+
+
+### Miscellaneous Chores
+
+* release 0.5.0 ([15aad25](https://github.com/socialgene/sgnf/commit/15aad253d060daf3c1dde918cad8d4a5aa4ebedb))
+
 ## [0.4.5](https://github.com/socialgene/sgnf/compare/v0.4.4...v0.4.5) (2024-06-21)
 
 

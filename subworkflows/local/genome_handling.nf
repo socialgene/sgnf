@@ -75,7 +75,7 @@ workflow GENOME_HANDLING {
             ch_versions = ch_versions.mix(PROKKA.out.versions)
         }
 
-    gbk_and_fasta_ch = ch_gbk.mix(fasta_ch)
+    gbk_and_fasta_ch = ch_gbk.mix(ch_fasta)
 
     PROCESS_GENBANK_FILES(
             gbk_and_fasta_ch.flatten().toSortedList().flatten().buffer( size: params.genbank_input_buffer, remainder: true ),

@@ -85,14 +85,20 @@ workflow PIPELINE_INITIALISATION {
     ch_fasta_files = Channel.empty()
     ch_fna_files = Channel.empty()
 
-    if (params.genbank_csv) {
-        Channel
-            .fromSamplesheet("genbank_csv")
-            .map {
-                validateInputSamplesheet(it)
-            }
-            .set { ch_genbank_files }
-    }
+    def paths = file(params.genbank_csv).readLines().findAll { it.size()>0 }.join(',')
+    Channel.fromPath(paths).collect().set { ch_genbank_files }
+
+
+
+    // if (params.genbank_csv) {
+
+    //     Channel
+    //         .fromSamplesheet("genbank_csv")
+    //         .map {
+    //             validateInputSamplesheet(it)
+    //         }
+    //         .set { ch_genbank_files }
+    // }
     if (params.fasta_csv) {
         Channel
             .fromSamplesheet("fasta_csv")
@@ -173,7 +179,8 @@ def validateInputParameters() {
 // Validate channels from input samplesheet
 //
 def validateInputSamplesheet(input) {
-    def (files) = input[1]
+    def (files) = input
+    println "Validating input samplesheet: ${files}"
 
     return [ files ]
 }

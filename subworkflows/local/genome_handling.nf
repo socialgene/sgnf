@@ -4,7 +4,6 @@ This is the subworkflow that controls downloading and processing input genomes
 ========================================================================================
 */
 
-include { CRABHASH                              } from '../../modules/local/crabhash.nf'
 include { MIBIG_DOWNLOAD                        } from '../../modules/local/mibig_download'
 include { DOWNLOAD_CHEMBL_DATA                  } from '../../modules/local/download_chembl_data'
 include { NCBI_DATASETS_DOWNLOAD                } from '../../modules/local/ncbi_datasets_download'
@@ -23,7 +22,11 @@ workflow GENOME_HANDLING {
     main:
         ch_versions             = Channel.empty()
         ch_non_mibig_gbk_file   = ch_gbk
-        info_ch                 = Channel.empty()
+
+        println("------------------------------")
+        println("params.local_genbank: ${ch_gbk}")
+        println("------------------------------")
+
 
         if (params.mibig){
             MIBIG_DOWNLOAD()
@@ -33,7 +36,7 @@ workflow GENOME_HANDLING {
 
         if (params.chembl) {
             DOWNLOAD_CHEMBL_DATA()
-            ch_fasta = DOWNLOAD_CHEMBL_DATA.out.chembl_fa
+            ch_fasta = ch_gbk.mix(DOWNLOAD_CHEMBL_DATA.out.chembl_fa)
             ch_versions = ch_versions.mix(DOWNLOAD_CHEMBL_DATA.out.ch_versions)
         }
 
@@ -42,13 +45,6 @@ workflow GENOME_HANDLING {
             ch_gbk = ch_gbk.mix(NCBI_GENOME_DOWNLOAD.out.gbff_files)
             ch_non_mibig_gbk_file = ch_non_mibig_gbk_file.mix(NCBI_GENOME_DOWNLOAD.out.gbff_files)
             ch_versions = ch_versions.mix(NCBI_GENOME_DOWNLOAD.out.versions)
-        }
-
-        if (params.local_genbank) {
-            temp_file_ch = Channel.fromPath( params.local_genbank )
-            ch_gbk= ch_gbk.mix(temp_file_ch)
-            temp_file_ch2 = Channel.fromPath( params.local_genbank )
-            ch_non_mibig_gbk_file = ch_non_mibig_gbk_file.mix(temp_file_ch2)
         }
 
         if (params.ncbi_datasets_command){

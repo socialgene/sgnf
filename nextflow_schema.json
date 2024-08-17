@@ -70,7 +70,8 @@
                 "outdir": {
                     "type": "string",
                     "description": "If set, and others not, all other outdirs within this directory",
-                    "fa_icon": "fas fa-folder-open"
+                    "fa_icon": "fas fa-folder-open",
+                    "default": "socialgene_results"
                 },
                 "outdir_download_cache": {
                     "type": "string",
@@ -291,25 +292,25 @@
                 },
                 "HMMSEARCH_E": {
                     "type": "number",
-                    "default": 10,
+                    "default": 100.0,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 },
                 "HMMSEARCH_DOME": {
                     "type": "number",
-                    "default": 10,
+                    "default": 10.0,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 },
                 "HMMSEARCH_INCE": {
                     "type": "number",
-                    "default": 0.1,
+                    "default": 0.001,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 },
                 "HMMSEARCH_INCDOME": {
                     "type": "number",
-                    "default": 0.01,
+                    "default": 0.001,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 },
@@ -347,7 +348,7 @@
             "properties": {
                 "amrfinder_version": {
                     "type": "string",
-                    "default": "2021-03-01.1",
+                    "default": "2024-05-02.2",
                     "hidden": true,
                     "description": "Version of amrfinder to download/use"
                 },
@@ -365,25 +366,25 @@
                 },
                 "tigrfam_version": {
                     "type": "string",
-                    "default": "15.0",
+                    "default": "15",
                     "hidden": true,
                     "description": "Version of tigrfam to download/use"
                 },
                 "pfam_version": {
                     "type": "string",
-                    "default": "35.0",
+                    "default": "37",
                     "description": "PFAM version. Ffor version numbers see: http://ftp.ebi.ac.uk/pub/databases/Pfam/releases",
                     "hidden": true
                 },
                 "antismash_hmms_git_sha": {
                     "type": "string",
-                    "default": "e2d777c6cd035e6bf20f7eec924a350b00b84c7b",
+                    "default": "8fd065a63e99ee628b536cc19fa66d5942b784ea",
                     "description": "Controls which version of antismash the antismash HMMS are pulled from",
                     "hidden": true
                 },
                 "chembl_version": {
                     "type": "string",
-                    "description": "Set (e.g. 31 for chembl version 31) to incorporate chembl into the database",
+                    "description": "Set (e.g. '31' for chembl version 31) to incorporate chembl into the database",
                     "hidden": true,
                     "default": "31"
                 }
@@ -716,5 +717,11 @@
         {
             "$ref": "#/definitions/validation"
         }
-    ]
+    ],
+    "properties": {
+        "prism_hmms_git_sha": {
+            "type": "string",
+            "default": "4bf8bbdf2da3b4f1c764de2301be7b02e74af157"
+        }
+    }
 }

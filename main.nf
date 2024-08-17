@@ -31,8 +31,17 @@ include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_soci
 // WORKFLOW: Run main socialgene/sgnf analysis pipeline
 //
 workflow SOCIALGENE_SGNF {
+    take:
+    ch_gbk
+    ch_fasta
+    ch_fna_files
+
     main:
-    SOCIALGENE()
+    SOCIALGENE(
+        ch_gbk,
+        ch_fasta,
+        ch_fna_files
+    )
 
     emit:
     multiqc_report = SOCIALGENE.out.multiqc_report // channel: /path/to/multiqc_report.html
@@ -50,7 +59,6 @@ workflow SOCIALGENE_SGNF {
 //
 workflow {
 
-    main:
 
     //
     // SUBWORKFLOW: Run initialisation tasks
@@ -70,8 +78,9 @@ workflow {
     //
     SOCIALGENE_SGNF (
         PIPELINE_INITIALISATION.out.genbank_files,
-        fasta_files,
-        fna_files,
+        PIPELINE_INITIALISATION.out.fasta_files,
+        PIPELINE_INITIALISATION.out.fna_files,
+
     )
 
     //

@@ -44,7 +44,6 @@ include { HMM_PREP                    } from '../subworkflows/local/hmm_prep'
     IMPORT NF-CORE MODULES/SUBWORKFLOWS
 ========================================================================================
 */
-include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/local/custom/dumpsoftwareversions/main'
 include { DIAMOND_BLASTP                } from '../modules/local/diamond/blastp/main'
 include { DIAMOND_MAKEDB                } from '../modules/local/diamond/makedb/main'
 include { MULTIQC                       } from '../modules/nf-core/multiqc/main'
@@ -61,13 +60,18 @@ include { methodsDescriptionText      } from '../subworkflows/local/utils_nfcore
 
 available_hmms=["antismash","amrfinder","bigslice","classiphage", "ipresto","pfam","prism","resfams","tigrfam","virus_orthologous_groups"]
 
-// Info required for completion email and summary
-def multiqc_report = []
-
 workflow SOCIALGENE {
+    take:
+    ch_gbk
+    ch_fasta
+    ch_fna_files
+
+    main:
 
     println "Manifest's pipeline version: $workflow.profile"
     ch_versions = Channel.empty()
+    ch_multiqc_files = Channel.empty()
+
 
     def hmmlist = []
     // if not `null`, hmmlist needs to be a list
@@ -110,7 +114,11 @@ workflow SOCIALGENE {
     ////////////////////////
     */
 
-    GENOME_HANDLING()
+    GENOME_HANDLING(
+        ch_gbk,
+        ch_fasta,
+        ch_fna_files
+    )
     GENOME_HANDLING.out.ch_fasta.set{ch_fasta}
     ch_versions = ch_versions.mix(GENOME_HANDLING.out.ch_versions)
 
@@ -118,6 +126,9 @@ workflow SOCIALGENE {
     GENOME_HANDLING.out.ch_fasta
         .collect()
         .set{fasta_to_dedup}
+
+    ch_multiqc_files = ch_multiqc_files.mix(ch_gbk)
+
 
     DEDUPLICATE_AND_INDEX_FASTA(fasta_to_dedup)
 
@@ -327,34 +338,34 @@ workflow SOCIALGENE {
         sg_modules
     )
 
-if (run_build_database) {
+    if (run_build_database) {
 
-    // Neo4j isn't available with Conda so check that Docker is being used
-    if (workflow.profile.contains("conda")){
-        println '\033[0;34m The Neo4j database can only be built using the docker Nextflow profile, but you have used Conda. The Docker/Neo4j command to do build the database can be found at \n "$outdir/socialgene_neo4j/command_to_build_neo4j_database_with_docker.sh" \033[0m'
-    } else if (workflow.profile.contains("docker")){
+        // Neo4j isn't available with Conda so check that Docker is being used
+        if (workflow.profile.contains("conda")){
+            println '\033[0;34m The Neo4j database can only be built using the docker Nextflow profile, but you have used Conda. The Docker/Neo4j command to do build the database can be found at \n "$outdir/socialgene_neo4j/command_to_build_neo4j_database_with_docker.sh" \033[0m'
+        } else if (workflow.profile.contains("docker")){
 
-            // TODO: this is not good/fragile, it really should be a single tuple input, but will have
-            // to recode admin import to not care about directory structure
-            NEO4J_ADMIN_IMPORT(
-                sg_modules.collect(),
-                hmmlist.collect(),
-                neo4j_header_ch,
-                taxdump_ch,
-                hmm_info_ch,
-                hmm_nodes_ch,
-                blast_ch,
-                mmseqs2_ch,
-                hmmer_result_ch,
-                tigrfam_ch,
-                parameters_ch,
-                GENOME_HANDLING.out.ch_genome_info,
-                GENOME_HANDLING.out.ch_protein_info,
-                goterms_ch
-            )
+                // TODO: this is not good/fragile, it really should be a single tuple input, but will have
+                // to recode admin import to not care about directory structure
+                NEO4J_ADMIN_IMPORT(
+                    sg_modules.collect(),
+                    hmmlist.collect(),
+                    neo4j_header_ch,
+                    taxdump_ch,
+                    hmm_info_ch,
+                    hmm_nodes_ch,
+                    blast_ch,
+                    mmseqs2_ch,
+                    hmmer_result_ch,
+                    tigrfam_ch,
+                    parameters_ch,
+                    GENOME_HANDLING.out.ch_genome_info,
+                    GENOME_HANDLING.out.ch_protein_info,
+                    goterms_ch
+                )
 
-            ch_versions = ch_versions.mix(NEO4J_ADMIN_IMPORT.out.versions)
-        }
+                ch_versions = ch_versions.mix(NEO4J_ADMIN_IMPORT.out.versions)
+            }
     }
 
 
@@ -397,28 +408,25 @@ if (run_build_database) {
     ch_methods_description                = Channel.value(
         methodsDescriptionText(ch_multiqc_custom_methods_description))
 
-    ch_multiqc_files = Channel.empty()
     ch_multiqc_files = ch_multiqc_files.mix(
         ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-    ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
+    ch_multiqc_files = ch_multiqc_files.mix(ch_versions)
     ch_multiqc_files = ch_multiqc_files.mix(
         ch_methods_description.collectFile(
             name: 'methods_description_mqc.yaml',
             sort: true
         )
     )
-
-    MULTIQC (
-        ch_multiqc_files.collect(),
+    MULTIQC(
+        ch_multiqc_files.toList(),
         ch_multiqc_config.toList(),
         ch_multiqc_custom_config.toList(),
         ch_multiqc_logo.toList(),
-        Channel.empty(),
-        Channel.empty()
+
     )
 
     emit:
-    multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
+    multiqc_report = ch_multiqc_files.toList()
     versions       = ch_versions                 // channel: [ path(versions.yml) ]
 
 }
@@ -429,16 +437,8 @@ if (run_build_database) {
 ========================================================================================
 */
 
-workflow.onComplete {
-    if (params.email || params.email_on_fail) {
-        NfcoreTemplate.email(workflow, params, summary_params, projectDir, log, multiqc_report)
-    }
-    NfcoreTemplate.dump_parameters(workflow, params)
-    NfcoreTemplate.summary(workflow, params, log)
-    if (params.hook_url) {
-        NfcoreTemplate.IM_notification(workflow, params, summary_params, projectDir, log)
-    }
-}
+
+
 
 /*
 ========================================================================================

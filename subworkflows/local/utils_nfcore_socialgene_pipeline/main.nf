@@ -12,7 +12,7 @@ include { UTILS_NFVALIDATION_PLUGIN } from '../../nf-core/utils_nfvalidation_plu
 include { paramsSummaryMap          } from 'plugin/nf-validation'
 include { fromSamplesheet           } from 'plugin/nf-validation'
 include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
-include { completionEmail           } from '../../nf-core/utils_nfcore_pipeline'
+// include { completionEmail           } from '../../nf-core/utils_nfcore_pipeline'
 include { completionSummary         } from '../../nf-core/utils_nfcore_pipeline'
 include { dashedLine                } from '../../nf-core/utils_nfcore_pipeline'
 include { nfCoreLogo                } from '../../nf-core/utils_nfcore_pipeline'
@@ -80,26 +80,35 @@ workflow PIPELINE_INITIALISATION {
     //
     // Create channel from input file provided through params.input
     //
-    Channel
-        .fromSamplesheet("genbank_csv")
-        .map {
-            validateInputSamplesheet(it)
-        }
-        .set { ch_genbank_files }
 
-    Channel
-        .fromSamplesheet("fasta_csv")
-        .map {
-            validateInputSamplesheet(it)
-        }
-        .set { ch_fasta_files }
+    ch_genbank_files = Channel.empty()
+    ch_fasta_files = Channel.empty()
+    ch_fna_files = Channel.empty()
 
-    Channel
-        .fromSamplesheet("fna_csv")
-        .map {
-            validateInputSamplesheet(it)
-        }
-        .set { ch_fna_files }
+    if (params.genbank_csv) {
+        Channel
+            .fromSamplesheet("genbank_csv")
+            .map {
+                validateInputSamplesheet(it)
+            }
+            .set { ch_genbank_files }
+    }
+    if (params.fasta_csv) {
+        Channel
+            .fromSamplesheet("fasta_csv")
+            .map {
+                validateInputSamplesheet(it)
+            }
+            .set { ch_fasta_files }
+    }
+    if (params.fna_csv) {
+        Channel
+            .fromSamplesheet("fna_csv")
+            .map {
+                validateInputSamplesheet(it)
+            }
+            .set { ch_fna_files }
+    }
 
     emit:
     genbank_files   = ch_genbank_files
@@ -133,15 +142,15 @@ workflow PIPELINE_COMPLETION {
     // Completion email and summary
     //
     workflow.onComplete {
-        if (email || email_on_fail) {
-            completionEmail(summary_params, email, email_on_fail, plaintext_email, outdir, monochrome_logs, multiqc_report.toList())
-        }
+        // if (email || email_on_fail) {
+        //     completionEmail(summary_params, email, email_on_fail, plaintext_email, outdir, monochrome_logs, multiqc_report.toList())
+        // }
 
-        completionSummary(monochrome_logs)
+        // completionSummary(monochrome_logs)
 
-        if (hook_url) {
-            imNotification(summary_params, hook_url)
-        }
+        // if (hook_url) {
+        //     imNotification(summary_params, hook_url)
+        // }
     }
 
     workflow.onError {

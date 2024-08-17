@@ -10,20 +10,13 @@
             "fasta": {
                 "type": "string",
                 "format": "file-path",
-                "pattern": "^\\S+\\.f(a|asta|na|as)\\.gz$",
+                "pattern": ".*",
                 "errorMessage": "Path to a FASTA file, cannot contain spaces",
                 "exists": true
-            },
-            "gbff": {
-                "type": "string",
-                "format": "file-path",
-                "pattern": "^\\S+\\.gbff\\.gz$",
-                "errorMessage": "Path to a GenBank file ('.gbff'), cannot contain spaces",
-                "exists": true
             }
+
         },
         "required": [
-            "sample",
             "fasta"
         ]
     }

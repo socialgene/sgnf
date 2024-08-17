@@ -16,7 +16,14 @@
                 "type": "string",
                 "format": "file-path",
                 "pattern": "^\\S+\\.f(a|asta|na|as)\\.gz$",
-                "errorMessage": "FastA file must be provided, cannot contain spaces and must have extension '.fa.gz', '.fasta.gz', '.fna.gz', or '.fas.gz'",
+                "errorMessage": "Path to a FASTA file, cannot contain spaces",
+                "exists": true
+            },
+            "gbff": {
+                "type": "string",
+                "format": "file-path",
+                "pattern": "^\\S+\\.gbff\\.gz$",
+                "errorMessage": "Path to a GenBank file ('.gbff'), cannot contain spaces",
                 "exists": true
             }
         },

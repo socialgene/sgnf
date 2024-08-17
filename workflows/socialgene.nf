@@ -5,33 +5,7 @@
 */
 
 
-
-
-
-include { paramsSummaryLog; paramsSummaryMap } from 'plugin/nf-validation'
-
-def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
-def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
-def summary_params = paramsSummaryMap(workflow)
-
-// Print parameter summary log to screen
-log.info logo + paramsSummaryLog(workflow) + citation
-
-WorkflowSocialgene.initialise(params, log)
-
 /*
-
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    CONFIG FILES
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-ch_multiqc_config          = Channel.fromPath("$projectDir/assets/multiqc_config.yml", checkIfExists: true)
-ch_multiqc_custom_config   = params.multiqc_config ? Channel.fromPath( params.multiqc_config, checkIfExists: true ) : Channel.empty()
-ch_multiqc_logo            = params.multiqc_logo   ? Channel.fromPath( params.multiqc_logo, checkIfExists: true ) : Channel.empty()
-ch_multiqc_custom_methods_description = params.multiqc_methods_description ? file(params.multiqc_methods_description, checkIfExists: true) : file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
 
 /*
 ========================================================================================
@@ -52,10 +26,7 @@ include { SEQKIT_SPLIT                                  } from '../modules/local
 include { HTCONDOR_PREP                                 } from '../modules/local/htcondor_prep'
 include { HMMER_HMMSEARCH                               } from '../modules/local/hmmsearch'
 include { HMMSEARCH_PARSE                               } from '../modules/local/hmmsearch_parse'
-include { DOWNLOAD_CHEMBL_DATA                          } from '../modules/local/download_chembl_data'
-include { MD5_AS_FILENAME as MERGE_PARSED_DOMTBLOUT   } from '../modules/local/md5_as_filename'
-
-
+include { MD5_AS_FILENAME as MERGE_PARSED_DOMTBLOUT     } from '../modules/local/md5_as_filename'
 
 /*
 ========================================================================================
@@ -67,8 +38,6 @@ include { NCBI_TAXONOMY               } from '../subworkflows/local/ncbi_taxonom
 include { GENOME_HANDLING             } from '../subworkflows/local/genome_handling'
 include { SG_MODULES                  } from '../subworkflows/local/sg_modules'
 include { HMM_PREP                    } from '../subworkflows/local/hmm_prep'
-//include { HMM_RUN                   } from '../subworkflows/local/hmm_run'
-//include { HMM_OUTSOURCED            } from '../subworkflows/local/hmm_outsourced'
 
 /*
 ========================================================================================
@@ -78,7 +47,12 @@ include { HMM_PREP                    } from '../subworkflows/local/hmm_prep'
 include { CUSTOM_DUMPSOFTWAREVERSIONS   } from '../modules/local/custom/dumpsoftwareversions/main'
 include { DIAMOND_BLASTP                } from '../modules/local/diamond/blastp/main'
 include { DIAMOND_MAKEDB                } from '../modules/local/diamond/makedb/main'
-include { MULTIQC                       } from '../modules/local/multiqc/main'
+include { MULTIQC                       } from '../modules/nf-core/multiqc/main'
+include { paramsSummaryMap       } from 'plugin/nf-validation'
+include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { softwareVersionsToYAML      } from '../subworkflows/nf-core/utils_nfcore_pipeline'
+include { methodsDescriptionText      } from '../subworkflows/local/utils_nfcore_socialgene_pipeline'
+
 /*
 ========================================================================================
     RUN MAIN WORKFLOW
@@ -136,44 +110,28 @@ workflow SOCIALGENE {
     ////////////////////////
     */
 
-
-    if (params.chembl) {
-        // chembl has fasta we need to process, so download here and pass fasta along
-        DOWNLOAD_CHEMBL_DATA()
-        chembl_fasta_ch = DOWNLOAD_CHEMBL_DATA.out.chembl_fa
-        ch_versions = ch_versions.mix(DOWNLOAD_CHEMBL_DATA.out.ch_versions)
-    } else {
-        chembl_fasta_ch = Channel.empty()
-    }
-
-    if (params.local_faa){
-        local_faa_ch = Channel.fromPath(params.local_faa)
-    } else {
-        local_faa_ch = Channel.empty()
-    }
-
-
-
-    input_fasta_ch = chembl_fasta_ch.mix(local_faa_ch)
-
-    GENOME_HANDLING(input_fasta_ch)
+    GENOME_HANDLING()
     GENOME_HANDLING.out.ch_fasta.set{ch_fasta}
     ch_versions = ch_versions.mix(GENOME_HANDLING.out.ch_versions)
 
     // TODO: just pass this straight to DEDUPLICATE_AND_INDEX_FASTA, dont' create a collected_fasta.faa.gz
-    GENOME_HANDLING.out.ch_fasta.collect().set{ fasta_to_dedup}
+    GENOME_HANDLING.out.ch_fasta
+        .collect()
+        .set{fasta_to_dedup}
+
     DEDUPLICATE_AND_INDEX_FASTA(fasta_to_dedup)
-    DEDUPLICATE_AND_INDEX_FASTA.out
-        .fasta
+
+    DEDUPLICATE_AND_INDEX_FASTA.out.fasta
         .set{ch_nr_fasta}
 
     if (params.sort_fasta) {
         // If testing, sort the FASTA file to get consistent output, otherwise skip
         // Use seqkit to remove redundant sequences, based on sequence id because they are already the sequence hash
         SEQKIT_SORT(ch_nr_fasta)
-        SEQKIT_SORT.out
-            .fasta
+
+        SEQKIT_SORT.out.fasta
             .set{single_ch_fasta}
+
     } else {
         single_ch_fasta = ch_nr_fasta
     }
@@ -400,15 +358,18 @@ if (run_build_database) {
     }
 
 
-    /*
-    ////////////////////////
-    OUTPUT SOFTWARE VERSIONS
-    ////////////////////////
-    */
+    //
+    // Collate and save software versions
+    //
+    softwareVersionsToYAML(ch_versions)
+        .collectFile(
+            storeDir: "${params.outdir}/pipeline_info",
+            name: 'nf_core_pipeline_software_mqc_versions.yml',
+            sort: true,
+            newLine: true
+        ).set { ch_collated_versions }
 
-    CUSTOM_DUMPSOFTWAREVERSIONS (
-        ch_versions.unique().collectFile(name: 'collated_versions.yml')
-    )
+    //
 
     /*
     ////////////////////////
@@ -416,24 +377,49 @@ if (run_build_database) {
     ////////////////////////
     */
 
-    workflow_summary    = WorkflowSocialgene.paramsSummaryMultiqc(workflow, summary_params)
-    ch_workflow_summary = Channel.value(workflow_summary)
 
-    methods_description    = WorkflowSocialgene.methodsDescriptionText(workflow, ch_multiqc_custom_methods_description, params)
-    ch_methods_description = Channel.value(methods_description)
+    ch_multiqc_config        = Channel.fromPath(
+        "$projectDir/assets/multiqc_config.yml", checkIfExists: true)
+    ch_multiqc_custom_config = params.multiqc_config ?
+        Channel.fromPath(params.multiqc_config, checkIfExists: true) :
+        Channel.empty()
+    ch_multiqc_logo          = params.multiqc_logo ?
+        Channel.fromPath(params.multiqc_logo, checkIfExists: true) :
+        Channel.empty()
+
+    summary_params      = paramsSummaryMap(
+        workflow, parameters_schema: "nextflow_schema.json")
+    ch_workflow_summary = Channel.value(paramsSummaryMultiqc(summary_params))
+
+    ch_multiqc_custom_methods_description = params.multiqc_methods_description ?
+        file(params.multiqc_methods_description, checkIfExists: true) :
+        file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
+    ch_methods_description                = Channel.value(
+        methodsDescriptionText(ch_multiqc_custom_methods_description))
 
     ch_multiqc_files = Channel.empty()
-    ch_multiqc_files = ch_multiqc_files.mix(ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
-    ch_multiqc_files = ch_multiqc_files.mix(ch_methods_description.collectFile(name: 'methods_description_mqc.yaml'))
-    ch_multiqc_files = ch_multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml.collect())
+    ch_multiqc_files = ch_multiqc_files.mix(
+        ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
+    ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
+    ch_multiqc_files = ch_multiqc_files.mix(
+        ch_methods_description.collectFile(
+            name: 'methods_description_mqc.yaml',
+            sort: true
+        )
+    )
 
     MULTIQC (
         ch_multiqc_files.collect(),
         ch_multiqc_config.toList(),
         ch_multiqc_custom_config.toList(),
-        ch_multiqc_logo.toList()
+        ch_multiqc_logo.toList(),
+        Channel.empty(),
+        Channel.empty()
     )
-    multiqc_report = MULTIQC.out.report.toList()
+
+    emit:
+    multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
+    versions       = ch_versions                 // channel: [ path(versions.yml) ]
 
 }
 

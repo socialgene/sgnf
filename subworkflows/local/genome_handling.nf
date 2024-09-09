@@ -40,6 +40,13 @@ workflow GENOME_HANDLING {
             ch_versions = ch_versions.mix(DOWNLOAD_CHEMBL_DATA.out.ch_versions)
         }
 
+        if (params.local_genbank) {
+            temp_file_ch = Channel.fromPath( params.local_genbank )
+            ch_gbk= ch_gbk.mix(temp_file_ch)
+            temp_file_ch2 = Channel.fromPath( params.local_genbank )
+            ch_non_mibig_gbk_file = ch_non_mibig_gbk_file.mix(temp_file_ch2)
+        }
+        
         if (params.ncbi_genome_download_command){
             NCBI_GENOME_DOWNLOAD(params.ncbi_genome_download_command)
             ch_gbk = ch_gbk.mix(NCBI_GENOME_DOWNLOAD.out.gbff_files)

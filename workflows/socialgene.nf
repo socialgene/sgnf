@@ -178,7 +178,7 @@ workflow SOCIALGENE {
         if (params.htcondor){
             // collect all fasta and all hmms to pass to HTCONDOR_PREP
             // kept separate to control renaming files in the process
-            ch_split_fasta.collect().set{all_split_fasta}
+            ch_split_fasta.flatten().collect().set{all_split_fasta}
             HTCONDOR_PREP(HMM_PREP.out.all_hmms, all_split_fasta)
             ch_versions = ch_versions.mix(HTCONDOR_PREP.out.versions)
         } else if (params.domtblout_path || params.domtblout_with_ga || params.domtblout_without_ga){

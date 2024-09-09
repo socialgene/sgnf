@@ -411,7 +411,7 @@
                 },
                 "pfam_version": {
                     "type": "string",
-                    "default": "37",
+                    "default": "37.0",
                     "description": "PFAM version. Ffor version numbers see: http://ftp.ebi.ac.uk/pub/databases/Pfam/releases",
                     "hidden": true
                 },

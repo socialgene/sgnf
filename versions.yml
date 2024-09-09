@@ -1,0 +1,4 @@
+"pfam":
+    version: 37
+    url: ftp.ebi.ac.uk/pub/databases/Pfam/releases/Pfam37/Pfam-A.hmm.gz
+    hmmconvert: $(hmmconvert -h | grep -o '^# HMMER [0-9.]*' | sed 's/^# HMMER *//')

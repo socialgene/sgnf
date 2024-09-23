@@ -80,8 +80,26 @@ workflow GENOME_HANDLING {
 
     gbk_and_fasta_ch = ch_gbk.mix(ch_fasta)
 
+    gbk_and_fasta_ch.flatten().toSortedList().flatten()
+        .map { file -> tuple(file, file.size()) }
+    .set { filesWithSizes }
+
+
+// Apply the batchFilesBySize function to the files and split into batches
+// Collect all files and apply the batchFilesBySize function
+// Collect all files and apply the batchFilesBySize function
+filesWithSizes 
+    .toList() 
+    .map { fileList -> batchFilesBySize(fileList, 13 * 1024 * 1024 * 1024) } 
+    .flatMap { it } 
+    .set { batchedFiles }
+
+
+
+
     PROCESS_GENBANK_FILES(
-            gbk_and_fasta_ch.flatten().toSortedList().flatten().buffer( size: params.genbank_input_buffer, remainder: true ),
+        batchedFiles
+            // gbk_and_fasta_ch.flatten().toSortedList().flatten().buffer( size: params.genbank_input_buffer, remainder: true ),
             )
 
     PROCESS_GENBANK_FILES.out.fasta.set{ch_fasta_out}
@@ -139,4 +157,33 @@ workflow GENOME_HANDLING {
         ch_non_mibig_gbk_file = ch_non_mibig_gbk_file.flatten().toSortedList().flatten()
 
 
+}
+
+// Function to batch files by cumulative size
+def batchFilesBySize(filesWithSizes, maxBatchSize) {
+    def batches = []
+    def currentBatch = []
+    def currentBatchSize = 0
+
+    filesWithSizes.each { tuple ->
+        def (file, size) = tuple
+
+        // If adding this file exceeds the batch size limit, close the current batch and start a new one
+        if (currentBatchSize + size > maxBatchSize && currentBatch) {
+            batches << currentBatch
+            currentBatch = []
+            currentBatchSize = 0
+        }
+        
+        // Add the current file to the batch
+        currentBatch << file
+        currentBatchSize += size
+    }
+
+    // Add the remaining batch if it exists and isn't empty
+    if (!currentBatch.isEmpty()) {
+        batches << currentBatch
+    }
+
+    return batches
 }

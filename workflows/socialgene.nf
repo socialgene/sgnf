@@ -175,12 +175,13 @@ workflow SOCIALGENE {
         // 2) use path to domtblout file
         // 3) run HMMER using nextflow
 
-        if (params.htcondor){
+        if (true){
             // collect all fasta and all hmms to pass to HTCONDOR_PREP
             // kept separate to control renaming files in the process
-            ch_split_fasta.flatten().collect().set{all_split_fasta}
+            ch_split_fasta.collect().set{all_split_fasta}
             HTCONDOR_PREP(HMM_PREP.out.all_hmms, all_split_fasta)
             ch_versions = ch_versions.mix(HTCONDOR_PREP.out.versions)
+            domtblout_ch=false
         } else if (params.domtblout_path || params.domtblout_with_ga || params.domtblout_without_ga){
             // TODO: check that no paths are repeated between the param inputs
             if (params.domtblout_with_ga){

@@ -1,9 +1,11 @@
-# Remove commented lines to also upload to github container registry
 name: Publish Docker images to DockerHub and GitHub Container Registry
 on:
   release:
     types: [published]
   workflow_dispatch:
+  push:
+    branches:
+      - dev
 jobs:
   build_and_push_sgnf_base:
     name: Build and push multistage
@@ -12,72 +14,54 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
       - name: Log in to Docker Hub
-        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+        uses: docker/login-action@v3.3.0
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKERHUBPAT }}
       - name: Get release number without preceding v
         id: get_release_number
+        if: github.ref != 'refs/heads/dev'
         run: echo "RELEASE_NUMBER=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+      - name: Set DEV_TAG if on dev branch
+        if: github.ref == 'refs/heads/dev'
+        run: echo "RELEASE_NUMBER=dev" >> $GITHUB_ENV
       - name: Build Docker images
         run: |
-            cd dockerfiles
-            pushd multistage
-            docker build --target sgnf-hmmer -t chasemc2/sgnf-hmmer:$RELEASE_NUMBER .
-            docker build --target sgnf-hmmer-plus -t chasemc2/sgnf-hmmer-plus:$RELEASE_NUMBER .
-            docker build --squash --target sgnf-sgpy -t chasemc2/sgnf-sgpy:$RELEASE_NUMBER .
-            popd
-            pushd minimal
-            docker build -t chasemc2/sgnf-minimal:$RELEASE_NUMBER .
-            popd
-      - name: Push Docker images
-        run: |
-            docker push chasemc2/sgnf-hmmer:$RELEASE_NUMBER
-            docker push chasemc2/sgnf-hmmer-plus:$RELEASE_NUMBER
-            docker push chasemc2/sgnf-sgpy:$RELEASE_NUMBER
-            docker push chasemc2/sgnf-minimal:$RELEASE_NUMBER
+          cd dockerfiles
+          pushd multistage
+          docker buildx build --platform linux/amd64,linux/arm64 --target sgnf-hmmer -t chasemc2/sgnf-hmmer:$RELEASE_NUMBER --push .
+          docker buildx build --platform linux/amd64,linux/arm64 --target sgnf-hmmer-plus -t chasemc2/sgnf-hmmer-plus:$RELEASE_NUMBER --push .
+          docker buildx build --platform linux/amd64,linux/arm64 --squash --target sgnf-sgpy -t chasemc2/sgnf-sgpy:$RELEASE_NUMBER --push .
+          popd
+          pushd minimal
+          docker buildx build --platform linux/amd64,linux/arm64 -t chasemc2/sgnf-minimal:$RELEASE_NUMBER --push .
+          popd
+
   build_and_push_antismash:
-      name: Build and push antismash
-      runs-on: ubuntu-latest
-      continue-on-error: true
-      steps:
-        - name: Check out the repo
-          uses: actions/checkout@v4
-        - name: Log in to Docker Hub
-          uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
-          with:
-            username: ${{ secrets.DOCKER_USERNAME }}
-            password: ${{ secrets.DOCKERHUBPAT }}
-        - name: Get release number without preceding v
-          id: get_release_number
-          run: echo "RELEASE_NUMBER=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
-        - name: Build Docker images
-          run: |
-              cd dockerfiles/antismash
-              docker build -t chasemc2/sgnf-antismash:$RELEASE_NUMBER .
-        - name: Push Docker images
-          run: |
-              docker push chasemc2/sgnf-antismash:$RELEASE_NUMBER
-  # build_and_push_prokka:
-  #     name: Build and push prokka
-  #     runs-on: ubuntu-latest
-  #     continue-on-error: true
-  #     steps:
-  #       - name: Check out the repo
-  #         uses: actions/checkout@v4
-  #       - name: Log in to Docker Hub
-  #         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
-  #         with:
-  #           username: ${{ secrets.DOCKER_USERNAME }}
-  #           password: ${{ secrets.DOCKERHUBPAT }}
-  #       - name: Get release number without preceding v
-  #         id: get_release_number
-  #         run: echo "RELEASE_NUMBER=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
-  #       - name: Build Docker images
-  #         run: |
-  #             cd dockerfiles/prokka
-  #             docker build -t chasemc2/sgnf-prokka:$RELEASE_NUMBER .
-  #       - name: Push Docker images
-  #         run: |
-  #             docker push chasemc2/sgnf-prokka:$RELEASE_NUMBER
+    name: Build and push antismash
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3.3.0
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKERHUBPAT }}
+      - name: Get release number without preceding v
+        id: get_release_number
+        if: github.ref != 'refs/heads/dev'
+        run: echo "RELEASE_NUMBER=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+      - name: Set DEV_TAG if on dev branch
+        if: github.ref == 'refs/heads/dev'
+        run: echo "RELEASE_NUMBER=dev" >> $GITHUB_ENV
+      - name: Build Docker images
+        run: |
+          cd dockerfiles/antismash
+          docker buildx build --platform linux/amd64,linux/arm64 -t chasemc2/sgnf-antismash:$RELEASE_NUMBER --push .

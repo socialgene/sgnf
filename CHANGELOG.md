@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/socialgene/sgnf/compare/v1.0.2...v1.1.0) (2024-10-20)
+
+
+### Features
+
+* bump sgpy version (changes protein hash results) ([#109](https://github.com/socialgene/sgnf/issues/109)) ([dffc236](https://github.com/socialgene/sgnf/commit/dffc2361e923422c96428a6af2e98fb19af3d994))
+
 ## [1.0.2](https://github.com/socialgene/sgnf/compare/v1.0.1...v1.0.2) (2024-07-24)
 
 

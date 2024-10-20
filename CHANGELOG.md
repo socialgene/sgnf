@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.1](https://github.com/socialgene/sgnf/compare/v1.1.0...v1.1.1) (2024-10-20)
+
+
+### Bug Fixes
+
+* protein hashing by updating sgpy ([47c086a](https://github.com/socialgene/sgnf/commit/47c086a28eef1c3dd6c11d3ba47ba6ec40567e7d))
+* protein hashing by updating sgpy ([4318640](https://github.com/socialgene/sgnf/commit/4318640ab36ef9acd5d6b9d398528a8fe8ffdbab))
+
 ## [1.1.0](https://github.com/socialgene/sgnf/compare/v1.0.2...v1.1.0) (2024-10-20)
 
 

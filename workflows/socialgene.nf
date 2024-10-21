@@ -175,7 +175,7 @@ workflow SOCIALGENE {
         // 2) use path to domtblout file
         // 3) run HMMER using nextflow
 
-        if (true){
+        if (params.htcondor){
             // collect all fasta and all hmms to pass to HTCONDOR_PREP
             // kept separate to control renaming files in the process
             ch_split_fasta.collect().set{all_split_fasta}
@@ -220,6 +220,8 @@ workflow SOCIALGENE {
             hmmer_result_ch = MERGE_PARSED_DOMTBLOUT.out.outfile
             ch_versions = ch_versions.mix(HMMSEARCH_PARSE.out.versions.last())
         }
+
+
 
         hmm_info_ch = HMM_PREP.out.hmm_info
         hmm_nodes_ch = HMM_PREP.out.hmm_nodes
@@ -346,8 +348,7 @@ workflow SOCIALGENE {
             println '\033[0;34m The Neo4j database can only be built using the docker Nextflow profile, but you have used Conda. The Docker/Neo4j command to do build the database can be found at \n "$outdir/socialgene_neo4j/command_to_build_neo4j_database_with_docker.sh" \033[0m'
         } else if (workflow.profile.contains("docker")){
 
-                // TODO: this is not good/fragile, it really should be a single tuple input, but will have
-                // to recode admin import to not care about directory structure
+
                 NEO4J_ADMIN_IMPORT(
                     sg_modules.collect(),
                     hmmlist.collect(),

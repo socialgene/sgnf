@@ -16,6 +16,7 @@ process DIAMOND_BLASTP {
     output:
     path('*.blast6.gz')     , emit: blastout
     path "versions.yml"     , emit: versions
+    path "diamond.log"      , emit: log
     val output_args         , emit: args
 
 
@@ -39,6 +40,7 @@ process DIAMOND_BLASTP {
         $args $args2 \\
         --compress 1 \\
         --no-self-hits \\
+        --log \\
         --out blastp_all_vs_all.blast6.txt.gz
 
     md5_as_filename.sh "blastp_all_vs_all.blast6.txt.gz" "blast6.gz"

@@ -5,6 +5,45 @@
     "description": "Scalable genome mining with SocialGene knowledge graphs",
     "type": "object",
     "definitions": {
+        "input_output_options": {
+            "title": "Input/output options",
+            "type": "object",
+            "fa_icon": "fas fa-terminal",
+            "description": "Define where the pipeline should find input data and save output data.",
+            "required": [],
+            "properties": {
+            "genbank_csv": {
+                "type": "string",
+                "mimetype": "text/csv",
+                "format": "file-path-pattern",
+                "exists": true,
+                "description": "Additional input CSV samplesheet containing information about pre-computed assemblies. When set, both read pre-processing and assembly are skipped and the pipeline begins at the binning stage.",
+                "help_text": "If you have pre-computed assemblies from another source, it is possible to jump straight to the binning stage of the pipeline by supplying these assemblies in a CSV file. This CSV file should have at minimum three columns and the following header: `id,group,assembler,fasta` (group is only required when `--coassemble_group). Short reads must still be supplied in to `--input` in CSV format. See [usage docs](https://nf-co.re/mag/usage#input-specifications) for further details.",
+                "fa_icon": "fas fa-file-csv"
+            },
+            "fasta_csv": {
+                "type": "string",
+                "mimetype": "text/csv",
+                "format": "file-path-pattern",
+                "exists": true,
+                "schema": "assets/schema_fasta.json",
+                "pattern": ".*",
+                "description": "Additional input CSV samplesheet containing information about pre-computed assemblies. When set, both read pre-processing and assembly are skipped and the pipeline begins at the binning stage.",
+                "help_text": "If you have pre-computed assemblies from another source, it is possible to jump straight to the binning stage of the pipeline by supplying these assemblies in a CSV file. This CSV file should have at minimum three columns and the following header: `id,group,assembler,fasta` (group is only required when `--coassemble_group). Short reads must still be supplied in to `--input` in CSV format. See [usage docs](https://nf-co.re/mag/usage#input-specifications) for further details.",
+                "fa_icon": "fas fa-file-csv"
+            },
+            "fna_csv": {
+                "type": "string",
+                "mimetype": "text/csv",
+                "format": "file-path-pattern",
+                "exists": true,
+                "schema": "assets/schema_assembly_input.json",
+                "pattern": ".*",
+                "description": "Additional input CSV samplesheet containing information about pre-computed assemblies. When set, both read pre-processing and assembly are skipped and the pipeline begins at the binning stage.",
+                "help_text": "If you have pre-computed assemblies from another source, it is possible to jump straight to the binning stage of the pipeline by supplying these assemblies in a CSV file. This CSV file should have at minimum three columns and the following header: `id,group,assembler,fasta` (group is only required when `--coassemble_group). Short reads must still be supplied in to `--input` in CSV format. See [usage docs](https://nf-co.re/mag/usage#input-specifications) for further details.",
+                "fa_icon": "fas fa-file-csv"
+            }
+        }},
         "input_genomes": {
             "title": "Input Genomes",
             "type": "object",
@@ -70,7 +109,8 @@
                 "outdir": {
                     "type": "string",
                     "description": "If set, and others not, all other outdirs within this directory",
-                    "fa_icon": "fas fa-folder-open"
+                    "fa_icon": "fas fa-folder-open",
+                    "default": "socialgene_results"
                 },
                 "outdir_download_cache": {
                     "type": "string",
@@ -291,7 +331,7 @@
                 },
                 "HMMSEARCH_E": {
                     "type": "number",
-                    "default": 10,
+                    "default": 100,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 },
@@ -303,13 +343,13 @@
                 },
                 "HMMSEARCH_INCE": {
                     "type": "number",
-                    "default": 0.1,
+                    "default": 0.001,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 },
                 "HMMSEARCH_INCDOME": {
                     "type": "number",
-                    "default": 0.01,
+                    "default": 0.001,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 },
@@ -347,7 +387,7 @@
             "properties": {
                 "amrfinder_version": {
                     "type": "string",
-                    "default": "2021-03-01.1",
+                    "default": "2024-05-02.2",
                     "hidden": true,
                     "description": "Version of amrfinder to download/use"
                 },
@@ -365,25 +405,25 @@
                 },
                 "tigrfam_version": {
                     "type": "string",
-                    "default": "15.0",
+                    "default": "15",
                     "hidden": true,
                     "description": "Version of tigrfam to download/use"
                 },
                 "pfam_version": {
                     "type": "string",
-                    "default": "35.0",
+                    "default": "37.0",
                     "description": "PFAM version. Ffor version numbers see: http://ftp.ebi.ac.uk/pub/databases/Pfam/releases",
                     "hidden": true
                 },
                 "antismash_hmms_git_sha": {
                     "type": "string",
-                    "default": "e2d777c6cd035e6bf20f7eec924a350b00b84c7b",
+                    "default": "8fd065a63e99ee628b536cc19fa66d5942b784ea",
                     "description": "Controls which version of antismash the antismash HMMS are pulled from",
                     "hidden": true
                 },
                 "chembl_version": {
                     "type": "string",
-                    "description": "Set (e.g. 31 for chembl version 31) to incorporate chembl into the database",
+                    "description": "Set (e.g. '31' for chembl version 31) to incorporate chembl into the database",
                     "hidden": true,
                     "default": "31"
                 }
@@ -551,15 +591,8 @@
                     "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
                     "hidden": true
                 },
-                "fasta": {
-                    "type": "string",
-                    "default": "not-used-but-needed-in-lint",
-                    "description": "not used, required by nf-core linter",
-                    "hidden": true
-                },
                 "input": {
                     "type": "string",
-                    "default": "not-used-but-needed-in-lint",
                     "description": "not used, required by nf-core linter",
                     "hidden": true
                 },
@@ -675,6 +708,9 @@
     },
     "allOf": [
         {
+            "$ref": "#/definitions/input_output_options"
+        },
+        {
             "$ref": "#/definitions/input_genomes"
         },
         {
@@ -716,5 +752,20 @@
         {
             "$ref": "#/definitions/validation"
         }
-    ]
+    ],
+    "properties": {
+        "prism_hmms_git_sha": {
+            "type": "string",
+            "default": "4bf8bbdf2da3b4f1c764de2301be7b02e74af157"
+        },
+        "fasta_csv": {
+            "type": "string"
+        },
+        "genbank_csv": {
+            "type": "string"
+        },
+        "fna_csv": {
+            "type": "string"
+        }
+    }
 }

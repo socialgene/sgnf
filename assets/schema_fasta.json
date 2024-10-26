@@ -7,21 +7,16 @@
     "items": {
         "type": "object",
         "properties": {
-            "sample": {
-                "type": "string",
-                "pattern": "^\\S+$",
-                "errorMessage": "Sample name must be provided and cannot contain spaces"
-            },
             "fasta": {
                 "type": "string",
                 "format": "file-path",
-                "pattern": "^\\S+\\.f(a|asta|na|as)\\.gz$",
-                "errorMessage": "FastA file must be provided, cannot contain spaces and must have extension '.fa.gz', '.fasta.gz', '.fna.gz', or '.fas.gz'",
+                "pattern": ".*",
+                "errorMessage": "Path to a FASTA file, cannot contain spaces",
                 "exists": true
             }
+
         },
         "required": [
-            "sample",
             "fasta"
         ]
     }

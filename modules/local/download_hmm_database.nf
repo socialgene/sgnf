@@ -23,9 +23,9 @@ process DOWNLOAD_HMM_DATABASE {
     when:
     task.ext.when == null || task.ext.when
 
-    script:
+    shell:
     """
-    hmm_download_${database}.sh $version
+    hmm_download_${database}.sh '$version'
 
     # convert hmm models to HMMER version 3
     hmmconvert_loop.sh

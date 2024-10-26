@@ -21,7 +21,7 @@ process HTCONDOR_PREP {
     path "sample_matrix.csv"        , emit: sample_matrix
     path "hmmsearch.sh"             , emit: hmmsearch
     path "submit_server_finish.sh"  , emit: submit_server_finish
-    path "versions.yml" , emit: versions
+    path "versions.yml"             , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

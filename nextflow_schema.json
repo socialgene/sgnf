@@ -5,6 +5,45 @@
     "description": "Scalable genome mining with SocialGene knowledge graphs",
     "type": "object",
     "definitions": {
+        "input_output_options": {
+            "title": "Input/output options",
+            "type": "object",
+            "fa_icon": "fas fa-terminal",
+            "description": "Define where the pipeline should find input data and save output data.",
+            "required": [],
+            "properties": {
+            "genbank_csv": {
+                "type": "string",
+                "mimetype": "text/csv",
+                "format": "file-path-pattern",
+                "exists": true,
+                "description": "Additional input CSV samplesheet containing information about pre-computed assemblies. When set, both read pre-processing and assembly are skipped and the pipeline begins at the binning stage.",
+                "help_text": "If you have pre-computed assemblies from another source, it is possible to jump straight to the binning stage of the pipeline by supplying these assemblies in a CSV file. This CSV file should have at minimum three columns and the following header: `id,group,assembler,fasta` (group is only required when `--coassemble_group). Short reads must still be supplied in to `--input` in CSV format. See [usage docs](https://nf-co.re/mag/usage#input-specifications) for further details.",
+                "fa_icon": "fas fa-file-csv"
+            },
+            "fasta_csv": {
+                "type": "string",
+                "mimetype": "text/csv",
+                "format": "file-path-pattern",
+                "exists": true,
+                "schema": "assets/schema_fasta.json",
+                "pattern": ".*",
+                "description": "Additional input CSV samplesheet containing information about pre-computed assemblies. When set, both read pre-processing and assembly are skipped and the pipeline begins at the binning stage.",
+                "help_text": "If you have pre-computed assemblies from another source, it is possible to jump straight to the binning stage of the pipeline by supplying these assemblies in a CSV file. This CSV file should have at minimum three columns and the following header: `id,group,assembler,fasta` (group is only required when `--coassemble_group). Short reads must still be supplied in to `--input` in CSV format. See [usage docs](https://nf-co.re/mag/usage#input-specifications) for further details.",
+                "fa_icon": "fas fa-file-csv"
+            },
+            "fna_csv": {
+                "type": "string",
+                "mimetype": "text/csv",
+                "format": "file-path-pattern",
+                "exists": true,
+                "schema": "assets/schema_assembly_input.json",
+                "pattern": ".*",
+                "description": "Additional input CSV samplesheet containing information about pre-computed assemblies. When set, both read pre-processing and assembly are skipped and the pipeline begins at the binning stage.",
+                "help_text": "If you have pre-computed assemblies from another source, it is possible to jump straight to the binning stage of the pipeline by supplying these assemblies in a CSV file. This CSV file should have at minimum three columns and the following header: `id,group,assembler,fasta` (group is only required when `--coassemble_group). Short reads must still be supplied in to `--input` in CSV format. See [usage docs](https://nf-co.re/mag/usage#input-specifications) for further details.",
+                "fa_icon": "fas fa-file-csv"
+            }
+        }},
         "input_genomes": {
             "title": "Input Genomes",
             "type": "object",
@@ -292,13 +331,13 @@
                 },
                 "HMMSEARCH_E": {
                     "type": "number",
-                    "default": 100.0,
+                    "default": 100,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 },
                 "HMMSEARCH_DOME": {
                     "type": "number",
-                    "default": 10.0,
+                    "default": 10,
                     "description": "see pg 74-77: http://eddylab.org/software/hmmer3/3.1b2/Userguide.pdf",
                     "hidden": true
                 },
@@ -372,7 +411,7 @@
                 },
                 "pfam_version": {
                     "type": "string",
-                    "default": "37",
+                    "default": "37.0",
                     "description": "PFAM version. Ffor version numbers see: http://ftp.ebi.ac.uk/pub/databases/Pfam/releases",
                     "hidden": true
                 },
@@ -552,15 +591,8 @@
                     "pattern": "^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
                     "hidden": true
                 },
-                "fasta": {
-                    "type": "string",
-                    "default": "not-used-but-needed-in-lint",
-                    "description": "not used, required by nf-core linter",
-                    "hidden": true
-                },
                 "input": {
                     "type": "string",
-                    "default": "not-used-but-needed-in-lint",
                     "description": "not used, required by nf-core linter",
                     "hidden": true
                 },
@@ -676,6 +708,9 @@
     },
     "allOf": [
         {
+            "$ref": "#/definitions/input_output_options"
+        },
+        {
             "$ref": "#/definitions/input_genomes"
         },
         {
@@ -722,6 +757,15 @@
         "prism_hmms_git_sha": {
             "type": "string",
             "default": "4bf8bbdf2da3b4f1c764de2301be7b02e74af157"
+        },
+        "fasta_csv": {
+            "type": "string"
+        },
+        "genbank_csv": {
+            "type": "string"
+        },
+        "fna_csv": {
+            "type": "string"
         }
     }
 }

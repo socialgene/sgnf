@@ -28,14 +28,14 @@ process DOWNLOAD_CHEMBL_DATA {
     """
     #   https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/latest/chembl_31_sqlite.tar.gz
 
-wget -i - << EOF
-    https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_${params.chembl_version}/chembl_${params.chembl_version}_chemreps.txt.gz
-    https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_${params.chembl_version}/chembl_uniprot_mapping.txt
-    https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_${params.chembl_version}/chembl_${params.chembl_version}.fa.gz
-    https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_${params.chembl_version}/chembl_${params.chembl_version}_bio.fa.gz
-    https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_${params.chembl_version}/chembl_${params.chembl_version}.fps.gz
-    https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_${params.chembl_version}/checksums.txt
-EOF
+    wget -i - << EOF
+        https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_${params.chembl_version}/chembl_${params.chembl_version}_chemreps.txt.gz
+        https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_${params.chembl_version}/chembl_uniprot_mapping.txt
+        https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_${params.chembl_version}/chembl_${params.chembl_version}.fa.gz
+        https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_${params.chembl_version}/chembl_${params.chembl_version}_bio.fa.gz
+        https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_${params.chembl_version}/chembl_${params.chembl_version}.fps.gz
+        https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_${params.chembl_version}/checksums.txt
+    EOF
 
     # remove headers
     # chembl_id       canonical_smiles        standard_inchi  standard_inchi_key
@@ -62,12 +62,14 @@ EOF
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         version: ${params.chembl_version}
-        url: "https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_${params.chembl_version}/chembl_${params.chembl_version}_chemreps.txt.gz"
-        url: "https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_${params.chembl_version}/chembl_uniprot_mapping.txt"
-        url: "https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_${params.chembl_version}/chembl_${params.chembl_version}.fa.gz"
-        url: "https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_${params.chembl_version}/chembl_${params.chembl_version}_bio.fa.gz"
-        url: "https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_${params.chembl_version}/chembl_${params.chembl_version}.fps.gz"
-        url: "https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_${params.chembl_version}/checksums.txt"
+        urls:
+            - https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_${params.chembl_version}/chembl_${params.chembl_version}_chemreps.txt.gz
+            - https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_${params.chembl_version}/chembl_uniprot_mapping.txt
+            - https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_${params.chembl_version}/chembl_${params.chembl_version}.fa.gz
+            - https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_${params.chembl_version}/chembl_${params.chembl_version}_bio.fa.gz
+            - https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_${params.chembl_version}/chembl_${params.chembl_version}.fps.gz
+            - https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_${params.chembl_version}/checksums.txt
     END_VERSIONS
+
     """
 }

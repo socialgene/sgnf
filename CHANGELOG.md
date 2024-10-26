@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/socialgene/sgnf/compare/v1.2.0...v1.2.1) (2024-10-26)
+
+
+### Bug Fixes
+
+* chembl and file inputs ([499b298](https://github.com/socialgene/sgnf/commit/499b298a1f094296c2edfe71e15552c122bda271))
+
 ## [1.2.0](https://github.com/socialgene/sgnf/compare/v1.1.1...v1.2.0) (2024-10-26)
 
 

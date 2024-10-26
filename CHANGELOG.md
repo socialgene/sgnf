@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.2.0](https://github.com/socialgene/sgnf/compare/v1.1.1...v1.2.0) (2024-10-26)
+
+
+### Features
+
+* new input methods ([0f13632](https://github.com/socialgene/sgnf/commit/0f136327b616f0d98cc04d9e5a0ba88b31d4934f))
+
+
+### Bug Fixes
+
+* remove old, unused config option ([bc2e1d8](https://github.com/socialgene/sgnf/commit/bc2e1d8eb3de41c1b3ab4b98409bb19bba4f38eb))
+* schema, nf-core linting ([c4ed53b](https://github.com/socialgene/sgnf/commit/c4ed53b4b184fa4e25b0ec9b89c665e742987aaa))
+
 ## [1.1.1](https://github.com/socialgene/sgnf/compare/v1.1.0...v1.1.1) (2024-10-20)
 
 

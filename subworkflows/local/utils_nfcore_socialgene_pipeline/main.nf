@@ -89,22 +89,14 @@ workflow PIPELINE_INITIALISATION {
         def paths = file(params.genbank_csv).readLines().findAll { it.size() > 0 }
         Channel.fromPath(paths).collect().set { ch_genbank_files }
     }
-    
+
     if (params.fasta_csv) {
-        Channel
-            .fromSamplesheet("fasta_csv")
-            .map {
-                validateInputSamplesheet(it)
-            }
-            .set { ch_fasta_files }
+        def paths = file(params.fasta_csv).readLines().findAll { it.size() > 0 }
+        Channel.fromPath(paths).collect().set { ch_fasta_files }
     }
     if (params.fna_csv) {
-        Channel
-            .fromSamplesheet("fna_csv")
-            .map {
-                validateInputSamplesheet(it)
-            }
-            .set { ch_fna_files }
+        def paths = file(params.fna_csv).readLines().findAll { it.size() > 0 }
+        Channel.fromPath(paths).collect().set { ch_fna_files }
     }
 
     emit:

@@ -23,9 +23,7 @@ workflow GENOME_HANDLING {
         ch_versions             = Channel.empty()
         ch_non_mibig_gbk_file   = ch_gbk
 
-        println("------------------------------")
-        println("params.local_genbank: ${ch_gbk}")
-        println("------------------------------")
+
 
 
         if (params.mibig){
@@ -36,8 +34,9 @@ workflow GENOME_HANDLING {
 
         if (params.chembl) {
             DOWNLOAD_CHEMBL_DATA()
-            ch_fasta = ch_gbk.mix(DOWNLOAD_CHEMBL_DATA.out.chembl_fa)
-            ch_versions = ch_versions.mix(DOWNLOAD_CHEMBL_DATA.out.ch_versions)
+            ch_fasta = ch_fasta.mix(DOWNLOAD_CHEMBL_DATA.out.chembl_fa)
+            ch_fasta = ch_fasta.mix(DOWNLOAD_CHEMBL_DATA.out.chembl_bio_fa)
+            ch_versions = ch_versions.mix(DOWNLOAD_CHEMBL_DATA.out.versions)
         }
 
         if (params.local_genbank) {
@@ -46,7 +45,7 @@ workflow GENOME_HANDLING {
             temp_file_ch2 = Channel.fromPath( params.local_genbank )
             ch_non_mibig_gbk_file = ch_non_mibig_gbk_file.mix(temp_file_ch2)
         }
-        
+
         if (params.ncbi_genome_download_command){
             NCBI_GENOME_DOWNLOAD(params.ncbi_genome_download_command)
             ch_gbk = ch_gbk.mix(NCBI_GENOME_DOWNLOAD.out.gbff_files)
@@ -88,10 +87,10 @@ workflow GENOME_HANDLING {
 // Apply the batchFilesBySize function to the files and split into batches
 // Collect all files and apply the batchFilesBySize function
 // Collect all files and apply the batchFilesBySize function
-filesWithSizes 
-    .toList() 
-    .map { fileList -> batchFilesBySize(fileList, 13 * 1024 * 1024 * 1024) } 
-    .flatMap { it } 
+filesWithSizes
+    .toList()
+    .map { fileList -> batchFilesBySize(fileList, 13 * 1024 * 1024 * 1024) }
+    .flatMap { it }
     .set { batchedFiles }
 
 
@@ -174,7 +173,7 @@ def batchFilesBySize(filesWithSizes, maxBatchSize) {
             currentBatch = []
             currentBatchSize = 0
         }
-        
+
         // Add the current file to the batch
         currentBatch << file
         currentBatchSize += size

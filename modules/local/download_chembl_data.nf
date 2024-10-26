@@ -36,7 +36,6 @@ wget -i - << EOF
     https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_${params.chembl_version}/chembl_${params.chembl_version}.fps.gz
     https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/releases/chembl_${params.chembl_version}/checksums.txt
 EOF
-    gzip -n chembl_uniprot_mapping.txt
 
     # remove headers
     # chembl_id       canonical_smiles        standard_inchi  standard_inchi_key
